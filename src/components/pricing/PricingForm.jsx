@@ -14,6 +14,7 @@ const schema = yup.object({
     .number()
     .typeError("Must be a number")
     .required("This field is required"),
+  features: yup.string().required("This field is required"),
 });
 
 function PricingForm({
@@ -51,6 +52,9 @@ function PricingForm({
         multiline
       />
       <FormControl {...getFormAttr("price", "price", "price")} type="number" />
+      <FormControl
+        {...getFormAttr("Features (Separate by comma)", "features", "features")}
+      />
       <Button isLoading={isSubmitting} type="submit">
         Submit
       </Button>

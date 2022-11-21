@@ -29,7 +29,7 @@ function AuthNavbarItem({ small = false }) {
   return (
     <>
       <li
-        className="font-medium cursor-pointer text-dimWhite hover:text-white transition-all mb-4 lg:mb-0 ml-0 lg:ml-10"
+        className="font-medium cursor-pointer text-dimWhite hover:text-white transition-all mb-4 md:mb-0 ml-0 md:ml-10"
         onClick={() => {
           setShowAuthModal(true);
           setAuthForm("LOGIN");
@@ -38,7 +38,7 @@ function AuthNavbarItem({ small = false }) {
         <Text>Login</Text>
       </li>
       <li
-        className="font-medium cursor-pointer text-dimWhite hover:text-white transition-all"
+        className="font-medium cursor-pointer text-dimWhite hover:text-white transition-all ml-0 md:ml-10"
         onClick={() => {
           setShowAuthModal(true);
           setAuthForm("REGISTER");

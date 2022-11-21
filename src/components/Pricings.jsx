@@ -55,7 +55,7 @@ function Pricings() {
           nesciunt earum facere?
         </Text>
 
-        <div className="lg:grid lg:grid-cols-3 sm:gap-6 lg:gap-10 lg:space-y-0 space-y-8 mx-auto">
+        <div className="lg:grid lg:grid-cols-3 sm:gap-6 lg:gap-10 lg:space-y-0 space-y-8">
           {pricings.map((item) => (
             <PricingItem
               key={item.id}
@@ -65,6 +65,7 @@ function Pricings() {
               loading={loading}
               onClick={handleClick}
               id={item.id}
+              features={(item?.features || "").split(",")}
             />
           ))}
         </div>
