@@ -25,10 +25,7 @@ function GuestLayout({ children }) {
 
         {children}
       </div>
-      <AuthModal
-        open={showAuthModal}
-        onClose={() => setShowAshowAuthModal(false)}
-      />
+      <AuthModal open={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </AuthModalContext.Provider>
   );
 }

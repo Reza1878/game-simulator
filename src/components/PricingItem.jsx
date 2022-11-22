@@ -20,7 +20,7 @@ function PricingItem({
       </Text>
       <div className="mx-auto">
         {features.map((item, index) => (
-          <div className="flex gap-2 mb-1">
+          <div className="flex gap-2 mb-1" key={index}>
             <div className="bg-secondary items-center flex rounded-full p-1">
               <CheckCircle className="text-black" size={18} />
             </div>
