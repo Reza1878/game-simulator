@@ -7,6 +7,7 @@ import Navbar from "../Navbar";
 function GuestLayout({ children }) {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authForm, setAuthForm] = useState("");
+
   return (
     <AuthModalContext.Provider
       value={{

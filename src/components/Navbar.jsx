@@ -1,6 +1,7 @@
 import AuthModalContext from "@/context/AuthModalContext";
 import { useContext, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { close, logo, menu } from "../assets";
 import { navLinks } from "../constants";
 import AuthNavbarItem from "./AuthNavbarItem";
@@ -10,6 +11,7 @@ const Navbar = () => {
   const [toggle, setToggle] = useState(false);
   const { setAuthForm, setShowAuthModal } = useContext(AuthModalContext);
   const accessToken = useSelector((state) => state.auth.accessToken);
+  const navigate = useNavigate();
 
   const onSimulatorClick = () => {
     if (!accessToken) {
@@ -65,12 +67,14 @@ const Navbar = () => {
         {navLinks.map((nav, index) => (
           <li
             key={nav.id}
-            className={`font-poppins font-normal cursor-pointer text-[16px] ${
+            className={`font-poppins font-normal cursor-pointer text-[16px] mr-10 ${
               active === nav.title ? "text-white" : "text-dimWhite"
-            } ${index === navLinks.length - 1 ? "mr-0" : "mr-10"}`}
-            onClick={() => setActive(nav.title)}
+            }`}
+            onClick={() => {
+              setActive(nav.title);
+            }}
           >
-            <a href={`#${nav.id}`}>{nav.title}</a>
+            <a href={`/#${nav.id}`}>{nav.title}</a>
           </li>
         ))}
         <AuthNavbarItem />
