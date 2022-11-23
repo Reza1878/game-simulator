@@ -1,11 +1,20 @@
 import {
   ROUTE_ADMIN_DASHBOARD,
   ROUTE_BAN_AMOUNT_PAGE,
+  ROUTE_HEROES_ROLE,
   ROUTE_LOGOUT,
   ROUTE_PRICING_PAGE,
+  ROUTE_TEAM_PAGE,
 } from "@/config/routes";
 import React, { useMemo } from "react";
-import { DollarSign, Home, LogOut, XCircle } from "react-feather";
+import {
+  DollarSign,
+  Home,
+  LogOut,
+  Settings,
+  Users,
+  XCircle,
+} from "react-feather";
 import { useSelector } from "react-redux";
 import { logo, mockAvatar } from "@/assets";
 import NavItem from "@/components/navigation/NavItem";
@@ -31,6 +40,16 @@ function AdminSidebar({ open = false }) {
         title: "Ban Amount",
         icon: <XCircle className="icon" />,
         href: ROUTE_BAN_AMOUNT_PAGE,
+      },
+      {
+        title: "Teams",
+        icon: <Users className="icon" />,
+        href: ROUTE_TEAM_PAGE,
+      },
+      {
+        title: "Heroes Roles",
+        icon: <Settings className="icon" />,
+        href: ROUTE_HEROES_ROLE,
       },
       {
         title: "Logout",

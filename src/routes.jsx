@@ -5,8 +5,10 @@ import { AdminLayout, GuestLayout } from "./components/layout";
 import {
   ROUTE_ADMIN_DASHBOARD,
   ROUTE_BAN_AMOUNT_PAGE,
+  ROUTE_HEROES_ROLE,
   ROUTE_LOGOUT,
   ROUTE_PRICING_PAGE,
+  ROUTE_TEAM_PAGE,
 } from "./config/routes";
 import { Home } from "./pages";
 import {
@@ -17,7 +19,15 @@ import {
   PricingCreatePage,
   PricingListPage,
   PricingUpdatePage,
+  TeamCreatePage,
+  TeamListPage,
+  TeamUpdatePage,
 } from "./pages/admin";
+import {
+  HeroesRoleCreatePage,
+  HeroesRoleListPage,
+  HeroesRoleUpdatePage,
+} from "./pages/admin/heroes-role";
 import Logout from "./pages/auth/Logout";
 import { CancelPayment, SuccessPayment } from "./pages/payment";
 
@@ -45,6 +55,24 @@ function ProtectedRoutes() {
           <Route
             path={`${ROUTE_BAN_AMOUNT_PAGE}/:id/edit`}
             element={<BanAmountUpdatePage />}
+          />
+          <Route path={ROUTE_TEAM_PAGE} element={<TeamListPage />} />
+          <Route
+            path={`${ROUTE_TEAM_PAGE}/create`}
+            element={<TeamCreatePage />}
+          />
+          <Route
+            path={`${ROUTE_TEAM_PAGE}/:id/edit`}
+            element={<TeamUpdatePage />}
+          />
+          <Route path={ROUTE_HEROES_ROLE} element={<HeroesRoleListPage />} />
+          <Route
+            path={`${ROUTE_HEROES_ROLE}/create`}
+            element={<HeroesRoleCreatePage />}
+          />
+          <Route
+            path={`${ROUTE_HEROES_ROLE}/:id/edit`}
+            element={<HeroesRoleUpdatePage />}
           />
           <Route path={ROUTE_LOGOUT} element={<Logout />} />
         </Routes>

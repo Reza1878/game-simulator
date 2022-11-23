@@ -11,6 +11,8 @@ import {
   BanAmountUpdatePage,
 } from "./ban-amount";
 
+import { TeamCreatePage, TeamListPage, TeamUpdatePage } from "./team";
+
 export {
   Dashboard,
   PricingCreatePage,
@@ -19,4 +21,7 @@ export {
   BanAmountCreatePage,
   BanAmountListPage,
   BanAmountUpdatePage,
+  TeamCreatePage,
+  TeamListPage,
+  TeamUpdatePage,
 };
