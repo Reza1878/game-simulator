@@ -1,10 +1,11 @@
 import {
   ROUTE_ADMIN_DASHBOARD,
+  ROUTE_BAN_AMOUNT_PAGE,
   ROUTE_LOGOUT,
   ROUTE_PRICING_PAGE,
 } from "@/config/routes";
 import React, { useMemo } from "react";
-import { DollarSign, Home, LogOut } from "react-feather";
+import { DollarSign, Home, LogOut, XCircle } from "react-feather";
 import { useSelector } from "react-redux";
 import { logo, mockAvatar } from "@/assets";
 import NavItem from "@/components/navigation/NavItem";
@@ -25,6 +26,11 @@ function AdminSidebar({ open = false }) {
         title: "Pricings",
         icon: <DollarSign className="icon" />,
         href: ROUTE_PRICING_PAGE,
+      },
+      {
+        title: "Ban Amount",
+        icon: <XCircle className="icon" />,
+        href: ROUTE_BAN_AMOUNT_PAGE,
       },
       {
         title: "Logout",

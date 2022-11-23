@@ -191,7 +191,9 @@ function BaseTable({ fetchItems, columns, limit, page, refetch, getParams }) {
             <ChevronLeft />
           </PaginationButton>
           <PaginationButton
-            disabled={pageData.page === totalPages}
+            disabled={
+              pageData.page === totalPages || pageData.page > totalPages
+            }
             onClick={() =>
               setPageData((val) => ({ ...val, page: val.page + 1 }))
             }
@@ -199,7 +201,9 @@ function BaseTable({ fetchItems, columns, limit, page, refetch, getParams }) {
             <ChevronRight />
           </PaginationButton>
           <PaginationButton
-            disabled={pageData.page === totalPages}
+            disabled={
+              pageData.page === totalPages || pageData.page > totalPages
+            }
             onClick={() => setPageData((val) => ({ ...val, page: totalPages }))}
           >
             <ChevronsRight />

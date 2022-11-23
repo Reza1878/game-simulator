@@ -4,11 +4,15 @@ import { Route, Routes } from "react-router-dom";
 import { AdminLayout, GuestLayout } from "./components/layout";
 import {
   ROUTE_ADMIN_DASHBOARD,
+  ROUTE_BAN_AMOUNT_PAGE,
   ROUTE_LOGOUT,
   ROUTE_PRICING_PAGE,
 } from "./config/routes";
 import { Home } from "./pages";
 import {
+  BanAmountCreatePage,
+  BanAmountListPage,
+  BanAmountUpdatePage,
   Dashboard,
   PricingCreatePage,
   PricingListPage,
@@ -32,6 +36,15 @@ function ProtectedRoutes() {
           <Route
             path={`${ROUTE_PRICING_PAGE}/:id/edit`}
             element={<PricingUpdatePage />}
+          />
+          <Route path={ROUTE_BAN_AMOUNT_PAGE} element={<BanAmountListPage />} />
+          <Route
+            path={`${ROUTE_BAN_AMOUNT_PAGE}/create`}
+            element={<BanAmountCreatePage />}
+          />
+          <Route
+            path={`${ROUTE_BAN_AMOUNT_PAGE}/:id/edit`}
+            element={<BanAmountUpdatePage />}
           />
           <Route path={ROUTE_LOGOUT} element={<Logout />} />
         </Routes>

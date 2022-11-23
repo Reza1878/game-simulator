@@ -5,4 +5,18 @@ import {
   PricingUpdatePage,
 } from "./pricing";
 
-export { Dashboard, PricingCreatePage, PricingListPage, PricingUpdatePage };
+import {
+  BanAmountCreatePage,
+  BanAmountListPage,
+  BanAmountUpdatePage,
+} from "./ban-amount";
+
+export {
+  Dashboard,
+  PricingCreatePage,
+  PricingListPage,
+  PricingUpdatePage,
+  BanAmountCreatePage,
+  BanAmountListPage,
+  BanAmountUpdatePage,
+};
