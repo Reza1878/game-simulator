@@ -5,6 +5,7 @@ import { AdminLayout, GuestLayout } from "./components/layout";
 import {
   ROUTE_ADMIN_DASHBOARD,
   ROUTE_BAN_AMOUNT_PAGE,
+  ROUTE_HEROES,
   ROUTE_HEROES_ROLE,
   ROUTE_LOGOUT,
   ROUTE_PRICING_PAGE,
@@ -16,6 +17,10 @@ import {
   BanAmountListPage,
   BanAmountUpdatePage,
   Dashboard,
+  HeroesCreatePage,
+  HeroesDetailPage,
+  HeroesListPage,
+  HeroesUpdatePage,
   PricingCreatePage,
   PricingListPage,
   PricingUpdatePage,
@@ -74,6 +79,16 @@ function ProtectedRoutes() {
             path={`${ROUTE_HEROES_ROLE}/:id/edit`}
             element={<HeroesRoleUpdatePage />}
           />
+          <Route path={ROUTE_HEROES} element={<HeroesListPage />} />
+          <Route
+            path={`${ROUTE_HEROES}/create`}
+            element={<HeroesCreatePage />}
+          />
+          <Route
+            path={`${ROUTE_HEROES}/:id/edit`}
+            element={<HeroesUpdatePage />}
+          />
+          <Route path={`${ROUTE_HEROES}/:id`} element={<HeroesDetailPage />} />
           <Route path={ROUTE_LOGOUT} element={<Logout />} />
         </Routes>
       </AdminLayout>

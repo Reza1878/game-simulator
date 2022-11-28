@@ -13,6 +13,13 @@ import {
 
 import { TeamCreatePage, TeamListPage, TeamUpdatePage } from "./team";
 
+import {
+  HeroesCreatePage,
+  HeroesDetailPage,
+  HeroesListPage,
+  HeroesUpdatePage,
+} from "./heroes";
+
 export {
   Dashboard,
   PricingCreatePage,
@@ -24,4 +31,8 @@ export {
   TeamCreatePage,
   TeamListPage,
   TeamUpdatePage,
+  HeroesCreatePage,
+  HeroesListPage,
+  HeroesDetailPage,
+  HeroesUpdatePage,
 };

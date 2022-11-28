@@ -1,6 +1,7 @@
 import {
   ROUTE_ADMIN_DASHBOARD,
   ROUTE_BAN_AMOUNT_PAGE,
+  ROUTE_HEROES,
   ROUTE_HEROES_ROLE,
   ROUTE_LOGOUT,
   ROUTE_PRICING_PAGE,
@@ -8,6 +9,7 @@ import {
 } from "@/config/routes";
 import React, { useMemo } from "react";
 import {
+  Award,
   DollarSign,
   Home,
   LogOut,
@@ -51,6 +53,7 @@ function AdminSidebar({ open = false }) {
         icon: <Settings className="icon" />,
         href: ROUTE_HEROES_ROLE,
       },
+      { title: "Heroes", icon: <Award className="icon" />, href: ROUTE_HEROES },
       {
         title: "Logout",
         icon: <LogOut className="icon" />,
