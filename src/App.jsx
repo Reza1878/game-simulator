@@ -1,5 +1,5 @@
 import { GuestLayout } from "@/components";
-import { Home } from "@/pages";
+import { Home, Pricing } from "@/pages";
 import { useSelector } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -23,6 +23,14 @@ const App = () => {
                 element={
                   <GuestLayout>
                     <Home />
+                  </GuestLayout>
+                }
+              />
+              <Route
+                path="/pricing"
+                element={
+                  <GuestLayout>
+                    <Pricing />
                   </GuestLayout>
                 }
               />

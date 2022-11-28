@@ -1,6 +1,7 @@
 import AuthModalContext from "@/context/AuthModalContext";
 import styles from "@/style";
 import React, { useState } from "react";
+import { Footer } from "..";
 import { AuthModal } from "../common";
 import Navbar from "../Navbar";
 
@@ -25,6 +26,9 @@ function GuestLayout({ children }) {
         </div>
 
         {children}
+        <div className={`${styles.paddingX} ${styles.flexCenter}`}>
+          <Footer />
+        </div>
       </div>
       <AuthModal open={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </AuthModalContext.Provider>

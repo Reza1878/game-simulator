@@ -11,7 +11,7 @@ import {
   ROUTE_PRICING_PAGE,
   ROUTE_TEAM_PAGE,
 } from "./config/routes";
-import { Home } from "./pages";
+import { Home, Pricing } from "./pages";
 import {
   BanAmountCreatePage,
   BanAmountListPage,
@@ -98,6 +98,7 @@ function ProtectedRoutes() {
     <GuestLayout>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/pricing" element={<Pricing />} />
         <Route path="/cancel-payment" element={<CancelPayment />} />
         <Route path="/payment-success" element={<SuccessPayment />} />
       </Routes>

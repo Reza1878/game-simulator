@@ -1,7 +1,7 @@
 import AuthModalContext from "@/context/AuthModalContext";
 import { useContext, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { close, logo, menu } from "../assets";
 import { navLinks } from "../constants";
 import AuthNavbarItem from "./AuthNavbarItem";
@@ -74,7 +74,7 @@ const Navbar = () => {
               setActive(nav.title);
             }}
           >
-            <a href={`/#${nav.id}`}>{nav.title}</a>
+            <Link to={nav.href}>{nav.title}</Link>
           </li>
         ))}
         <AuthNavbarItem />

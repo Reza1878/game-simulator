@@ -4,9 +4,7 @@ import {
   CardDeal,
   Clients,
   CTA,
-  Footer,
   Hero,
-  Pricings,
   Stats,
   Testimonials,
 } from "@/components";
@@ -29,10 +27,9 @@ function Home() {
           <Billing />
           <CardDeal />
           <Testimonials />
-          <Pricings />
+
           <Clients />
           <CTA />
-          <Footer />
         </div>
       </div>
     </>
