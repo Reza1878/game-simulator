@@ -6,12 +6,14 @@ import {
   ROUTE_LOGOUT,
   ROUTE_PRICING_PAGE,
   ROUTE_TEAM_PAGE,
+  ROUTE_USER_TIER,
 } from "@/config/routes";
 import React, { useMemo } from "react";
 import {
   Award,
   DollarSign,
   Home,
+  Layers,
   LogOut,
   Settings,
   Users,
@@ -54,6 +56,11 @@ function AdminSidebar({ open = false }) {
         href: ROUTE_HEROES_ROLE,
       },
       { title: "Heroes", icon: <Award className="icon" />, href: ROUTE_HEROES },
+      {
+        title: "User Tier",
+        icon: <Layers className="icon" />,
+        href: ROUTE_USER_TIER,
+      },
       {
         title: "Logout",
         icon: <LogOut className="icon" />,

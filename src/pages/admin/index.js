@@ -20,6 +20,12 @@ import {
   HeroesUpdatePage,
 } from "./heroes";
 
+import {
+  UserTierCreatePage,
+  UserTierListPage,
+  UserTierUpdatePage,
+} from "./user-tier";
+
 export {
   Dashboard,
   PricingCreatePage,
@@ -35,4 +41,7 @@ export {
   HeroesListPage,
   HeroesDetailPage,
   HeroesUpdatePage,
+  UserTierCreatePage,
+  UserTierListPage,
+  UserTierUpdatePage,
 };
