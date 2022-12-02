@@ -26,6 +26,8 @@ import {
   UserTierUpdatePage,
 } from "./user-tier";
 
+import { UserListPage } from "./user";
+
 export {
   Dashboard,
   PricingCreatePage,
@@ -44,4 +46,5 @@ export {
   UserTierCreatePage,
   UserTierListPage,
   UserTierUpdatePage,
+  UserListPage,
 };

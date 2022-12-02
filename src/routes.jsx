@@ -10,6 +10,7 @@ import {
   ROUTE_LOGOUT,
   ROUTE_PRICING_PAGE,
   ROUTE_TEAM_PAGE,
+  ROUTE_USER,
   ROUTE_USER_TIER,
 } from "./config/routes";
 import { Home, Pricing } from "./pages";
@@ -28,6 +29,7 @@ import {
   TeamCreatePage,
   TeamListPage,
   TeamUpdatePage,
+  UserListPage,
   UserTierCreatePage,
   UserTierListPage,
   UserTierUpdatePage,
@@ -92,6 +94,7 @@ function ProtectedRoutes() {
             path={`${ROUTE_HEROES}/:id/edit`}
             element={<HeroesUpdatePage />}
           />
+          <Route path={`${ROUTE_HEROES}/:id`} element={<HeroesDetailPage />} />
           <Route path={ROUTE_USER_TIER} element={<UserTierListPage />} />
           <Route
             path={`${ROUTE_USER_TIER}/create`}
@@ -101,6 +104,7 @@ function ProtectedRoutes() {
             path={`${ROUTE_USER_TIER}/:id/edit`}
             element={<UserTierUpdatePage />}
           />
+          <Route path={`${ROUTE_USER}`} element={<UserListPage />} />
           <Route path={ROUTE_LOGOUT} element={<Logout />} />
         </Routes>
       </AdminLayout>

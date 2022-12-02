@@ -31,6 +31,15 @@ function PricingListPage() {
       cell: (info) => info.getValue(),
       header: () => <span>Description</span>,
     }),
+    columnHelper.accessor("interval", {
+      cell: (info) => info.getValue(),
+      header: () => <span>Interval</span>,
+    }),
+    columnHelper.accessor("user_tier", {
+      cell: (info) => info.getValue()?.name,
+      header: () => <span>User Tier</span>,
+      enableColumnFilter: false,
+    }),
     columnHelper.display({
       id: "action",
       cell: (props) => {

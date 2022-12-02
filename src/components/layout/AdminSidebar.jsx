@@ -6,6 +6,7 @@ import {
   ROUTE_LOGOUT,
   ROUTE_PRICING_PAGE,
   ROUTE_TEAM_PAGE,
+  ROUTE_USER,
   ROUTE_USER_TIER,
 } from "@/config/routes";
 import React, { useMemo } from "react";
@@ -16,6 +17,7 @@ import {
   Layers,
   LogOut,
   Settings,
+  User,
   Users,
   XCircle,
 } from "react-feather";
@@ -61,6 +63,7 @@ function AdminSidebar({ open = false }) {
         icon: <Layers className="icon" />,
         href: ROUTE_USER_TIER,
       },
+      { title: "Users", icon: <User className="icon" />, href: ROUTE_USER },
       {
         title: "Logout",
         icon: <LogOut className="icon" />,
@@ -71,9 +74,9 @@ function AdminSidebar({ open = false }) {
   return (
     <aside
       className={clsx(
-        "bg-white h-full lg:w-72 visible fixed z-10 overflow-hidden transition-all duration-300 overflow-y-auto",
+        "bg-white h-full w-72 visible fixed z-10 overflow-hidden transition-all duration-300 overflow-y-auto lg:translate-x-0",
         [open && "w-72"],
-        [!open && "w-0"]
+        [!open && "-translate-x-80"]
       )}
     >
       <div className="flex justify-center items-center py-10 border-b border-b-gray-100">

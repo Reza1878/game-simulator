@@ -5,4 +5,5 @@ export const ROUTE_TEAM_PAGE = "/admin/teams";
 export const ROUTE_HEROES_ROLE = "/admin/heroes-roles";
 export const ROUTE_HEROES = "/admin/heroes";
 export const ROUTE_USER_TIER = "/admin/user-tiers";
+export const ROUTE_USER = "/admin/users";
 export const ROUTE_LOGOUT = "/logout";

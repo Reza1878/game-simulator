@@ -12,7 +12,7 @@ function NavItem({ href, children = [], icon, title, permission = [] }) {
   if (!children.length) {
     return (
       <NavLink className={clsx("nav-item", "w-full")} to={href}>
-        <div className="flex w-full overflow-hidden py-4 px-6 nav-item">
+        <div className="flex w-full overflow-hidden py-3 px-6 nav-item">
           <span
             className={clsx(
               "absolute bg-primary inset-y-0 w-1 left-0 rounded-r-lg nav-item-band"
