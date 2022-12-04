@@ -4,6 +4,7 @@ import { ROUTE_PRICING_PAGE } from "@/config/routes";
 import useToast from "@/hooks/useToast";
 import { useWrap } from "@/hooks/useWrap";
 import PricingService from "@/service/pricing-service";
+import UserTierService from "@/service/user-tier-service";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -18,6 +19,10 @@ function PricingUpdatePage() {
   const [item, setItem] = useState(null);
   const { showInvalidRequestToast, showToast } = useToast();
   const navigate = useNavigate();
+
+  const wrappedFetchUserTier = useWrap((...params) =>
+    UserTierService.gets(...params)
+  );
 
   useEffect(() => {
     let active = true;
@@ -46,6 +51,7 @@ function PricingUpdatePage() {
       const response = await wrappedUpdateItem(id, val);
       setIsSubmitting(false);
       showToast(response.message);
+
       navigate(ROUTE_PRICING_PAGE);
     } catch (error) {
       showInvalidRequestToast(error);
@@ -66,6 +72,7 @@ function PricingUpdatePage() {
         key={item?.id}
         onSubmit={onSubmit}
         isSubmitting={isSubmitting}
+        fetchUserTiers={wrappedFetchUserTier}
       />
     </BasePage>
   );
