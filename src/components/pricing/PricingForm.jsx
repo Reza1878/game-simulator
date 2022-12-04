@@ -15,6 +15,10 @@ const schema = yup.object({
     .typeError("Must be a number")
     .required("This field is required"),
   features: yup.string().required("This field is required"),
+  user_tier_id: yup
+    .number()
+    .typeError("This field is required")
+    .required("This field is required"),
 });
 
 function PricingForm({
