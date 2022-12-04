@@ -1,5 +1,6 @@
 import AuthModalContext from "@/context/AuthModalContext";
 import useToast from "@/hooks/useToast";
+import { useWrap } from "@/hooks/useWrap";
 import PricingService from "@/service/pricing-service";
 import SubscriptionService from "@/service/subscription-service";
 import styles from "@/style";
@@ -29,6 +30,10 @@ function Pricings() {
     };
   }, []);
 
+  const wrappedCreateItemm = useWrap((...params) =>
+    SubscriptionService.create(...params)
+  );
+
   const handleClick = async (id) => {
     if (!accessToken) {
       setAuthForm("LOGIN");
@@ -36,7 +41,7 @@ function Pricings() {
       return;
     }
     try {
-      const response = await SubscriptionService.create({ pricing_id: id });
+      const response = await wrappedCreateItemm({ pricing_id: id });
       const { data } = response;
       window.location = data.url;
     } catch (error) {

@@ -86,13 +86,23 @@ function LoginForm() {
           Sign In
         </Button>
       </form>
-      <Button
-        className="px-0"
-        variant="link"
-        onClick={() => setAuthForm("REGISTER")}
-      >
-        Not have account? Register
-      </Button>
+      <div className="flex justify-between">
+        <Button
+          className="px-0"
+          variant="link"
+          onClick={() => setAuthForm("REGISTER")}
+        >
+          Not have account? Register
+        </Button>
+
+        <Button
+          className="px-0"
+          variant="link"
+          onClick={() => setAuthForm("FORGOT PASSWORD")}
+        >
+          Forgot password?
+        </Button>
+      </div>
     </>
   );
 }

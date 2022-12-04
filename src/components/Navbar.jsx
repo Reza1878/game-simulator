@@ -102,7 +102,7 @@ const Navbar = () => {
                 }`}
                 onClick={() => setActive(nav.title)}
               >
-                <a href={`#${nav.id}`}>{nav.title}</a>
+                <Link to={nav.href}>{nav.title}</Link>
               </li>
             ))}
             <li className="text-dimWhite hover:text-white font-poppins font-normal text-[16px] mb-4">

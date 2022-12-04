@@ -14,4 +14,22 @@ export default class AuthService {
     });
     return response.data;
   }
+
+  static async forgotPassword({ email }) {
+    const response = await axios.post("/api/auth/forgot-password", { email });
+    return response.data;
+  }
+
+  static async verifyForgotPasswordToken(token) {
+    const response = await axios.post(
+      "/api/auth/validate-forgot-password-token",
+      { token }
+    );
+    return response.data;
+  }
+
+  static async resetPassword(payload) {
+    const response = await axios.post("/api/auth/reset-password", payload);
+    return response.data;
+  }
 }
