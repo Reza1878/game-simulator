@@ -10,13 +10,14 @@ function PricingItem({
   loading = false,
   id,
   features = [],
+  interval = "month",
 }) {
   return (
     <div className="flex flex-col p-6 max-w-lg text-center text-white shadow border-gray-600 bg-gray-800 rounded-md mx-auto lg:mx-0 relative lg:min-h-[350px]">
       <Text variant="h1">{name}</Text>
       <Text>{description}</Text>
       <Text variant="h2" className="my-4">
-        ${price} / month
+        ${price} / {interval}
       </Text>
       <div className="mx-auto lg:mb-6">
         {features.map((item, index) => (

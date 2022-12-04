@@ -71,6 +71,7 @@ function Pricings() {
               onClick={handleClick}
               id={item.id}
               features={(item?.features || "").split(",")}
+              interval={item.interval}
             />
           ))}
         </div>
