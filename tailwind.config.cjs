@@ -7,6 +7,7 @@ module.exports = {
       colors: {
         primary: "#00040f",
         secondary: "#00f6ff",
+        maroon: "#A22C4C",
         dimWhite: "rgba(255, 255, 255, 0.7)",
         dimBlue: "rgba(9, 151, 124, 0.1)",
       },
@@ -23,5 +24,9 @@ module.exports = {
       xl: "1700px",
     },
   },
-  plugins: [],
+  plugins: [
+    require("@tailwindcss/forms")({
+      strategy: "class",
+    }),
+  ],
 };

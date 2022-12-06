@@ -16,11 +16,13 @@ function Button({
     filled: {
       primary: "bg-primary opacity-90 text-white hover:opacity-100",
       danger: "bg-red-500 text-white hover:bg-red-600",
+      maroon: "bg-maroon opacity-90 text-white hover:opacity-100",
     },
     outlined: {
       primary:
         "border border-primary bg-white hover:bg-primary-100 text-primary",
       danger: "border border-red-500 bg-white hover:bg-red-100 text-red-500",
+      maroon: "border border-maroon bg-inherit text-white",
     },
     link: {
       primary: "text-primary hover:decoration-primary hover:underline",
@@ -51,7 +53,7 @@ Button.propTypes = {
   children: t.node,
   className: t.string,
   variant: t.oneOf(["filled", "outlined", "link"]).isRequired,
-  color: t.oneOf(["primary", "danger"]).isRequired,
+  color: t.oneOf(["primary", "danger", "maroon"]).isRequired,
   type: t.string,
   onClick: t.func,
   isLoading: t.bool,

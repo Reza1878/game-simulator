@@ -42,6 +42,7 @@ import {
 import { ResetPassword } from "./pages/auth";
 import Logout from "./pages/auth/Logout";
 import { CancelPayment, SuccessPayment } from "./pages/payment";
+import { Simulator, SimulatorPortal } from "./pages/simulator";
 
 function ProtectedRoutes() {
   const role = useSelector((state) => state.user.role);
@@ -119,6 +120,8 @@ function ProtectedRoutes() {
         <Route path="/cancel-payment" element={<CancelPayment />} />
         <Route path="/payment-success" element={<SuccessPayment />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/simulator" element={<SimulatorPortal />} />
+        <Route path="/simulator/start" element={<Simulator />} />
       </Routes>
     </GuestLayout>
   );

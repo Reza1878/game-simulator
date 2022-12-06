@@ -19,7 +19,7 @@ const Navbar = () => {
       setShowAuthModal(true);
       return;
     }
-    alert("Coming soon");
+    navigate("/simulator");
   };
   const onMapDrawingClick = () => {
     if (!accessToken) {

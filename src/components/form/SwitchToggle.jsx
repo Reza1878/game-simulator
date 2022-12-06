@@ -1,6 +1,6 @@
-import { Switch } from '@headlessui/react';
-import clsx from 'clsx';
-import React from 'react';
+import { Switch } from "@headlessui/react";
+import clsx from "clsx";
+import React from "react";
 
 function SwitchToggle({
   checked = false,
@@ -19,15 +19,15 @@ function SwitchToggle({
             checked={checked}
             onChange={onChange}
             className={clsx(
-              'relative inline-flex h-6 w-11 items-center rounded-full outline-none',
-              [checked && 'bg-primary-500'],
-              [!checked && 'bg-gray-200']
+              "relative inline-flex h-6 w-11 items-center rounded-full outline-none",
+              [checked && "bg-primary border"],
+              [!checked && "bg-gray-200"]
             )}
           >
             <span
               className={clsx(
-                'transition inline-block h-4 w-4 rounded-full bg-white translate-x-1',
-                [checked && 'translate-x-6']
+                "transition-all inline-block h-4 w-4 rounded-full bg-white translate-x-1",
+                [checked && "translate-x-6"]
               )}
             />
           </Switch>
