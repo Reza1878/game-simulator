@@ -12,7 +12,18 @@ function SimulatorBanSlot({ slot = 0, heroes = null }) {
       </div>
     );
   }
-  return <div>SimulatorBanSlot</div>;
+  return (
+    <div className="relative">
+      <img
+        className="border-2 border-blue-900 w-10 h-10"
+        src={`${import.meta.env.VITE_BASE_URL}/${heroes.icon_url}`}
+      />
+
+      <div className="absolute -bottom-2 w-full flex justify-center">
+        <Slash className="text-red-500" width={18} height={18} />
+      </div>
+    </div>
+  );
 }
 
 export default SimulatorBanSlot;

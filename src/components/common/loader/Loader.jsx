@@ -1,13 +1,21 @@
-import React from 'react';
-import style from './Loader.module.css';
+import React from "react";
+import style from "./Loader.module.css";
 
-function Loader() {
+function Loader({ color = "black" }) {
   return (
-    <div className={style['lds-ring']}>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
+    <div className={style["lds-ring"]}>
+      <div
+        style={{ borderColor: `${color} transparent transparent transparent` }}
+      ></div>
+      <div
+        style={{ borderColor: `${color} transparent transparent transparent` }}
+      ></div>
+      <div
+        style={{ borderColor: `${color} transparent transparent transparent` }}
+      ></div>
+      <div
+        style={{ borderColor: `${color} transparent transparent transparent` }}
+      ></div>
     </div>
   );
 }

@@ -45,19 +45,19 @@ const Navbar = () => {
         <img src={logo} alt="feggot" className="w-[124px] h-[32px] mr-10" />
         <button
           onClick={onSimulatorClick}
-          className="text-dimWhite hover:text-white font-poppins font-normal text-[16px] hidden lg:block mr-10"
+          className="text-dimWhite hover:text-white font-poppins font-normal text-[16px] hidden md:block mr-10"
         >
           Simulator
         </button>
         <button
           onClick={onMapDrawingClick}
-          className="text-dimWhite hover:text-white font-poppins font-normal text-[16px] hidden lg:block mr-10"
+          className="text-dimWhite hover:text-white font-poppins font-normal text-[16px] hidden md:block mr-10"
         >
           Map Drawing
         </button>
         <button
           onClick={onToolPageClick}
-          className="text-dimWhite hover:text-white font-poppins font-normal text-[16px] hidden lg:block"
+          className="text-dimWhite hover:text-white font-poppins font-normal text-[16px] hidden md:block"
         >
           Tool Page
         </button>

@@ -1,5 +1,6 @@
 import { Button } from "@/components/common";
 import { SwitchToggle } from "@/components/form";
+import { useWrap } from "@/hooks/useWrap";
 import BanAmountService from "@/service/ban-amount-service";
 import TeamService from "@/service/team-service";
 import React, { useEffect, useState } from "react";
@@ -13,14 +14,15 @@ function SimulatorPortal() {
   ]);
   const [firstPick, setFirstPick] = useState("LEFT");
   const [banOptions, setBanOptions] = useState([]);
-  const [skipBan, setSkipBan] = useState(false);
   const [banCount, setBanCount] = useState(null);
   const accessToken = useSelector((state) => state.auth.accessToken);
   const navigate = useNavigate();
   const [gameMode, setGameMode] = useState(1);
+  const wrappedFetchBanAmount = useWrap(BanAmountService.gets);
+  const wrappedFetechTeam = useWrap(TeamService.gets);
 
   useEffect(() => {
-    setBanCount(banOptions[0]?.ban_count ?? 0);
+    setBanCount(banOptions[0]?.id ?? 0);
   }, [banOptions]);
 
   useEffect(() => {
@@ -33,7 +35,7 @@ function SimulatorPortal() {
     let active = true;
 
     const fetchData = async () => {
-      const response = await BanAmountService.gets();
+      const response = await wrappedFetchBanAmount();
       if (!active) return;
       setBanOptions(response.data);
     };
@@ -49,7 +51,7 @@ function SimulatorPortal() {
     let active = true;
 
     const fetchData = async () => {
-      const response = await TeamService.gets();
+      const response = await wrappedFetechTeam();
       if (!active) return;
       if (response.data.length) {
         setTeams(response.data);
@@ -65,11 +67,7 @@ function SimulatorPortal() {
   }, []);
 
   const onClick = () => {
-    navigate(
-      `/simulator/start?ban_count=${
-        skipBan ? 0 : banCount
-      }&first_pick=${firstPick}`
-    );
+    navigate(`/simulator/start?ban_count=${banCount}&first_pick=${firstPick}`);
   };
 
   return (
@@ -106,7 +104,7 @@ function SimulatorPortal() {
                   onChange={() => setGameMode(1)}
                 />
                 <label htmlFor="game-mode-1" className="text-white">
-                  Solo / Duo / Flex
+                  Tournament
                 </label>
               </div>
               <div className="flex gap-2 items-center">
@@ -120,7 +118,7 @@ function SimulatorPortal() {
                   onChange={() => setGameMode(2)}
                 />
                 <label htmlFor="game-mode-2" className="text-white">
-                  Clash / Tournamen / Scrim
+                  Scrim
                 </label>
               </div>
             </div>
@@ -154,29 +152,21 @@ function SimulatorPortal() {
             ))}
           </div>
         </div>
-        <div className="flex items-start gap-4 mb-3">
+        <div className="flex items-start gap-4">
           <p className="text-lg font-medium text-white min-w-[128px]">
-            Skip Bans
+            Ban Amount
           </p>
-          <SwitchToggle checked={skipBan} onChange={(val) => setSkipBan(val)} />
+          <select
+            className="py-1 px-2 outline-none"
+            onChange={(e) => setBanCount(+e.target.value)}
+          >
+            {banOptions.map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.ban_count} Bans
+              </option>
+            ))}
+          </select>
         </div>
-        {!skipBan && (
-          <div className="flex items-start gap-4">
-            <p className="text-lg font-medium text-white min-w-[128px]">
-              Ban Amount
-            </p>
-            <select
-              className="py-1 px-2 outline-none"
-              onChange={(e) => setBanCount(+e.target.value)}
-            >
-              {banOptions.map((item) => (
-                <option key={item.id} value={item.ban_count}>
-                  {item.ban_count} Bans
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
         <Button
           onClick={onClick}
           color="maroon"

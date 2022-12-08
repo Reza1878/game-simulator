@@ -3,24 +3,37 @@ import SimulatorPickSlot from "@/components/simulator/SimulatorPickSlot";
 import HeroesRoleService from "@/service/heroes-roles-service";
 import HeroService from "@/service/heroes-service";
 import TeamService from "@/service/team-service";
-import HeroesIcon from "@/components/heroes/HeroesIcon";
 import React, { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import clsx from "clsx";
+import { Loader } from "@/components/common";
+import BanAmountService from "@/service/ban-amount-service";
+import { useWrap } from "@/hooks/useWrap";
+import HeroesButton from "@/components/simulator/HeroesButton";
 
 function Simulator() {
   const [teams, setTeams] = useState([
     { id: 1, name: "Blue Team", side: "LEFT" },
     { id: 2, name: "Read Team", side: "RIGHT" },
   ]);
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
   const [roles, setRoles] = useState([]);
   const [heroes, setHeroes] = useState([]);
   const [searchParams] = useSearchParams();
   const banCount = +searchParams.get("ban_count") || 0;
+  const firstPick = !["LEFT", "RIGHT"].includes(searchParams.get("first_pick"))
+    ? "LEFT"
+    : searchParams.get("first_pick");
   const [currentOrder, setCurrentOrder] = useState(0);
-  const [currentSide, setCurrentSide] = useState("LEFT");
   const [roleFilter, setRoleFilter] = useState(0);
   const [search, setSearch] = useState("");
+  const [selectedBanCount, setSelectedBanCount] = useState(null);
+  const wrappedFetchBanCount = useWrap((id) => BanAmountService.get(id));
+  const [heroesBanList, setHeroesBanList] = useState([]);
+  const [currentBanOrder, setCurrentBanOrder] = useState(0);
+  const [currentHeroes, setCurrentHeroes] = useState(null);
+  const [heroesPickList, setHeroesPickList] = useState([]);
 
   useEffect(() => {
     let active = true;
@@ -73,6 +86,21 @@ function Simulator() {
     };
   }, []);
 
+  useEffect(() => {
+    let active = true;
+
+    (async () => {
+      const response = await wrappedFetchBanCount(banCount);
+      if (!active) return;
+      setSelectedBanCount(response.data);
+      setLoading(false);
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const heroesList = useMemo(() => {
     if (!roleFilter && !search) return heroes;
 
@@ -95,12 +123,82 @@ function Simulator() {
     if (!curr) return "Red Team";
     return curr.name;
   }, [teams]);
+
+  const banPhase = useMemo(() => {
+    if (!selectedBanCount) return false;
+    return currentBanOrder < selectedBanCount?.ban_count * 2;
+  }, [currentBanOrder, selectedBanCount]);
+
+  const pickPhase = useMemo(() => {
+    return !banPhase && heroesPickList.length !== 10;
+  }, [banPhase, heroesPickList]);
+
+  const handleBanClick = () => {
+    const arr = [...heroesBanList];
+    arr.push({ ...currentHeroes, order: currentBanOrder });
+    setHeroesBanList(arr);
+    setCurrentBanOrder(currentBanOrder + 1);
+    setCurrentHeroes(null);
+  };
+
+  const handlePickClick = () => {
+    const arr = [...heroesPickList];
+    arr.push({ ...currentHeroes, order: currentOrder });
+    setHeroesPickList(arr);
+    setCurrentOrder(currentOrder + 1);
+    setCurrentHeroes(null);
+  };
+
+  const handleResetClick = () => {
+    setCurrentHeroes(null);
+    setCurrentOrder(0);
+    setCurrentBanOrder(0);
+    setHeroesBanList([]);
+    setHeroesPickList([]);
+  };
+
+  const arrangeBanAndPickOrder = (side, order) => {
+    if (side === firstPick) return +order % 2 === 0;
+    return +order % 2 !== 0;
+  };
+
+  if (loading) {
+    return (
+      <div className="flex min-h-[50vh] justify-center items-center">
+        <Loader color="white" />
+      </div>
+    );
+  }
+
+  if (!loading && !selectedBanCount) {
+    return (
+      <div className="flex min-h-[50vh] px-4 flex-col items-center">
+        <div className="w-full">
+          <div className="bg-red-500 rounded-md py-2 w-full text-white text-center">
+            Data not found
+          </div>
+        </div>
+        <button className="text-white mt-3 w-48" onClick={() => navigate("/")}>
+          Back to home
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-[50vh]">
-      <div className="flex p-4 gap-2">
-        <p className="text-white text-opacity-70 font-bold">Game Mode</p>
-        <p className="text-white font-bold text-opacity-70">|</p>
-        <p className="text-white font-bold">Simulator</p>
+      <div className="flex justify-between items-center  p-4">
+        <div className="flex gap-2">
+          <p className="text-white text-opacity-70 font-bold">Game Mode</p>
+          <p className="text-white font-bold text-opacity-70">|</p>
+          <p className="text-white font-bold">Simulator</p>
+        </div>
+        <button
+          onClick={handleResetClick}
+          className="bg-gray-500 text-white py-2 rounded-md w-24"
+        >
+          Reset
+        </button>
       </div>
       <div className="flex w-full gap-4">
         <div className="w-96">
@@ -109,13 +207,24 @@ function Simulator() {
             <span className="block w-10 h-6 bg-blue-500" />
           </div>
           <div className="flex flex-col gap-1">
-            {[0, 1, 2, 3, 4].map((slot) => (
-              <SimulatorPickSlot
-                key={slot}
-                active={slot === currentOrder && currentSide === "LEFT"}
-                slot={slot}
-              />
-            ))}
+            {[...Array(5 * 2).keys()]
+              .filter((item) => arrangeBanAndPickOrder("LEFT", item))
+              .map((slot) => (
+                <SimulatorPickSlot
+                  key={slot}
+                  slot={slot}
+                  active={banPhase ? false : +slot === currentOrder}
+                  heroes={
+                    banPhase
+                      ? null
+                      : currentOrder == slot
+                      ? currentHeroes
+                      : heroesPickList.filter(
+                          (hero) => hero.order == slot
+                        )[0] || null
+                  }
+                />
+              ))}
           </div>
         </div>
         <div className="flex-1 border p-4 max-h-[530px] overflow-x-scroll no-scrollbar">
@@ -152,16 +261,15 @@ function Simulator() {
           </div>
           <div className="grid grid-cols-8 gap-2 mt-3">
             {heroesList.map((hero) => (
-              <div
-                className="flex flex-col items-center cursor-pointer"
+              <HeroesButton
                 key={hero.id}
-              >
-                <HeroesIcon
-                  url={hero.icon_url}
-                  className="border mb-1 w-14 h-14"
-                />
-                <p className="text-white font-bold text-xs">{hero.name}</p>
-              </div>
+                hero={hero}
+                disabled={
+                  heroesBanList.filter((item) => item.id === hero.id)[0] ||
+                  heroesPickList.filter((item) => item.id === hero.id)[0]
+                }
+                onClick={() => setCurrentHeroes(hero)}
+              />
             ))}
           </div>
         </div>
@@ -171,30 +279,77 @@ function Simulator() {
             <p className="font-bold text-white">{rightTeam}</p>
           </div>
           <div className="flex flex-col gap-1">
-            {[0, 1, 2, 3, 4].map((slot) => (
-              <SimulatorPickSlot
-                active={slot === currentOrder && currentSide === "RIGHT"}
-                slot={slot}
-                key={slot}
-              />
-            ))}
+            {[...Array(5 * 2).keys()]
+              .filter((item) => arrangeBanAndPickOrder("RIGHT", item))
+              .map((slot) => (
+                <SimulatorPickSlot
+                  slot={slot}
+                  key={slot}
+                  active={banPhase ? false : +slot === currentOrder}
+                  heroes={
+                    banPhase
+                      ? null
+                      : currentOrder == slot
+                      ? currentHeroes
+                      : heroesPickList.filter(
+                          (hero) => hero.order == slot
+                        )[0] || null
+                  }
+                />
+              ))}
           </div>
         </div>
       </div>
 
       <div className="flex w-full px-4 justify-between mt-3">
         <div className="flex gap-2 mt-3 px-4">
-          {[...Array(banCount).keys()].map((item) => (
-            <SimulatorBanSlot key={item} />
-          ))}
+          {[...Array(selectedBanCount.ban_count * 2).keys()]
+            .filter((item) => arrangeBanAndPickOrder("LEFT", item))
+            .map((item) => (
+              <SimulatorBanSlot
+                key={item}
+                slot={item}
+                heroes={
+                  currentBanOrder == item
+                    ? currentHeroes
+                    : heroesBanList.filter((hero) => hero.order == item)[0] ||
+                      null
+                }
+              />
+            ))}
         </div>
-        <button className="bg-red-500 text-white py-2 px-6 rounded-md w-48">
-          Ban
-        </button>
+        {banPhase && (
+          <button
+            onClick={handleBanClick}
+            className="bg-red-500 text-white py-2 px-6 rounded-md w-48"
+          >
+            Ban
+          </button>
+        )}
+        {pickPhase && (
+          <button
+            onClick={handlePickClick}
+            className="bg-blue-500 text-white py-2 px-6 rounded-md w-48"
+          >
+            Pick
+          </button>
+        )}
         <div className="flex gap-2 mt-3 px-4">
-          {[...Array(banCount).keys()].map((item) => (
-            <SimulatorBanSlot key={item} />
-          ))}
+          {[...Array(selectedBanCount.ban_count * 2).keys()]
+            .filter((item) => arrangeBanAndPickOrder("RIGHT", item))
+            .reverse()
+            .map((item) => (
+              <SimulatorBanSlot
+                key={item}
+                slot={item}
+                heroes={
+                  currentBanOrder == item
+                    ? currentHeroes
+                    : heroesBanList.filter((hero) => hero.order == item)[0] ||
+                      null
+                }
+              />
+            ))}
         </div>
       </div>
     </div>
