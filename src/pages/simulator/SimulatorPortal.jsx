@@ -3,11 +3,31 @@ import { SwitchToggle } from "@/components/form";
 import BanAmountService from "@/service/ban-amount-service";
 import TeamService from "@/service/team-service";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 function SimulatorPortal() {
-  const [teams, setTeams] = useState([]);
+  const [teams, setTeams] = useState([
+    { id: 1, name: "Blue Team", side: "LEFT" },
+    { id: 2, name: "Read Team", side: "RIGHT" },
+  ]);
+  const [firstPick, setFirstPick] = useState("LEFT");
   const [banOptions, setBanOptions] = useState([]);
   const [skipBan, setSkipBan] = useState(false);
+  const [banCount, setBanCount] = useState(null);
+  const accessToken = useSelector((state) => state.auth.accessToken);
+  const navigate = useNavigate();
+  const [gameMode, setGameMode] = useState(1);
+
+  useEffect(() => {
+    setBanCount(banOptions[0]?.ban_count ?? 0);
+  }, [banOptions]);
+
+  useEffect(() => {
+    if (!accessToken) {
+      navigate("/");
+    }
+  }, [accessToken]);
 
   useEffect(() => {
     let active = true;
@@ -31,7 +51,10 @@ function SimulatorPortal() {
     const fetchData = async () => {
       const response = await TeamService.gets();
       if (!active) return;
-      setTeams(response.data);
+      if (response.data.length) {
+        setTeams(response.data);
+        return;
+      }
     };
 
     fetchData();
@@ -40,6 +63,15 @@ function SimulatorPortal() {
       active = false;
     };
   }, []);
+
+  const onClick = () => {
+    navigate(
+      `/simulator/start?ban_count=${
+        skipBan ? 0 : banCount
+      }&first_pick=${firstPick}`
+    );
+  };
+
   return (
     <div className="min-h-[50vh] px-6 lg:px-24 w-full">
       <div className="max-w-lg mx-auto w-full border p-6">
@@ -69,7 +101,9 @@ function SimulatorPortal() {
                   name="game-mode"
                   id="game-mode-1"
                   className="w-5 h-5 bg-primary text-primary form-radio checked:border checked:border-white outline-none"
-                  defaultChecked={true}
+                  checked={gameMode === 1}
+                  value={1}
+                  onChange={() => setGameMode(1)}
                 />
                 <label htmlFor="game-mode-1" className="text-white">
                   Solo / Duo / Flex
@@ -81,6 +115,9 @@ function SimulatorPortal() {
                   name="game-mode"
                   id="game-mode-2"
                   className="w-5 h-5 bg-primary text-primary form-radio checked:border checked:border-white outline-none"
+                  checked={gameMode === 2}
+                  value={2}
+                  onChange={() => setGameMode(2)}
                 />
                 <label htmlFor="game-mode-2" className="text-white">
                   Clash / Tournamen / Scrim
@@ -90,7 +127,9 @@ function SimulatorPortal() {
           </div>
         </div>
         <div className="flex items-start gap-4 mb-3">
-          <p className="text-lg font-medium min-w-[128px]">First Pick</p>
+          <p className="text-lg text-white font-medium min-w-[128px]">
+            First Pick
+          </p>
           <div>
             {teams.map((team) => (
               <React.Fragment key={team.id}>
@@ -100,7 +139,9 @@ function SimulatorPortal() {
                     name="team-first-pick"
                     id={`team-mode-${team.id}`}
                     className="w-5 h-5 bg-primary text-primary form-radio checked:border checked:border-white outline-none"
-                    value={team.id}
+                    value={team.side}
+                    checked={team.side === firstPick}
+                    onChange={() => setFirstPick(team.side)}
                   />
                   <label
                     htmlFor={`team-mode-${team.id}`}
@@ -124,14 +165,24 @@ function SimulatorPortal() {
             <p className="text-lg font-medium text-white min-w-[128px]">
               Ban Amount
             </p>
-            <select className="py-1 px-2 outline-none">
+            <select
+              className="py-1 px-2 outline-none"
+              onChange={(e) => setBanCount(+e.target.value)}
+            >
               {banOptions.map((item) => (
-                <option key={item.id}>{item.ban_count} Bans</option>
+                <option key={item.id} value={item.ban_count}>
+                  {item.ban_count} Bans
+                </option>
               ))}
             </select>
           </div>
         )}
-        <Button color="maroon" variant="outlined" className="mt-4">
+        <Button
+          onClick={onClick}
+          color="maroon"
+          variant="outlined"
+          className="mt-4"
+        >
           Start Simulator
         </Button>
       </div>
