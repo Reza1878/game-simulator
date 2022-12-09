@@ -3,12 +3,14 @@ import { setAccessToken } from "@/features/auth/authSlice";
 import { setUser } from "@/features/user/userSlice";
 import React, { useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { Text } from "./common";
 
 function AuthNavbarItem({ small = false }) {
   const accessToken = useSelector((state) => state.auth.accessToken);
   const { setShowAuthModal, setAuthForm } = useContext(AuthModalContext);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   if (accessToken) {
     return (
@@ -18,6 +20,7 @@ function AuthNavbarItem({ small = false }) {
           onClick={() => {
             dispatch(setAccessToken(""));
             dispatch(setUser(null));
+            navigate("/");
           }}
         >
           <Text>Logout</Text>
