@@ -6,7 +6,7 @@ function HeroesBanner({ url, className = "" }) {
     <img
       src={`${import.meta.env.VITE_BASE_URL}/${url}`}
       alt="Hero banner"
-      className={clsx("w-96 h-24 object-cover", className)}
+      className={clsx("w-96 h-28 object-cover", className)}
     />
   );
 }

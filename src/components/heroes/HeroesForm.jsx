@@ -1,10 +1,11 @@
 import { purgeInitialFormData } from "@/utils/form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { Button } from "../common";
 import { Autocomplete, FormControl } from "../form";
+import ImageCropper from "../form/ImageCropper";
 
 const schema = yup.object().shape({
   name: yup.string().required(),
@@ -20,12 +21,11 @@ function HeroesForm({
   defaultValue = {},
   fetchHeroesRoleData = () => ({ data: [] }),
 }) {
-  const [banner, setBanner] = useState(null);
-  const [icon, setIcon] = useState(null);
-
   const [initialFormData] = useState(() =>
     purgeInitialFormData(defaultValue, { name: null, heroes_role_id: null })
   );
+  const bannerRef = useRef(null);
+  const iconRef = useRef(null);
   const {
     register,
     formState: { errors },
@@ -47,7 +47,10 @@ function HeroesForm({
     };
   };
 
-  const submitData = (val) => {
+  const submitData = async (val) => {
+    const banner = await bannerRef.current?.getCroppedImage();
+    const icon = await iconRef.current?.getCroppedImage();
+
     const formData = new FormData();
     formData.append("name", val.name);
     formData.append("heroes_role_id", val.heroes_role_id);
@@ -59,38 +62,25 @@ function HeroesForm({
   return (
     <form onSubmit={handleSubmit(submitData)}>
       <FormControl {...getFormAttr("Name", "name", "name")} />
-      <Autocomplete
-        fetchItems={(params) => fetchHeroesRoleData({ name: params })}
-        renderOptions={(opt) => opt?.name}
-        {...getFormAttr("Heroes Role", "heroes_role_id", "heroes_role_id")}
-        onChange={(val) => {
-          setValue("heroes_role_id", val?.id);
-        }}
-        getOptionSelected={(item) =>
-          item?.id === initialFormData?.heroes_role_id
-        }
-      />
-      <FormControl
-        type="file"
-        label="Icon"
-        InputProps={{
-          accept: "image/*",
-          onChange: (e) => {
-            const image = e.target.files;
-            setIcon(image[0] || null);
-          },
-        }}
-      />
-      <FormControl
-        type="file"
+      <div className="mb-3">
+        <Autocomplete
+          fetchItems={(params) => fetchHeroesRoleData({ name: params })}
+          renderOptions={(opt) => opt?.name}
+          {...getFormAttr("Heroes Role", "heroes_role_id", "heroes_role_id")}
+          onChange={(val) => {
+            setValue("heroes_role_id", val?.id);
+          }}
+          getOptionSelected={(item) =>
+            item?.id === initialFormData?.heroes_role_id
+          }
+        />
+      </div>
+      <ImageCropper ref={iconRef} label="Icon" aspect={1 / 1} />
+      <ImageCropper
+        ref={bannerRef}
         label="Banner"
-        InputProps={{
-          accept: "image/*",
-          onChange: (e) => {
-            const image = e.target.files;
-            setBanner(image[0] || null);
-          },
-        }}
+        aspect={16 / 9}
+        cropSize={{ width: 384, height: 112 }}
       />
       <Button type="submit" isLoading={isSubmitting}>
         Submit
