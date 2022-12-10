@@ -20,14 +20,21 @@ function Select({
   helperText,
   className,
   getOptionSelected,
+  multiple = false,
+  displayValue = () => "Please provide displayValue props",
 }) {
   const [value, setValue] = useState(defaultValue);
   const [items, setItems] = useState([]);
   const initialValue = useMemo(() => {
     if (!getOptionSelected) return null;
     if (options) return options.filter((item) => getOptionSelected(item))[0];
-    return items.filter((item) => getOptionSelected(item))[0];
+    if (!multiple) return items.filter((item) => getOptionSelected(item))[0];
+    return items.filter((item) => getOptionSelected(item));
   }, [getOptionSelected, items]);
+
+  useEffect(() => {
+    onChange(value);
+  }, [value]);
 
   useEffect(() => {
     let active = true;
@@ -48,15 +55,28 @@ function Select({
     };
   }, [fetchItems]);
 
+  const renderSingleValue = () => {
+    if (value) {
+      return renderOptions(value);
+    }
+    if (initialValue) {
+      return renderOptions(initialValue);
+    }
+    return "-";
+  };
+  const renderMultipleValue = () => {
+    if (!value) return "-";
+    if (!value.length) return "No options selected";
+    return displayValue(value);
+  };
+
   return (
     <>
       <input id={id} type="hidden" name={name} {...register(name)} />
       <Listbox
         value={value || initialValue || ""}
-        onChange={(val) => {
-          setValue(val);
-          onChange(val);
-        }}
+        onChange={setValue}
+        multiple={multiple}
       >
         <div className={clsx("relative mt-1", className)}>
           <Label error={error}>{label}</Label>
@@ -67,11 +87,8 @@ function Select({
             )}
           >
             <span className={clsx("block truncate", { "text-red-500": error })}>
-              {value
-                ? renderOptions(value)
-                : initialValue
-                ? renderOptions(initialValue)
-                : "-"}
+              {!multiple && renderSingleValue()}
+              {multiple && renderMultipleValue()}
             </span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
               <ChevronDown
@@ -121,11 +138,11 @@ function Select({
                 {(options ?? items).map((opt, index) => (
                   <Listbox.Option
                     key={index}
-                    className={({ active }) =>
+                    className={({ active, selected }) =>
                       clsx(
                         "relative cursor-pointer select-none py-2 px-4",
-                        { "bg-primary text-white": active },
-                        { "text-gray-900": !active }
+                        { "bg-primary text-white": active || selected },
+                        { "text-gray-900": !active && !selected }
                       )
                     }
                     value={opt}

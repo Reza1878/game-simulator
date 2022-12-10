@@ -36,8 +36,12 @@ function HeroesListPage() {
       cell: (info) => info.getValue(),
       header: () => <span>Name</span>,
     }),
-    columnHelper.accessor("heroes_role", {
-      cell: (info) => info.getValue().name,
+    columnHelper.accessor("heroes_roles", {
+      cell: (info) =>
+        info
+          .getValue()
+          .map((item) => item.name)
+          .join(", "),
       header: () => <span>Role</span>,
       enableColumnFilter: false,
     }),

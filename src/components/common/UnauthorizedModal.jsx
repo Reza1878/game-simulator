@@ -2,6 +2,7 @@ import {
   setAccessToken,
   setShowUnauthorizedModal,
 } from "@/features/auth/authSlice";
+import { setUser } from "@/features/user/userSlice";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +17,7 @@ function UnauthorizedModal({ open }) {
   const handleClick = () => {
     dispatch(setShowUnauthorizedModal(false));
     dispatch(setAccessToken(""));
+    dispatch(setUser(null));
     navigate("/");
     localStorage.removeItem("user");
     localStorage.removeItem("accessToken");

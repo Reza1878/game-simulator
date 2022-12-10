@@ -4,7 +4,7 @@ import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { Button } from "../common";
-import { Autocomplete, FormControl } from "../form";
+import { FormControl, Select } from "../form";
 import ImageCropper from "../form/ImageCropper";
 
 const schema = yup.object().shape({
@@ -24,6 +24,7 @@ function HeroesForm({
   const [initialFormData] = useState(() =>
     purgeInitialFormData(defaultValue, { name: null, heroes_role_id: null })
   );
+  const [selectedRoles, setSelectedRoles] = useState([]);
   const bannerRef = useRef(null);
   const iconRef = useRef(null);
   const {
@@ -31,6 +32,7 @@ function HeroesForm({
     formState: { errors },
     handleSubmit,
     setValue,
+    setError,
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: initialFormData,
@@ -48,12 +50,19 @@ function HeroesForm({
   };
 
   const submitData = async (val) => {
+    const validRoles = selectedRoles.filter((item) => Boolean(item));
+    if (!validRoles.length) {
+      setError("heroes_role_id", { type: "required" });
+      return;
+    }
     const banner = await bannerRef.current?.getCroppedImage();
     const icon = await iconRef.current?.getCroppedImage();
 
     const formData = new FormData();
     formData.append("name", val.name);
-    formData.append("heroes_role_id", val.heroes_role_id);
+    validRoles.forEach((role, index) => {
+      formData.append(`heroes_role_id[${index}]`, role);
+    });
     if (icon) formData.append("icon", icon);
     if (banner) formData.append("banner", banner);
     onSubmit(formData);
@@ -63,16 +72,24 @@ function HeroesForm({
     <form onSubmit={handleSubmit(submitData)}>
       <FormControl {...getFormAttr("Name", "name", "name")} />
       <div className="mb-3">
-        <Autocomplete
-          fetchItems={(params) => fetchHeroesRoleData({ name: params })}
+        <Select
+          fetchItems={fetchHeroesRoleData}
           renderOptions={(opt) => opt?.name}
           {...getFormAttr("Heroes Role", "heroes_role_id", "heroes_role_id")}
           onChange={(val) => {
-            setValue("heroes_role_id", val?.id);
+            setSelectedRoles((val || []).map((item) => item?.id));
+            setValue(
+              "heroes_role_id",
+              (val || []).map((item) => item?.id)
+            );
           }}
+          displayValue={(items) =>
+            items.map((item) => item?.name ?? "-").join(", ")
+          }
           getOptionSelected={(item) =>
             item?.id === initialFormData?.heroes_role_id
           }
+          multiple
         />
       </div>
       <ImageCropper ref={iconRef} label="Icon" aspect={1 / 1} />
