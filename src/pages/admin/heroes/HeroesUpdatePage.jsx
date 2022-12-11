@@ -63,7 +63,7 @@ function HeroesUpdatePage() {
     return <BasePage title="Not Found" />;
   }
   return (
-    <BasePage title="Update Pricing">
+    <BasePage title="Update Hero">
       <HeroesForm
         defaultValue={item}
         key={item?.id}

@@ -16,7 +16,11 @@ function HeroesDetailPage() {
 
   const attrAndLabel = [
     { label: "Name", key: "name" },
-    { label: "Role", key: "heroes_role", display: (val) => val?.name || "-" },
+    {
+      label: "Role",
+      key: "heroes_roles",
+      display: (val) => val?.map((item) => item?.name).join(", ") || "-",
+    },
     {
       label: "Icon",
       key: "icon_url",
