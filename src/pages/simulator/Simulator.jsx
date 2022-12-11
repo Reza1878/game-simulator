@@ -201,7 +201,7 @@ function Simulator() {
 
   return (
     <div className="min-h-[50vh]">
-      <div className="flex justify-between items-center  p-4">
+      <div className="flex justify-between items-center p-4">
         <div className="flex gap-2">
           <p className="text-white text-opacity-70 font-bold">Game Mode</p>
           <p className="text-white font-bold text-opacity-70">|</p>
@@ -239,7 +239,7 @@ function Simulator() {
               ))}
           </div>
         </div>
-        <div className="sm:w-auto w-full border p-4 overflow-x-scroll no-scrollbar max-h-[615px]">
+        <div className="flex-1 border p-4 overflow-x-scroll no-scrollbar max-h-[615px]">
           <div className="flex gap-2 justify-between items-center flex-wrap">
             <p className="text-white font-bold w-full md:w-auto">
               Select Champion
