@@ -17,7 +17,6 @@ function SimulatorPortal() {
   const [banCount, setBanCount] = useState(null);
   const accessToken = useSelector((state) => state.auth.accessToken);
   const navigate = useNavigate();
-  const [gameMode, setGameMode] = useState(1);
   const wrappedFetchBanAmount = useWrap(BanAmountService.gets);
   const wrappedFetechTeam = useWrap(TeamService.gets);
 
@@ -88,41 +87,6 @@ function SimulatorPortal() {
               <span className="text-maroon">Skip Bans</span>
             </li>
           </ol>
-          <div className="flex items-start gap-4 mb-3">
-            <p className="text-lg font-medium text-white min-w-[128px]">
-              Game Mode
-            </p>
-            <div>
-              <div className="flex gap-2 items-center mb-3">
-                <input
-                  type="radio"
-                  name="game-mode"
-                  id="game-mode-1"
-                  className="w-5 h-5 bg-primary text-primary form-radio checked:border checked:border-white outline-none"
-                  checked={gameMode === 1}
-                  value={1}
-                  onChange={() => setGameMode(1)}
-                />
-                <label htmlFor="game-mode-1" className="text-white">
-                  Tournament
-                </label>
-              </div>
-              <div className="flex gap-2 items-center">
-                <input
-                  type="radio"
-                  name="game-mode"
-                  id="game-mode-2"
-                  className="w-5 h-5 bg-primary text-primary form-radio checked:border checked:border-white outline-none"
-                  checked={gameMode === 2}
-                  value={2}
-                  onChange={() => setGameMode(2)}
-                />
-                <label htmlFor="game-mode-2" className="text-white">
-                  Scrim
-                </label>
-              </div>
-            </div>
-          </div>
         </div>
         <div className="flex items-start gap-4 mb-3">
           <p className="text-lg text-white font-medium min-w-[128px]">

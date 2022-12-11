@@ -106,7 +106,9 @@ function Simulator() {
 
     return heroes
       .filter((hero) =>
-        roleFilter ? hero.heroes_role_id === roleFilter : true
+        roleFilter
+          ? !!hero.heroes_roles.filter((role) => role.id === roleFilter)[0]
+          : true
       )
       .filter((hero) =>
         search ? hero.name.toLowerCase().includes(search.toLowerCase()) : true
@@ -126,8 +128,20 @@ function Simulator() {
 
   const banPhase = useMemo(() => {
     if (!selectedBanCount) return false;
+    if (selectedBanCount?.ban_count === 3) {
+      if (heroesPickList.length < 6) {
+        return heroesBanList.length < 4;
+      }
+      return heroesBanList.length < 6;
+    }
+    if (selectedBanCount?.ban_count === 5) {
+      if (heroesPickList.length < 4) {
+        return heroesBanList.length < 6;
+      }
+      return heroesBanList.length < 10;
+    }
     return currentBanOrder < selectedBanCount?.ban_count * 2;
-  }, [currentBanOrder, selectedBanCount]);
+  }, [currentBanOrder, selectedBanCount, heroesBanList, heroesPickList]);
 
   const pickPhase = useMemo(() => {
     return !banPhase && heroesPickList.length !== 10;
@@ -215,9 +229,7 @@ function Simulator() {
                   slot={slot}
                   active={banPhase ? false : +slot === currentOrder}
                   heroes={
-                    banPhase
-                      ? null
-                      : currentOrder == slot
+                    currentOrder == slot && pickPhase
                       ? currentHeroes
                       : heroesPickList.filter(
                           (hero) => hero.order == slot
@@ -227,13 +239,15 @@ function Simulator() {
               ))}
           </div>
         </div>
-        <div className="flex-1 border p-4 overflow-x-scroll no-scrollbar">
-          <div className="flex justify-between items-center">
-            <p className="text-white font-bold">Select Champion</p>
-            <div className="flex gap-2">
+        <div className="flex-1 border p-4 overflow-x-scroll no-scrollbar max-h-[615px]">
+          <div className="flex gap-2 justify-between items-center flex-wrap">
+            <p className="text-white font-bold w-full md:w-auto">
+              Select Champion
+            </p>
+            <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setRoleFilter(0)}
-                className={clsx("text-white px-2 py-1 rounded-md", {
+                className={clsx("text-white px-2 py-1 rounded-md w-auto", {
                   "bg-gray-400": roleFilter === 0,
                 })}
               >
@@ -241,7 +255,7 @@ function Simulator() {
               </button>
               {roles.map((item, index) => (
                 <button
-                  className={clsx("text-white px-2 py-1 rounded-md", {
+                  className={clsx("text-white px-2 py-1 rounded-md w-auto", {
                     "bg-gray-400": roleFilter === item.id,
                   })}
                   key={index}
@@ -253,13 +267,13 @@ function Simulator() {
             </div>
             <input
               type="text"
-              className="border w-36 rounded-full py-1 px-2 outline-none bg-primary text-white"
+              className="border lg:w-36 rounded-full py-1 px-2 outline-none bg-primary text-white w-full"
               placeholder="Search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <div className="grid grid-cols-8 gap-2 mt-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2 mt-3">
             {heroesList.map((hero) => (
               <HeroesButton
                 key={hero.id}
@@ -287,9 +301,7 @@ function Simulator() {
                   key={slot}
                   active={banPhase ? false : +slot === currentOrder}
                   heroes={
-                    banPhase
-                      ? null
-                      : currentOrder == slot
+                    currentOrder == slot && pickPhase
                       ? currentHeroes
                       : heroesPickList.filter(
                           (hero) => hero.order == slot
@@ -310,7 +322,7 @@ function Simulator() {
                 key={item}
                 slot={item}
                 heroes={
-                  currentBanOrder == item
+                  currentBanOrder == item && banPhase
                     ? currentHeroes
                     : heroesBanList.filter((hero) => hero.order == item)[0] ||
                       null
@@ -343,7 +355,7 @@ function Simulator() {
                 key={item}
                 slot={item}
                 heroes={
-                  currentBanOrder == item
+                  currentBanOrder == item && banPhase
                     ? currentHeroes
                     : heroesBanList.filter((hero) => hero.order == item)[0] ||
                       null
