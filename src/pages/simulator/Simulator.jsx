@@ -214,8 +214,8 @@ function Simulator() {
           Reset
         </button>
       </div>
-      <div className="flex w-full gap-4">
-        <div className="w-96">
+      <div className="flex w-full gap-4 flex-wrap">
+        <div className="w-full md:w-96 sm:w-64">
           <div className="flex justify-between px-4 items-center mb-3">
             <p className="font-bold text-white">{leftTeam}</p>
             <span className="block w-10 h-6 bg-blue-500" />
@@ -239,7 +239,7 @@ function Simulator() {
               ))}
           </div>
         </div>
-        <div className="flex-1 border p-4 overflow-x-scroll no-scrollbar max-h-[615px]">
+        <div className="sm:w-auto w-full border p-4 overflow-x-scroll no-scrollbar max-h-[615px]">
           <div className="flex gap-2 justify-between items-center flex-wrap">
             <p className="text-white font-bold w-full md:w-auto">
               Select Champion
@@ -273,7 +273,7 @@ function Simulator() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2 mt-3">
+          <div className="grid grid-cols-2 xs:grid-cols-4 md:grid-cols-4 lg:grid-cols-8 gap-2 mt-3">
             {heroesList.map((hero) => (
               <HeroesButton
                 key={hero.id}
@@ -287,7 +287,7 @@ function Simulator() {
             ))}
           </div>
         </div>
-        <div className="w-96">
+        <div className="w-full md:w-96 sm:w-64">
           <div className="flex justify-between px-4 items-center mb-3">
             <span className="block w-10 h-6 bg-red-500" />
             <p className="font-bold text-white">{rightTeam}</p>
@@ -313,7 +313,7 @@ function Simulator() {
         </div>
       </div>
 
-      <div className="flex w-full px-4 justify-between mt-3">
+      <div className="flex w-full px-4 justify-between mt-3 flex-wrap gap-4">
         <div className="flex gap-2 mt-3 px-4">
           {[...Array(selectedBanCount.ban_count * 2).keys()]
             .filter((item) => arrangeBanAndPickOrder("LEFT", item))
@@ -333,7 +333,7 @@ function Simulator() {
         {banPhase && (
           <button
             onClick={handleBanClick}
-            className="bg-red-500 text-white py-2 px-6 rounded-md w-48"
+            className="bg-red-500 text-white py-2 px-6 rounded-md w-full xs:w-48"
           >
             Ban
           </button>
@@ -341,7 +341,7 @@ function Simulator() {
         {pickPhase && (
           <button
             onClick={handlePickClick}
-            className="bg-blue-500 text-white py-2 px-6 rounded-md w-48"
+            className="bg-blue-500 text-white py-2 px-6 rounded-md w-full xs:w-48"
           >
             Pick
           </button>
