@@ -273,7 +273,7 @@ function Simulator() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <div className="grid grid-cols-2 xs:grid-cols-4 md:grid-cols-4 lg:grid-cols-8 gap-2 mt-3">
+          <div className="grid grid-cols-2 xs:grid-cols-4 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2 mt-3">
             {heroesList.map((hero) => (
               <HeroesButton
                 key={hero.id}
