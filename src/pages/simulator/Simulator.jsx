@@ -34,6 +34,7 @@ function Simulator() {
   const [currentBanOrder, setCurrentBanOrder] = useState(0);
   const [currentHeroes, setCurrentHeroes] = useState(null);
   const [heroesPickList, setHeroesPickList] = useState([]);
+  const pickSequences = useMemo(() => [0, 1, 3, 2, 4, 5, 6, 7, 9, 8], []);
 
   useEffect(() => {
     let active = true;
@@ -157,7 +158,7 @@ function Simulator() {
 
   const handlePickClick = () => {
     const arr = [...heroesPickList];
-    arr.push({ ...currentHeroes, order: currentOrder });
+    arr.push({ ...currentHeroes, order: pickSequences[currentOrder] });
     setHeroesPickList(arr);
     setCurrentOrder(currentOrder + 1);
     setCurrentHeroes(null);
@@ -227,9 +228,11 @@ function Simulator() {
                 <SimulatorPickSlot
                   key={slot}
                   slot={slot}
-                  active={banPhase ? false : +slot === currentOrder}
+                  active={
+                    banPhase ? false : +slot === pickSequences[currentOrder]
+                  }
                   heroes={
-                    currentOrder == slot && pickPhase
+                    pickSequences[currentOrder] == slot && pickPhase
                       ? currentHeroes
                       : heroesPickList.filter(
                           (hero) => hero.order == slot
@@ -299,9 +302,11 @@ function Simulator() {
                 <SimulatorPickSlot
                   slot={slot}
                   key={slot}
-                  active={banPhase ? false : +slot === currentOrder}
+                  active={
+                    banPhase ? false : +slot === pickSequences[currentOrder]
+                  }
                   heroes={
-                    currentOrder == slot && pickPhase
+                    pickSequences[currentOrder] == slot && pickPhase
                       ? currentHeroes
                       : heroesPickList.filter(
                           (hero) => hero.order == slot
