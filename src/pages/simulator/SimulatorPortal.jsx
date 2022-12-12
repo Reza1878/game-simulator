@@ -2,7 +2,6 @@ import { Button } from "@/components/common";
 import { SwitchToggle } from "@/components/form";
 import { useWrap } from "@/hooks/useWrap";
 import BanAmountService from "@/service/ban-amount-service";
-import TeamService from "@/service/team-service";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -10,15 +9,22 @@ import { useNavigate } from "react-router-dom";
 function SimulatorPortal() {
   const [teams, setTeams] = useState([
     { id: 1, name: "Blue Team", side: "LEFT" },
-    { id: 2, name: "Read Team", side: "RIGHT" },
+    { id: 2, name: "Red Team", side: "RIGHT" },
   ]);
   const [firstPick, setFirstPick] = useState("LEFT");
   const [banOptions, setBanOptions] = useState([]);
   const [banCount, setBanCount] = useState(null);
+  const [timer, setTimer] = useState(0);
   const accessToken = useSelector((state) => state.auth.accessToken);
   const navigate = useNavigate();
   const wrappedFetchBanAmount = useWrap(BanAmountService.gets);
-  const wrappedFetechTeam = useWrap(TeamService.gets);
+
+  const handleTeamNameChange = (event, side) => {
+    const teamsCopy = [...teams];
+    const index = teamsCopy.findIndex((item) => item.side === side);
+    teamsCopy[index].name = event.target.value;
+    setTeams(teamsCopy);
+  };
 
   useEffect(() => {
     setBanCount(banOptions[0]?.id ?? 0);
@@ -46,27 +52,12 @@ function SimulatorPortal() {
     };
   }, []);
 
-  useEffect(() => {
-    let active = true;
-
-    const fetchData = async () => {
-      const response = await wrappedFetechTeam();
-      if (!active) return;
-      if (response.data.length) {
-        setTeams(response.data);
-        return;
-      }
-    };
-
-    fetchData();
-
-    return () => {
-      active = false;
-    };
-  }, []);
-
   const onClick = () => {
-    navigate(`/simulator/start?ban_count=${banCount}&first_pick=${firstPick}`);
+    const leftName = teams.filter((team) => team.side === "LEFT")[0].name;
+    const rightName = teams.filter((team) => team.side === "RIGHT")[0].name;
+    navigate(
+      `/simulator/start?ban_count=${banCount}&first_pick=${firstPick}&left_name=${leftName}&right_name=${rightName}&timer=${timer}`
+    );
   };
 
   return (
@@ -109,12 +100,45 @@ function SimulatorPortal() {
                     htmlFor={`team-mode-${team.id}`}
                     className="text-white"
                   >
-                    {team.name}
+                    {team.side} SIDE
                   </label>
                 </div>
               </React.Fragment>
             ))}
           </div>
+        </div>
+        <div className="flex items-start gap-4 mb-3">
+          <p className="text-lg text-white font-medium min-w-[128px]">
+            Team Name
+          </p>
+          <div className="flex flex-col">
+            {teams.map((team) => (
+              <React.Fragment key={team.id}>
+                <div className="mb-3 flex flex-col">
+                  <label htmlFor={`team-${team.id}`} className="text-white">
+                    {team.side} SIDE
+                  </label>
+                  <input
+                    type="text"
+                    className="rounded-md px-2 py-1 outline-none"
+                    value={team.name}
+                    onChange={(e) => handleTeamNameChange(e, team.side)}
+                  />
+                </div>
+              </React.Fragment>
+            ))}
+          </div>
+        </div>
+        <div className="flex items-start gap-4 mb-3">
+          <p className="text-lg font-medium text-white min-w-[128px]">
+            Timer (sec)
+          </p>
+          <input
+            type="number"
+            className="rounded-md px-2 py-1 outline-none"
+            value={timer}
+            onChange={(e) => setTimer(e.target.value)}
+          />
         </div>
         <div className="flex items-start gap-4">
           <p className="text-lg font-medium text-white min-w-[128px]">

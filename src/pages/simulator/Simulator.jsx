@@ -21,10 +21,13 @@ function Simulator() {
   const [roles, setRoles] = useState([]);
   const [heroes, setHeroes] = useState([]);
   const [searchParams] = useSearchParams();
+  const timer = +searchParams.get("timer") || 0;
   const banCount = +searchParams.get("ban_count") || 0;
   const firstPick = !["LEFT", "RIGHT"].includes(searchParams.get("first_pick"))
     ? "LEFT"
     : searchParams.get("first_pick");
+  const leftTeamFromQuery = searchParams.get("left_name");
+  const rightTeamFromQuery = searchParams.get("right_name");
   const [currentOrder, setCurrentOrder] = useState(0);
   const [roleFilter, setRoleFilter] = useState(0);
   const [search, setSearch] = useState("");
@@ -71,25 +74,6 @@ function Simulator() {
   useEffect(() => {
     let active = true;
 
-    const fetchData = async () => {
-      const response = await TeamService.gets();
-      if (!active) return;
-      if (response.data.length) {
-        setTeams(response.data);
-        return;
-      }
-    };
-
-    fetchData();
-
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    let active = true;
-
     (async () => {
       const response = await wrappedFetchBanCount(banCount);
       if (!active) return;
@@ -117,15 +101,17 @@ function Simulator() {
   }, [roleFilter, heroes, search]);
 
   const leftTeam = useMemo(() => {
+    if (leftTeamFromQuery) return leftTeamFromQuery;
     const curr = teams.filter((item) => item.side === "LEFT")[0];
     if (!curr) return "Blue Team";
     return curr.name;
-  }, [teams]);
+  }, [teams, leftTeamFromQuery]);
   const rightTeam = useMemo(() => {
+    if (rightTeamFromQuery) return rightTeamFromQuery;
     const curr = teams.filter((item) => item.side === "RIGHT")[0];
     if (!curr) return "Red Team";
     return curr.name;
-  }, [teams]);
+  }, [teams, rightTeamFromQuery]);
 
   const banPhase = useMemo(() => {
     if (!selectedBanCount) return false;
