@@ -122,7 +122,7 @@ function Simulator() {
       return heroesBanList.length < 6;
     }
     if (selectedBanCount?.ban_count === 5) {
-      if (heroesPickList.length < 4) {
+      if (heroesPickList.length < 6) {
         return heroesBanList.length < 6;
       }
       return heroesBanList.length < 10;
