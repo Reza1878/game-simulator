@@ -192,6 +192,9 @@ function Simulator() {
     setCurrentBanOrder(0);
     setHeroesBanList([]);
     setHeroesPickList([]);
+    setTimer(+searchParams.get("timer") || 0);
+    clearInterval();
+    setTimerInterval();
   };
 
   const heroesList = useMemo(() => {
