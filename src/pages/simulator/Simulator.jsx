@@ -269,7 +269,7 @@ function Simulator() {
         </button>
       </div>
       <div className="flex w-full gap-4 flex-wrap">
-        <div className="w-full md:w-96 sm:w-64">
+        <div className="w-full md:w-96 sm:w-64 xs:landscape:w-44">
           <div className="flex justify-between px-4 items-center mb-3">
             <p className="font-bold text-white">{leftTeam}</p>
             <span className="block w-10 h-6 bg-blue-500" />
@@ -346,7 +346,7 @@ function Simulator() {
             ))}
           </div>
         </div>
-        <div className="w-full md:w-96 sm:w-64">
+        <div className="w-full md:w-96 sm:w-64 xs:landscape:w-44">
           <div className="flex justify-between px-4 items-center mb-3">
             <span className="block w-10 h-6 bg-red-500" />
             <p className="font-bold text-white">{rightTeam}</p>
