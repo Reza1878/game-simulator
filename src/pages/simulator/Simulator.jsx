@@ -2,8 +2,7 @@ import SimulatorBanSlot from "@/components/simulator/SimulatorBanSlot";
 import SimulatorPickSlot from "@/components/simulator/SimulatorPickSlot";
 import HeroesRoleService from "@/service/heroes-roles-service";
 import HeroService from "@/service/heroes-service";
-import TeamService from "@/service/team-service";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import clsx from "clsx";
 import { Loader } from "@/components/common";
@@ -21,7 +20,9 @@ function Simulator() {
   const [roles, setRoles] = useState([]);
   const [heroes, setHeroes] = useState([]);
   const [searchParams] = useSearchParams();
-  const timer = +searchParams.get("timer") || 0;
+  const [timer, setTimer] = useState(+searchParams.get("timer") || 0);
+  const timerRef = useRef(null);
+
   const banCount = +searchParams.get("ban_count") || 0;
   const firstPick = !["LEFT", "RIGHT"].includes(searchParams.get("first_pick"))
     ? "LEFT"
@@ -37,7 +38,42 @@ function Simulator() {
   const [currentBanOrder, setCurrentBanOrder] = useState(0);
   const [currentHeroes, setCurrentHeroes] = useState(null);
   const [heroesPickList, setHeroesPickList] = useState([]);
-  const pickSequences = useMemo(() => [0, 1, 3, 2, 4, 5, 6, 7, 9, 8], []);
+  const pickSequences = useMemo(() => [0, 1, 3, 2, 4, 5, 7, 6, 8, 9], []);
+  const banSequences = useMemo(() => [0, 1, 2, 3, 5, 4, 7, 6, 9, 8], []);
+  const withTimer = useMemo(
+    () => Boolean(+searchParams.get("timer") || 0),
+    [searchParams]
+  );
+
+  const banPhase = useMemo(() => {
+    if (!selectedBanCount) return false;
+    if (selectedBanCount?.ban_count === 3) {
+      if (heroesPickList.length < 6) {
+        return heroesBanList.length < 4;
+      }
+      return heroesBanList.length < 6;
+    }
+    if (selectedBanCount?.ban_count === 5) {
+      if (heroesPickList.length < 6) {
+        return heroesBanList.length < 6;
+      }
+      return heroesBanList.length < 10;
+    }
+    return currentBanOrder < selectedBanCount?.ban_count * 2;
+  }, [currentBanOrder, selectedBanCount, heroesBanList, heroesPickList]);
+
+  const pickPhase = useMemo(() => {
+    return !banPhase && heroesPickList.length !== 10;
+  }, [banPhase, heroesPickList]);
+
+  const clearInterval = () => {
+    window.clearInterval(timerRef?.current);
+  };
+  const setTimerInterval = () => {
+    timerRef.current = window.setInterval(() => {
+      setTimer((timer) => timer - 1);
+    }, 1000);
+  };
 
   useEffect(() => {
     let active = true;
@@ -86,6 +122,78 @@ function Simulator() {
     };
   }, []);
 
+  useEffect(() => {
+    timerRef.current = window.setInterval(() => {
+      setTimer((timer) => timer - 1);
+    }, 1000);
+    return () => clearInterval();
+  }, []);
+
+  useEffect(() => {
+    if (timer <= 0) clearInterval();
+  }, [timer]);
+
+  const banHeroes = (hero) => {
+    const arr = [...heroesBanList];
+    arr.push({ ...hero, order: currentBanOrder });
+    setHeroesBanList(arr);
+    setCurrentBanOrder(currentBanOrder + 1);
+    setCurrentHeroes(null);
+    clearInterval();
+    setTimerInterval();
+  };
+
+  const pickHeroes = (hero) => {
+    const arr = [...heroesPickList];
+    arr.push({ ...hero, order: pickSequences[currentOrder] });
+    setHeroesPickList(arr);
+    setCurrentOrder(currentOrder + 1);
+    setCurrentHeroes(null);
+    clearInterval();
+    setTimerInterval();
+  };
+
+  useEffect(() => {
+    if (!banPhase && !pickPhase) return;
+    if (timer === 0 && withTimer) {
+      setTimer(+searchParams.get("timer") || 0);
+      if (banPhase) {
+        const bannedHero = heroes.filter(
+          (item) =>
+            !Boolean(heroesBanList.filter((hb) => hb.id === item.id)[0]) &&
+            !Boolean(heroesPickList.filter((hp) => hp.id === item.id)[0])
+        );
+        banHeroes(bannedHero[Math.floor(Math.random() * bannedHero.length)]);
+      }
+      if (pickPhase) {
+        const pickedHero = heroes.filter(
+          (item) =>
+            !Boolean(heroesBanList.filter((hb) => hb.id === item.id)[0]) &&
+            !Boolean(heroesPickList.filter((hp) => hp.id === item.id)[0])
+        );
+        pickHeroes(pickedHero[Math.floor(Math.random() * pickedHero.length)]);
+      }
+    }
+  }, [timer, withTimer, banPhase, pickPhase]);
+
+  const handleBanClick = () => {
+    setTimer(+searchParams.get("timer") || 0);
+    banHeroes(currentHeroes);
+  };
+
+  const handlePickClick = () => {
+    setTimer(+searchParams.get("timer") || 0);
+    pickHeroes(currentHeroes);
+  };
+
+  const handleResetClick = () => {
+    setCurrentHeroes(null);
+    setCurrentOrder(0);
+    setCurrentBanOrder(0);
+    setHeroesBanList([]);
+    setHeroesPickList([]);
+  };
+
   const heroesList = useMemo(() => {
     if (!roleFilter && !search) return heroes;
 
@@ -112,51 +220,6 @@ function Simulator() {
     if (!curr) return "Red Team";
     return curr.name;
   }, [teams, rightTeamFromQuery]);
-
-  const banPhase = useMemo(() => {
-    if (!selectedBanCount) return false;
-    if (selectedBanCount?.ban_count === 3) {
-      if (heroesPickList.length < 6) {
-        return heroesBanList.length < 4;
-      }
-      return heroesBanList.length < 6;
-    }
-    if (selectedBanCount?.ban_count === 5) {
-      if (heroesPickList.length < 6) {
-        return heroesBanList.length < 6;
-      }
-      return heroesBanList.length < 10;
-    }
-    return currentBanOrder < selectedBanCount?.ban_count * 2;
-  }, [currentBanOrder, selectedBanCount, heroesBanList, heroesPickList]);
-
-  const pickPhase = useMemo(() => {
-    return !banPhase && heroesPickList.length !== 10;
-  }, [banPhase, heroesPickList]);
-
-  const handleBanClick = () => {
-    const arr = [...heroesBanList];
-    arr.push({ ...currentHeroes, order: currentBanOrder });
-    setHeroesBanList(arr);
-    setCurrentBanOrder(currentBanOrder + 1);
-    setCurrentHeroes(null);
-  };
-
-  const handlePickClick = () => {
-    const arr = [...heroesPickList];
-    arr.push({ ...currentHeroes, order: pickSequences[currentOrder] });
-    setHeroesPickList(arr);
-    setCurrentOrder(currentOrder + 1);
-    setCurrentHeroes(null);
-  };
-
-  const handleResetClick = () => {
-    setCurrentHeroes(null);
-    setCurrentOrder(0);
-    setCurrentBanOrder(0);
-    setHeroesBanList([]);
-    setHeroesPickList([]);
-  };
 
   const arrangeBanAndPickOrder = (side, order) => {
     if (side === firstPick) return +order % 2 === 0;
@@ -215,7 +278,9 @@ function Simulator() {
                   key={slot}
                   slot={slot}
                   active={
-                    banPhase ? false : +slot === pickSequences[currentOrder]
+                    banPhase
+                      ? +slot === banSequences[currentBanOrder]
+                      : +slot === pickSequences[currentOrder]
                   }
                   heroes={
                     pickSequences[currentOrder] == slot && pickPhase
@@ -224,6 +289,7 @@ function Simulator() {
                           (hero) => hero.order == slot
                         )[0] || null
                   }
+                  timer={timer}
                 />
               ))}
           </div>
@@ -289,7 +355,9 @@ function Simulator() {
                   slot={slot}
                   key={slot}
                   active={
-                    banPhase ? false : +slot === pickSequences[currentOrder]
+                    banPhase
+                      ? +slot === banSequences[currentBanOrder]
+                      : +slot === pickSequences[currentOrder]
                   }
                   heroes={
                     pickSequences[currentOrder] == slot && pickPhase
@@ -298,6 +366,7 @@ function Simulator() {
                           (hero) => hero.order == slot
                         )[0] || null
                   }
+                  timer={timer}
                 />
               ))}
           </div>
@@ -313,7 +382,7 @@ function Simulator() {
                 key={item}
                 slot={item}
                 heroes={
-                  currentBanOrder == item && banPhase
+                  banSequences[currentBanOrder] == item && banPhase
                     ? currentHeroes
                     : heroesBanList.filter((hero) => hero.order == item)[0] ||
                       null
@@ -346,7 +415,7 @@ function Simulator() {
                 key={item}
                 slot={item}
                 heroes={
-                  currentBanOrder == item && banPhase
+                  banSequences[currentBanOrder] == item && banPhase
                     ? currentHeroes
                     : heroesBanList.filter((hero) => hero.order == item)[0] ||
                       null
