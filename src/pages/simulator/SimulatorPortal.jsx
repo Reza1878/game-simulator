@@ -79,7 +79,7 @@ function SimulatorPortal() {
             </li>
           </ol>
         </div>
-        <div className="flex items-start gap-4 mb-3">
+        <div className="flex md:flex-row flex-col items-start md:gap-4 gap-2 mb-3">
           <p className="text-lg text-white font-medium min-w-[128px]">
             First Pick
           </p>
@@ -107,7 +107,7 @@ function SimulatorPortal() {
             ))}
           </div>
         </div>
-        <div className="flex items-start gap-4 mb-3">
+        <div className="flex md:flex-row flex-col items-start gap-2 md:gap-4 mb-3">
           <p className="text-lg text-white font-medium min-w-[128px]">
             Team Name
           </p>
@@ -129,7 +129,7 @@ function SimulatorPortal() {
             ))}
           </div>
         </div>
-        <div className="flex items-start gap-4 mb-3">
+        <div className="flex items-start md:gap-4 gap-2 md:flex-row flex-col mb-3">
           <p className="text-lg font-medium text-white min-w-[128px]">
             Timer (sec)
           </p>
@@ -140,12 +140,12 @@ function SimulatorPortal() {
             onChange={(e) => setTimer(e.target.value)}
           />
         </div>
-        <div className="flex items-start gap-4">
+        <div className="flex items-start md:gap-4 gap-2 md:flex-row flex-col">
           <p className="text-lg font-medium text-white min-w-[128px]">
             Ban Amount
           </p>
           <select
-            className="py-1 px-2 outline-none"
+            className="py-1 px-2 outline-none md:w-auto w-full"
             onChange={(e) => setBanCount(+e.target.value)}
           >
             {banOptions.map((item) => (
