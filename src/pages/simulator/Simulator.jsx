@@ -182,6 +182,7 @@ function Simulator() {
   };
 
   const handlePickClick = () => {
+    if (!currentHeroes) return;
     setTimer(+searchParams.get("timer") || 0);
     pickHeroes(currentHeroes);
   };
