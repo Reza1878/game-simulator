@@ -298,7 +298,7 @@ function Simulator() {
               ))}
           </div>
         </div>
-        <div className="flex-1 border p-4 overflow-x-scroll no-scrollbar max-h-[615px]">
+        <div className="flex-1 border p-4 overflow-x-scroll no-scrollbar sm:max-h-[615px] landscape:xs:max-h-[290px]">
           <div className="flex gap-2 justify-between items-center flex-wrap">
             <p className="text-white font-bold w-full md:w-auto">
               Select Champion

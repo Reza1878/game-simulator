@@ -12,7 +12,7 @@ function SimulatorPickSlot({
     return (
       <div
         className={clsx(
-          "w-full h-28 bg-gray-300 relative",
+          "w-full md:h-28 xs:landscape:h-12 bg-gray-300 relative",
           { "opacity-70": !active },
           { "opacity-50": active }
         )}
@@ -27,8 +27,11 @@ function SimulatorPickSlot({
   }
   return (
     <div className="relative">
-      <HeroesBanner url={heroes.banner_url} />
-      <div className="absolute right-4 bottom-8">
+      <HeroesBanner
+        url={heroes.banner_url}
+        className="md:h-28 landscape:xs:h-12"
+      />
+      <div className="absolute right-4 md:bottom-8 landscape:xs:bottom-4">
         <p className="font-bold text-white mb-0 font-poppins">{heroes.name}</p>
         {/* <p className="font-bold text-white">{heroes.heroes_role.name}</p> */}
       </div>
