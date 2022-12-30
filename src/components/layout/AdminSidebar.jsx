@@ -4,6 +4,7 @@ import {
   ROUTE_HEROES,
   ROUTE_HEROES_ROLE,
   ROUTE_LOGOUT,
+  ROUTE_MAP,
   ROUTE_PRICING_PAGE,
   ROUTE_TEAM_PAGE,
   ROUTE_USER,
@@ -16,6 +17,7 @@ import {
   Home,
   Layers,
   LogOut,
+  Map,
   Settings,
   User,
   Users,
@@ -64,6 +66,7 @@ function AdminSidebar({ open = false }) {
         href: ROUTE_USER_TIER,
       },
       { title: "Users", icon: <User className="icon" />, href: ROUTE_USER },
+      { title: "Map", icon: <Map className="icon" />, href: ROUTE_MAP },
       {
         title: "Logout",
         icon: <LogOut className="icon" />,

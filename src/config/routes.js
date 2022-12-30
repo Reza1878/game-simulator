@@ -7,3 +7,4 @@ export const ROUTE_HEROES = "/admin/heroes";
 export const ROUTE_USER_TIER = "/admin/user-tiers";
 export const ROUTE_USER = "/admin/users";
 export const ROUTE_LOGOUT = "/logout";
+export const ROUTE_MAP = "/admin/maps";

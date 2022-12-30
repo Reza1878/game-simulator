@@ -8,6 +8,7 @@ import {
   ROUTE_HEROES,
   ROUTE_HEROES_ROLE,
   ROUTE_LOGOUT,
+  ROUTE_MAP,
   ROUTE_PRICING_PAGE,
   ROUTE_TEAM_PAGE,
   ROUTE_USER,
@@ -39,6 +40,7 @@ import {
   HeroesRoleListPage,
   HeroesRoleUpdatePage,
 } from "./pages/admin/heroes-role";
+import { MapDetailPage, MapUpdatePage } from "./pages/admin/map";
 import { ResetPassword } from "./pages/auth";
 import Logout from "./pages/auth/Logout";
 import { CancelPayment, SuccessPayment } from "./pages/payment";
@@ -106,6 +108,8 @@ function ProtectedRoutes() {
             path={`${ROUTE_USER_TIER}/:id/edit`}
             element={<UserTierUpdatePage />}
           />
+          <Route path={ROUTE_MAP} element={<MapDetailPage />} />
+          <Route path={`${ROUTE_MAP}/edit`} element={<MapUpdatePage />} />
           <Route path={`${ROUTE_USER}`} element={<UserListPage />} />
           <Route path={ROUTE_LOGOUT} element={<Logout />} />
         </Routes>
