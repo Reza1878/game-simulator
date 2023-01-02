@@ -28,6 +28,13 @@ import {
 
 import { UserListPage } from "./user";
 
+import {
+  AdsCreatePage,
+  AdsDetailPage,
+  AdsListPage,
+  AdsUpdatePage,
+} from "./ads";
+
 export {
   Dashboard,
   PricingCreatePage,
@@ -47,4 +54,8 @@ export {
   UserTierListPage,
   UserTierUpdatePage,
   UserListPage,
+  AdsCreatePage,
+  AdsDetailPage,
+  AdsUpdatePage,
+  AdsListPage,
 };

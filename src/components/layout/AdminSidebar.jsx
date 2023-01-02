@@ -1,5 +1,6 @@
 import {
   ROUTE_ADMIN_DASHBOARD,
+  ROUTE_ADS,
   ROUTE_BAN_AMOUNT_PAGE,
   ROUTE_HEROES,
   ROUTE_HEROES_ROLE,
@@ -18,6 +19,7 @@ import {
   Layers,
   LogOut,
   Map,
+  PlayCircle,
   Settings,
   User,
   Users,
@@ -67,6 +69,7 @@ function AdminSidebar({ open = false }) {
       },
       { title: "Users", icon: <User className="icon" />, href: ROUTE_USER },
       { title: "Map", icon: <Map className="icon" />, href: ROUTE_MAP },
+      { title: "Ads", icon: <PlayCircle className="icon" />, href: ROUTE_ADS },
       {
         title: "Logout",
         icon: <LogOut className="icon" />,
@@ -96,7 +99,7 @@ function AdminSidebar({ open = false }) {
         <Text className="font-medium ml-2">{user.name}</Text>
       </div>
 
-      <ul>
+      <ul className="mb-4">
         {routes.map((item, index) => (
           <li key={index} className="flex items-center relative">
             <NavItem

@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import { AdminLayout, GuestLayout } from "./components/layout";
 import {
   ROUTE_ADMIN_DASHBOARD,
+  ROUTE_ADS,
   ROUTE_BAN_AMOUNT_PAGE,
   ROUTE_HEROES,
   ROUTE_HEROES_ROLE,
@@ -16,6 +17,10 @@ import {
 } from "./config/routes";
 import { Home, Pricing } from "./pages";
 import {
+  AdsCreatePage,
+  AdsDetailPage,
+  AdsListPage,
+  AdsUpdatePage,
   BanAmountCreatePage,
   BanAmountListPage,
   BanAmountUpdatePage,
@@ -111,6 +116,11 @@ function ProtectedRoutes() {
           <Route path={ROUTE_MAP} element={<MapDetailPage />} />
           <Route path={`${ROUTE_MAP}/edit`} element={<MapUpdatePage />} />
           <Route path={`${ROUTE_USER}`} element={<UserListPage />} />
+
+          <Route path={ROUTE_ADS} element={<AdsListPage />} />
+          <Route path={`${ROUTE_ADS}/create`} element={<AdsCreatePage />} />
+          <Route path={`${ROUTE_ADS}/:id`} element={<AdsDetailPage />} />
+          <Route path={`${ROUTE_ADS}/:id/edit`} element={<AdsUpdatePage />} />
           <Route path={ROUTE_LOGOUT} element={<Logout />} />
         </Routes>
       </AdminLayout>
