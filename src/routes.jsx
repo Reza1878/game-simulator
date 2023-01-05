@@ -8,6 +8,7 @@ import {
   ROUTE_BAN_AMOUNT_PAGE,
   ROUTE_HEROES,
   ROUTE_HEROES_ROLE,
+  ROUTE_ICONS,
   ROUTE_LOGOUT,
   ROUTE_MAP,
   ROUTE_PRICING_PAGE,
@@ -29,6 +30,10 @@ import {
   HeroesDetailPage,
   HeroesListPage,
   HeroesUpdatePage,
+  IconsCreatePage,
+  IconsDetailPage,
+  IconsListPage,
+  IconsUpdatePage,
   PricingCreatePage,
   PricingListPage,
   PricingUpdatePage,
@@ -121,6 +126,14 @@ function ProtectedRoutes() {
           <Route path={`${ROUTE_ADS}/create`} element={<AdsCreatePage />} />
           <Route path={`${ROUTE_ADS}/:id`} element={<AdsDetailPage />} />
           <Route path={`${ROUTE_ADS}/:id/edit`} element={<AdsUpdatePage />} />
+
+          <Route path={ROUTE_ICONS} element={<IconsListPage />} />
+          <Route path={`${ROUTE_ICONS}/create`} element={<IconsCreatePage />} />
+          <Route path={`${ROUTE_ICONS}/:id`} element={<IconsDetailPage />} />
+          <Route
+            path={`${ROUTE_ICONS}/:id/edit`}
+            element={<IconsUpdatePage />}
+          />
           <Route path={ROUTE_LOGOUT} element={<Logout />} />
         </Routes>
       </AdminLayout>

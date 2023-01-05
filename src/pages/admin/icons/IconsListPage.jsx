@@ -1,27 +1,27 @@
 import { BasePage, Button, ConfirmationModal } from "@/components/common";
 import { BaseTable, TableControl } from "@/components/common/table";
-import { ROUTE_ADS } from "@/config/routes";
+import { ROUTE_ICONS } from "@/config/routes";
 import useToast from "@/hooks/useToast";
 import { useWrap } from "@/hooks/useWrap";
-import AdService from "@/service/ads-service";
+import IconsService from "@/service/icons-service";
 import { createColumnHelper } from "@tanstack/react-table";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function AdsListPage() {
+function IconsListPage() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [open, setOpen] = useState(false);
   const { showToast } = useToast();
   const [refetch, setRefetch] = useState(false);
   const navigate = useNavigate();
-  const wrappedFetchItem = useWrap((...args) => AdService.gets(...args));
-  const wrappedDeleteItem = useWrap((id) => AdService.delete(id));
+  const wrappedFetchItem = useWrap((...args) => IconsService.gets(...args));
+  const wrappedDeleteItem = useWrap((id) => IconsService.delete(id));
 
   const columnHelper = createColumnHelper();
   const columns = [
-    columnHelper.accessor("ratio", {
+    columnHelper.accessor("name", {
       cell: (info) => info.getValue(),
-      header: () => <span>Ratio</span>,
+      header: () => <span>Name</span>,
     }),
     columnHelper.display({
       id: "action",
@@ -29,10 +29,10 @@ function AdsListPage() {
         return (
           <TableControl
             onEditClick={() =>
-              navigate(`${ROUTE_ADS}/${props.row.original.id}/edit`)
+              navigate(`${ROUTE_ICONS}/${props.row.original.id}/edit`)
             }
             onViewClick={() => {
-              navigate(`${ROUTE_ADS}/${props.row.original.id}`);
+              navigate(`${ROUTE_ICONS}/${props.row.original.id}`);
             }}
             onDeleteClick={() => {
               setOpen(true);
@@ -65,9 +65,11 @@ function AdsListPage() {
   };
 
   return (
-    <BasePage title="Ads List">
+    <BasePage title="Icons List">
       <div className="flex justify-end mb-3">
-        <Button onClick={() => navigate(`${ROUTE_ADS}/create`)}>Create</Button>
+        <Button onClick={() => navigate(`${ROUTE_ICONS}/create`)}>
+          Create
+        </Button>
       </div>
       <BaseTable
         columns={columns}
@@ -75,7 +77,7 @@ function AdsListPage() {
         refetch={refetch}
       />
       <ConfirmationModal
-        title={`Delete "${selectedItem?.ratio}" ads?`}
+        title={`Delete "${selectedItem?.name}"?`}
         onClose={handleConfirmDelete}
         open={open}
       />
@@ -83,4 +85,4 @@ function AdsListPage() {
   );
 }
 
-export default AdsListPage;
+export default IconsListPage;

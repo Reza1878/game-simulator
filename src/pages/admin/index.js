@@ -35,6 +35,13 @@ import {
   AdsUpdatePage,
 } from "./ads";
 
+import {
+  IconsCreatePage,
+  IconsUpdatePage,
+  IconsDetailPage,
+  IconsListPage,
+} from "./icons";
+
 export {
   Dashboard,
   PricingCreatePage,
@@ -58,4 +65,8 @@ export {
   AdsDetailPage,
   AdsUpdatePage,
   AdsListPage,
+  IconsListPage,
+  IconsCreatePage,
+  IconsDetailPage,
+  IconsUpdatePage,
 };

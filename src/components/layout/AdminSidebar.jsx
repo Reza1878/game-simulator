@@ -4,6 +4,7 @@ import {
   ROUTE_BAN_AMOUNT_PAGE,
   ROUTE_HEROES,
   ROUTE_HEROES_ROLE,
+  ROUTE_ICONS,
   ROUTE_LOGOUT,
   ROUTE_MAP,
   ROUTE_PRICING_PAGE,
@@ -14,6 +15,7 @@ import {
 import React, { useMemo } from "react";
 import {
   Award,
+  Database,
   DollarSign,
   Home,
   Layers,
@@ -70,6 +72,11 @@ function AdminSidebar({ open = false }) {
       { title: "Users", icon: <User className="icon" />, href: ROUTE_USER },
       { title: "Map", icon: <Map className="icon" />, href: ROUTE_MAP },
       { title: "Ads", icon: <PlayCircle className="icon" />, href: ROUTE_ADS },
+      {
+        title: "Icons",
+        icon: <Database className="icon" />,
+        href: ROUTE_ICONS,
+      },
       {
         title: "Logout",
         icon: <LogOut className="icon" />,

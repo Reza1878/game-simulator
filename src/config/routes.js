@@ -9,3 +9,4 @@ export const ROUTE_USER = "/admin/users";
 export const ROUTE_LOGOUT = "/logout";
 export const ROUTE_MAP = "/admin/maps";
 export const ROUTE_ADS = "/admin/ads";
+export const ROUTE_ICONS = "/admin/icons";
