@@ -17,10 +17,11 @@ function FormControl({
   multiline,
   InputProps,
   className,
+  LabelProps,
 }) {
   return (
     <div className={clsx("mb-3", className)}>
-      <Label htmlFor={id} error={error}>
+      <Label {...LabelProps} htmlFor={id} error={error}>
         {label}
       </Label>
       <TextField

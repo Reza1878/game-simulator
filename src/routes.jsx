@@ -53,11 +53,14 @@ import {
 import { MapDetailPage, MapUpdatePage } from "./pages/admin/map";
 import { ResetPassword } from "./pages/auth";
 import Logout from "./pages/auth/Logout";
+import { MapDrawing } from "./pages/map-drawing";
+import NotFound from "./pages/NotFound";
 import { CancelPayment, SuccessPayment } from "./pages/payment";
 import { Simulator, SimulatorPortal } from "./pages/simulator";
 
 function ProtectedRoutes() {
   const role = useSelector((state) => state.user.role);
+  const accessToken = useSelector((state) => state.auth.accessToken);
   if (role === "admin") {
     return (
       <AdminLayout>
@@ -149,6 +152,12 @@ function ProtectedRoutes() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/simulator" element={<SimulatorPortal />} />
         <Route path="/simulator/start" element={<Simulator />} />
+        {accessToken && (
+          <>
+            <Route path="/map-drawing" element={<MapDrawing />} />
+          </>
+        )}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </GuestLayout>
   );

@@ -27,7 +27,7 @@ const Navbar = () => {
       setShowAuthModal(true);
       return;
     }
-    alert("Coming soon");
+    navigate("/map-drawing");
   };
 
   const onToolPageClick = () => {
