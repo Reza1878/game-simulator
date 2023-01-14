@@ -1,9 +1,11 @@
+import AdsImage from "@/components/ads/AdsImage";
 import { Button } from "@/components/common";
 import { FormControl } from "@/components/form";
 import { useWrap } from "@/hooks/useWrap";
+import AdService from "@/service/ads-service";
 import IconsService from "@/service/icons-service";
 import MapService from "@/service/map-service";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Draggable from "react-draggable";
 
 function MapDrawing() {
@@ -16,6 +18,13 @@ function MapDrawing() {
   const [usedIcons, setUsedIcons] = useState([]);
   const [imgSrc, setImgSrc] = useState(null);
   const [resetFlag, setResetFlag] = useState(false);
+  const [ads, setAds] = useState([]);
+
+  const showedAds = useMemo(() => {
+    if (!ads.length) return null;
+
+    return ads[Math.floor(Math.random() * ads.length)];
+  }, [ads]);
 
   const wrappedFetchIcons = useWrap(
     () => IconsService.gets(),
@@ -67,6 +76,12 @@ function MapDrawing() {
       const response = await wrappedFetchIcons();
       if (!active) return;
       setIcons(response.data);
+    })();
+
+    (async () => {
+      const response = await AdService.gets();
+      if (!active) return;
+      setAds(response.data);
     })();
     return () => {
       active = false;
@@ -242,7 +257,7 @@ function MapDrawing() {
             onChange: (e) => setBrushColor(e.target.value),
           }}
         />
-        <div className="flex gap-2">
+        <div className="flex sm:flex-row flex-col gap-2">
           <Button onClick={handleDownloadImage} variant="outlined">
             Download Image
           </Button>
@@ -253,6 +268,9 @@ function MapDrawing() {
             Reset Map
           </Button>
         </div>
+        {showedAds && (
+          <AdsImage ratio={showedAds.ratio} url={showedAds.image_url} />
+        )}
       </div>
     </div>
   );
