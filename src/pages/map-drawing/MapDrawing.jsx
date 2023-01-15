@@ -234,8 +234,9 @@ function MapDrawing() {
           onMouseDown={startDrawing}
           onMouseUp={endDrawing}
           onMouseMove={draw}
-          onTouchStart={() => {
-            console.log("Touch start");
+          onTouchStart={(e) => {
+            e.stopPropagation();
+            startDrawing(e);
           }}
           onTouchMove={draw}
           onTouchEnd={endDrawing}
