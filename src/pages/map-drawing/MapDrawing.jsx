@@ -234,6 +234,11 @@ function MapDrawing() {
           onMouseDown={startDrawing}
           onMouseUp={endDrawing}
           onMouseMove={draw}
+          onTouchStart={() => {
+            console.log("Touch start");
+          }}
+          onTouchMove={draw}
+          onTouchEnd={endDrawing}
           ref={canvasRef}
         />
       </div>
