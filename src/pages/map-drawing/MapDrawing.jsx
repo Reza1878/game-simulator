@@ -235,15 +235,15 @@ function MapDrawing() {
           onMouseUp={endDrawing}
           onMouseMove={draw}
           onTouchStart={(e) => {
-            e.stopPropagation();
+            e.preventDefault();
             startDrawing(e);
           }}
           onTouchMove={(e) => {
-            e.stopPropagation();
+            e.preventDefault();
             draw(e);
           }}
           onTouchEnd={(e) => {
-            e.stopPropagation();
+            e.preventDefault();
             endDrawing();
           }}
           ref={canvasRef}
