@@ -238,8 +238,14 @@ function MapDrawing() {
             e.stopPropagation();
             startDrawing(e);
           }}
-          onTouchMove={draw}
-          onTouchEnd={endDrawing}
+          onTouchMove={(e) => {
+            e.stopPropagation();
+            draw(e);
+          }}
+          onTouchEnd={(e) => {
+            e.stopPropagation();
+            endDrawing();
+          }}
           ref={canvasRef}
         />
       </div>
