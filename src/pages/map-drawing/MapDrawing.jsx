@@ -238,8 +238,8 @@ function MapDrawing() {
             e.preventDefault();
             startDrawing({
               nativeEvent: {
-                offsetX: e.changedTouches[0].pageX,
-                offsetY: e.changedTouches[0].pageY,
+                offsetX: e.changedTouches[0].clientX,
+                offsetY: e.changedTouches[0].clientY,
               },
             });
           }}
@@ -247,8 +247,8 @@ function MapDrawing() {
             e.preventDefault();
             draw({
               nativeEvent: {
-                offsetX: e.changedTouches[0].pageX,
-                offsetY: e.changedTouches[0].pageY,
+                offsetX: e.changedTouches[0].clientX,
+                offsetY: e.changedTouches[0].clientY,
               },
             });
           }}
