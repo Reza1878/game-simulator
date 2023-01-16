@@ -230,15 +230,9 @@ function MapDrawing() {
   };
 
   useEffect(() => {
-    canvasRef.current.addEventListener("touchstart", handleTouchStart, {
-      passive: false,
-    });
-    canvasRef.current.addEventListener("touchmove", handleTouchMove, {
-      passive: false,
-    });
-    canvasRef.current.addEventListener("touchend", handleTouchEnd, {
-      passive: true,
-    });
+    canvasRef.current.addEventListener("touchstart", handleTouchStart);
+    canvasRef.current.addEventListener("touchmove", handleTouchMove);
+    canvasRef.current.addEventListener("touchend", handleTouchEnd);
 
     return () => {
       canvasRef.current.removeEventListener("touchstart", handleTouchStart);
