@@ -19,6 +19,7 @@ function MapDrawing() {
   const [imgSrc, setImgSrc] = useState(null);
   const [resetFlag, setResetFlag] = useState(false);
   const [ads, setAds] = useState([]);
+  const canvasContainerRef = useRef(null);
 
   const showedAds = useMemo(() => {
     if (!ads.length) return null;
@@ -100,8 +101,8 @@ function MapDrawing() {
     const context = canvasRef.current?.getContext("2d");
     image.src = imgSrc;
     image.onload = function () {
-      canvasRef.current.width = 600;
-      canvasRef.current.height = 600;
+      canvasRef.current.width = canvasContainerRef.current.clientWidth;
+      canvasRef.current.height = canvasContainerRef.current.clientHeight;
       context.drawImage(
         image,
         0,
@@ -124,9 +125,11 @@ function MapDrawing() {
 
   const addIconToMap = (icon) => {
     const randomX =
-      Math.floor(Math.random() * 600) - Math.floor(Math.random() * 300);
+      Math.floor(Math.random() * canvasContainerRef.current.clientWidth) -
+      Math.floor(Math.random() * 300);
     const randomY =
-      Math.floor(Math.random() * 600) - Math.floor(Math.random() * 300);
+      Math.floor(Math.random() * canvasContainerRef.current.clientWidth) -
+      Math.floor(Math.random() * 300);
     const iconCpy = [...usedIcons];
     const id = new Date().getTime();
     iconCpy.push({
@@ -243,8 +246,11 @@ function MapDrawing() {
   }, []);
 
   return (
-    <div className="min-h-[50vh] flex md:flex-row flex-col gap-4 p-6">
-      <div className="relative w-[600px] h-[600px]">
+    <div className="min-h-[50vh] flex flex-row gap-4 p-6">
+      <div
+        ref={canvasContainerRef}
+        className="relative md:w-[600px] md:h-[600px] w-[300px] h-[300px]"
+      >
         {usedIcons.map((icon) => (
           <Draggable
             defaultPosition={{
@@ -262,7 +268,7 @@ function MapDrawing() {
             key={icon.id}
           >
             <img
-              className="w-6 h-6 absolute"
+              className="md:w-6 md:h-6 w-5 h-5 absolute"
               src={`${import.meta.env.VITE_BASE_URL}/${icon.image_url}`}
             />
           </Draggable>
@@ -301,7 +307,7 @@ function MapDrawing() {
           {icons.map((icon) => (
             <img
               key={icon.id}
-              className="w-10 h-10 cursor-pointer"
+              className="md:w-10 md:h-10 w-5 h-5 cursor-pointer"
               src={`${import.meta.env.VITE_BASE_URL}/${icon.image_url}`}
               onClick={() => addIconToMap(icon)}
             />
