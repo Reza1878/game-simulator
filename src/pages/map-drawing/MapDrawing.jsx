@@ -278,7 +278,6 @@ function MapDrawing() {
           onMouseUp={endDrawing}
           onMouseMove={draw}
           onTouchStart={(e) => {
-            e.preventDefault();
             startDrawing({
               nativeEvent: {
                 offsetX: e.changedTouches[0].clientX,
@@ -287,7 +286,6 @@ function MapDrawing() {
             });
           }}
           onTouchMove={(e) => {
-            e.preventDefault();
             draw({
               nativeEvent: {
                 offsetX: e.changedTouches[0].clientX,
@@ -296,7 +294,6 @@ function MapDrawing() {
             });
           }}
           onTouchEnd={(e) => {
-            e.preventDefault();
             endDrawing();
           }}
           ref={canvasRef}
