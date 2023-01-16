@@ -236,11 +236,21 @@ function MapDrawing() {
           onMouseMove={draw}
           onTouchStart={(e) => {
             e.preventDefault();
-            startDrawing(e);
+            startDrawing({
+              nativeEvent: {
+                offsetX: e.changedTouches[0].pageX,
+                offsetY: e.changedTouches[0].pageY,
+              },
+            });
           }}
           onTouchMove={(e) => {
             e.preventDefault();
-            draw(e);
+            draw({
+              nativeEvent: {
+                offsetX: e.changedTouches[0].pageX,
+                offsetY: e.changedTouches[0].pageY,
+              },
+            });
           }}
           onTouchEnd={(e) => {
             e.preventDefault();
