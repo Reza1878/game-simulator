@@ -19,6 +19,7 @@ function MapDrawing() {
   const [imgSrc, setImgSrc] = useState(null);
   const [resetFlag, setResetFlag] = useState(false);
   const [ads, setAds] = useState([]);
+  const canvasContainerRef = useRef(null);
 
   const showedAds = useMemo(() => {
     if (!ads.length) return null;
@@ -100,8 +101,8 @@ function MapDrawing() {
     const context = canvasRef.current?.getContext("2d");
     image.src = imgSrc;
     image.onload = function () {
-      canvasRef.current.width = 600;
-      canvasRef.current.height = 600;
+      canvasRef.current.width = canvasContainerRef.current.clientWidth;
+      canvasRef.current.height = canvasContainerRef.current.clientHeight;
       context.drawImage(
         image,
         0,
@@ -208,7 +209,10 @@ function MapDrawing() {
   return (
     <div className="min-h-[50vh] flex md:flex-row flex-col gap-4 p-6">
       <div className="flex justify-center">
-        <div className="relative w-[600px] h-[600px]">
+        <div
+          ref={canvasContainerRef}
+          className="relative md:w-[600px] md:h-[600px] w-[300px] h-[300px]"
+        >
           {usedIcons.map((icon) => (
             <Draggable
               defaultPosition={{
