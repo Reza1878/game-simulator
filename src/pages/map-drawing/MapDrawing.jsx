@@ -208,65 +208,63 @@ function MapDrawing() {
 
   return (
     <div className="min-h-[50vh] flex md:flex-row flex-col gap-4 p-6">
-      <div className="flex justify-center">
-        <div
-          ref={canvasContainerRef}
-          className="relative md:w-[600px] md:h-[600px] w-[300px] h-[300px]"
-        >
-          {usedIcons.map((icon) => (
-            <Draggable
-              defaultPosition={{
-                x: icon.coordX,
-                y: icon.coordY,
-              }}
-              // offsetParent={canvasRef}
-              bounds="parent"
-              onStop={(e, data) => {
-                onStopDragIcon({ x: data.x, y: Math.abs(data.y) }, icon.id);
-              }}
-              onDrag={(e, data) => {
-                onDragIcon({ x: data.x, y: Math.abs(data.y) }, icon.id);
-              }}
-              key={icon.id}
-            >
-              <img
-                className="w-6 h-6 absolute"
-                src={`${import.meta.env.VITE_BASE_URL}/${icon.image_url}`}
-              />
-            </Draggable>
-          ))}
-          <canvas
-            onMouseDown={startDrawing}
-            onMouseUp={endDrawing}
-            onMouseMove={draw}
-            onTouchStart={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              startDrawing({
-                nativeEvent: {
-                  offsetX: e.changedTouches[0].clientX,
-                  offsetY: e.changedTouches[0].clientY,
-                },
-              });
+      <div
+        ref={canvasContainerRef}
+        className="relative md:w-[600px] md:h-[600px] w-[300px] h-[300px]"
+      >
+        {usedIcons.map((icon) => (
+          <Draggable
+            defaultPosition={{
+              x: icon.coordX,
+              y: icon.coordY,
             }}
-            onTouchMove={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              draw({
-                nativeEvent: {
-                  offsetX: e.changedTouches[0].clientX,
-                  offsetY: e.changedTouches[0].clientY,
-                },
-              });
+            // offsetParent={canvasRef}
+            bounds="parent"
+            onStop={(e, data) => {
+              onStopDragIcon({ x: data.x, y: Math.abs(data.y) }, icon.id);
             }}
-            onTouchEnd={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              endDrawing();
+            onDrag={(e, data) => {
+              onDragIcon({ x: data.x, y: Math.abs(data.y) }, icon.id);
             }}
-            ref={canvasRef}
-          />
-        </div>
+            key={icon.id}
+          >
+            <img
+              className="w-6 h-6 absolute"
+              src={`${import.meta.env.VITE_BASE_URL}/${icon.image_url}`}
+            />
+          </Draggable>
+        ))}
+        <canvas
+          onMouseDown={startDrawing}
+          onMouseUp={endDrawing}
+          onMouseMove={draw}
+          onTouchStart={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            startDrawing({
+              nativeEvent: {
+                offsetX: e.changedTouches[0].clientX,
+                offsetY: e.changedTouches[0].clientY,
+              },
+            });
+          }}
+          onTouchMove={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            draw({
+              nativeEvent: {
+                offsetX: e.changedTouches[0].clientX,
+                offsetY: e.changedTouches[0].clientY,
+              },
+            });
+          }}
+          onTouchEnd={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            endDrawing();
+          }}
+          ref={canvasRef}
+        />
       </div>
       <div className="flex flex-col gap-4">
         <div className="grid grid-cols-8">
