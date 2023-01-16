@@ -205,42 +205,6 @@ function MapDrawing() {
     document.body.removeChild(link);
   };
 
-  const handleTouchStart = (e) => {
-    e.preventDefault();
-    startDrawing({
-      nativeEvent: {
-        offsetX: e.changedTouches[0].clientX,
-        offsetY: e.changedTouches[0].clientY,
-      },
-    });
-  };
-
-  const handleTouchMove = (e) => {
-    e.preventDefault();
-    draw({
-      nativeEvent: {
-        offsetX: e.changedTouches[0].clientX,
-        offsetY: e.changedTouches[0].clientY,
-      },
-    });
-  };
-  const handleTouchEnd = (e) => {
-    e.preventDefault();
-    endDrawing();
-  };
-
-  useEffect(() => {
-    canvasRef.current.addEventListener("touchstart", handleTouchStart);
-    canvasRef.current.addEventListener("touchmove", handleTouchMove);
-    canvasRef.current.addEventListener("touchend", handleTouchEnd);
-
-    return () => {
-      canvasRef.current.removeEventListener("touchstart", handleTouchStart);
-      canvasRef.current.removeEventListener("touchend", handleTouchEnd);
-      canvasRef.current.removeEventListener("touchmove", handleTouchMove);
-    };
-  }, []);
-
   return (
     <div className="min-h-[50vh] flex md:flex-row flex-col gap-4 p-6">
       <div className="flex justify-center">
@@ -271,6 +235,31 @@ function MapDrawing() {
             onMouseDown={startDrawing}
             onMouseUp={endDrawing}
             onMouseMove={draw}
+            onTouchStart={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              startDrawing({
+                nativeEvent: {
+                  offsetX: e.changedTouches[0].clientX,
+                  offsetY: e.changedTouches[0].clientY,
+                },
+              });
+            }}
+            onTouchMove={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              draw({
+                nativeEvent: {
+                  offsetX: e.changedTouches[0].clientX,
+                  offsetY: e.changedTouches[0].clientY,
+                },
+              });
+            }}
+            onTouchEnd={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              endDrawing();
+            }}
             ref={canvasRef}
           />
         </div>
