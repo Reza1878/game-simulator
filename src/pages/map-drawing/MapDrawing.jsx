@@ -19,7 +19,6 @@ function MapDrawing() {
   const [imgSrc, setImgSrc] = useState(null);
   const [resetFlag, setResetFlag] = useState(false);
   const [ads, setAds] = useState([]);
-  const canvasContainerRef = useRef(null);
 
   const showedAds = useMemo(() => {
     if (!ads.length) return null;
@@ -101,8 +100,8 @@ function MapDrawing() {
     const context = canvasRef.current?.getContext("2d");
     image.src = imgSrc;
     image.onload = function () {
-      canvasRef.current.width = canvasContainerRef.current.clientWidth;
-      canvasRef.current.height = canvasContainerRef.current.clientHeight;
+      canvasRef.current.width = 600;
+      canvasRef.current.height = 600;
       context.drawImage(
         image,
         0,
@@ -206,12 +205,46 @@ function MapDrawing() {
     document.body.removeChild(link);
   };
 
+  const handleTouchStart = (e) => {
+    e.preventDefault();
+    startDrawing({
+      nativeEvent: {
+        offsetX: e.changedTouches[0].clientX,
+        offsetY: e.changedTouches[0].clientY,
+      },
+    });
+  };
+
+  const handleTouchMove = (e) => {
+    e.preventDefault();
+    draw({
+      nativeEvent: {
+        offsetX: e.changedTouches[0].clientX,
+        offsetY: e.changedTouches[0].clientY,
+      },
+    });
+  };
+
+  const handleTouchEnd = (e) => {
+    e.preventDefault();
+    endDrawing();
+  };
+
+  useEffect(() => {
+    canvasRef.current.addEventListener("touchstart", handleTouchStart, false);
+    canvasRef.current.addEventListener("touchmove", handleTouchMove, false);
+    canvasRef.current.addEventListener("touchend", handleTouchEnd, false);
+
+    return () => {
+      canvasRef.current.removeEventListener("touchstart", handleTouchStart);
+      canvasRef.current.removeEventListener("touchmove", handleTouchMove);
+      canvasRef.current.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, []);
+
   return (
     <div className="min-h-[50vh] flex md:flex-row flex-col gap-4 p-6">
-      <div
-        ref={canvasContainerRef}
-        className="relative md:w-[600px] md:h-[600px] w-[300px] h-[300px]"
-      >
+      <div className="relative w-[600px] h-[600px]">
         {usedIcons.map((icon) => (
           <Draggable
             defaultPosition={{
@@ -240,7 +273,6 @@ function MapDrawing() {
           onMouseMove={draw}
           onTouchStart={(e) => {
             e.preventDefault();
-            e.stopPropagation();
             startDrawing({
               nativeEvent: {
                 offsetX: e.changedTouches[0].clientX,
@@ -250,7 +282,6 @@ function MapDrawing() {
           }}
           onTouchMove={(e) => {
             e.preventDefault();
-            e.stopPropagation();
             draw({
               nativeEvent: {
                 offsetX: e.changedTouches[0].clientX,
@@ -260,7 +291,6 @@ function MapDrawing() {
           }}
           onTouchEnd={(e) => {
             e.preventDefault();
-            e.stopPropagation();
             endDrawing();
           }}
           ref={canvasRef}
