@@ -239,9 +239,9 @@ function MapDrawing() {
     canvasRef.current.addEventListener("touchend", handleTouchEnd, false);
 
     return () => {
-      canvasRef.current.removeEventListener("touchstart", handleTouchStart);
-      canvasRef.current.removeEventListener("touchmove", handleTouchMove);
-      canvasRef.current.removeEventListener("touchend", handleTouchEnd);
+      canvasRef.current?.removeEventListener("touchstart", handleTouchStart);
+      canvasRef.current?.removeEventListener("touchmove", handleTouchMove);
+      canvasRef.current?.removeEventListener("touchend", handleTouchEnd);
     };
   }, []);
 
