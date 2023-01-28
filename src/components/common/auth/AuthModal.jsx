@@ -18,7 +18,7 @@ function AuthModal({ open = false, onClose = () => {} }) {
   return (
     <Modal open={open} onClose={onClose}>
       <div className="bg-primary p-2 flex justify-center rounded-md mb-3">
-        <img src={logo} className="w-[124px] h-[32px]" />
+        <img src={logo} className="w-[200px] h-[168px]" />
       </div>
       {content}
     </Modal>

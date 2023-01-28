@@ -55,20 +55,22 @@ function RegisterForm() {
 
   const onSubmit = async (val) => {
     try {
-      setError("");
-      setLoading(true);
-      const response = await AuthService.register(val);
-      const { data } = response;
-      dispatch(setUser(data));
-      dispatch(setAccessToken(data.token));
-      setLoading(false);
-      setShowAuthModal(false);
-      showToast("Register success");
+    setError("");
+    setLoading(true);
+    const response = await AuthService.register(val);
+    const { data } = response;
+    dispatch(setUser(data));
+    dispatch(setAccessToken(data.token));
+    setLoading(false);
+    setShowAuthModal(false);
+    showToast("Register success");
     } catch (error) {
-      setError(error?.response?.data?.message || "Something went wrong");
-      setLoading(false);
+    console.log(error);
+    setError(error?.response?.data?.message || "Something went wrong");
+    setLoading(false);
     }
-  };
+    };
+    
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>

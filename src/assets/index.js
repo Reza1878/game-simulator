@@ -1,10 +1,8 @@
 import airbnb from "./airbnb.png";
-import bill from "./bill.png";
 import binance from "./binance.png";
-import card from "./card.png";
 import coinbase from "./coinbase.png";
 import dropbox from "./dropbox.png";
-import logo from "./logo.svg";
+import logo from "./logo.png";
 import quotes from "./quotes.svg";
 import robot from "./robot.png";
 import send from "./Send.svg";
@@ -24,12 +22,18 @@ import people01 from "./people01.png";
 import people02 from "./people02.png";
 import people03 from "./people03.png";
 import mockAvatar from "./mock-avatar.png";
+import client1 from "./client1.png";
+import text from "./text.png";
+import sltool from "./sltool.svg";
+import pencil from "./pencil.svg";
 
 export {
+  pencil,
+  sltool,
+  text,
+  client1,
   airbnb,
-  bill,
   binance,
-  card,
   coinbase,
   dropbox,
   logo,

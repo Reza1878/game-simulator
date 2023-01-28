@@ -1,5 +1,6 @@
-import React from "react";
-import { TextField } from "@/components/form";
+import React from 'react';
+import * as t from 'prop-types';
+import { TextField } from '@/components/form';
 
 /**
  *
@@ -11,7 +12,7 @@ function TableCellSearch({ column }) {
   return (
     <TextField
       type="text"
-      defaultValue={columnFilterValue ?? ""}
+      defaultValue={columnFilterValue ?? ''}
       onChange={(e) => column.setFilterValue(e.target.value)}
       placeholder="Search..."
       className="font-normal py-1"

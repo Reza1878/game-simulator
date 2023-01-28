@@ -42,6 +42,8 @@ import {
   IconsListPage,
 } from "./icons";
 
+import { SettingsItemPage, SettingUpdatePage } from "./settings";
+
 export {
   Dashboard,
   PricingCreatePage,
@@ -69,4 +71,6 @@ export {
   IconsCreatePage,
   IconsDetailPage,
   IconsUpdatePage,
+  SettingsItemPage,
+  SettingUpdatePage,
 };

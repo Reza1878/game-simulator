@@ -54,10 +54,8 @@ function Pricings() {
       <div className="w-full flex flex-col">
         <Text className={styles.heading2}>Designed for gamers like you</Text>
         <Text className="text-dimWhite mb-4">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Corrupti,
-          voluptas voluptates atque blanditiis ullam architecto corporis tempora
-          ex autem odit. Voluptatem nam impedit sint aspernatur odio sequi
-          nesciunt earum facere?
+          Require an enterprise subscription as a big Esports organisation ? Contact us 
+          here at business@feggot.com
         </Text>
 
         <div className="lg:grid lg:grid-cols-3 sm:gap-6 lg:gap-10 lg:space-y-0 space-y-8">

@@ -1,18 +1,22 @@
 import {
+  ROUTE_DISCLAIMER,
+  ROUTE_EULA,
+  ROUTE_PRIVACY,
+  ROUTE_REFUND_POLICY,
+  ROUTE_TERMS_AND_SERVICE,
+} from "@/config/routes";
+import {
   people01,
   people02,
   people03,
   facebook,
-  instagram,
-  linkedin,
-  twitter,
-  airbnb,
-  binance,
-  coinbase,
-  dropbox,
   send,
   shield,
   star,
+  text,
+  client1,
+  sltool,
+  pencil,
 } from "../assets";
 
 export const navLinks = [
@@ -29,174 +33,175 @@ export const navLinks = [
 ];
 
 export const features = [
+  // {
+  //   id: "feature-1",
+  //   icon: star,
+  //   title: "Heatmap",
+  //   content:
+  //     "Upgrading yourself by watching how a good player move in game and how you move in game",
+  // },
   {
     id: "feature-1",
-    icon: star,
-    title: "Rewards",
+    icon: sltool,
+    title: "Still Developing",
     content:
-      "The best credit cards offer some tantalizing combinations of promotions and prizes",
+      "We are only in the soft launch phase! if this is useful for you after using multiple times, do help to support our service by donating!",
   },
   {
     id: "feature-2",
     icon: shield,
-    title: "100% Secured",
+    title: "Draft Simulator",
     content:
-      "We take proactive steps make sure your information and transactions are secure.",
+      "Not sure about how the opponent might likely draft ? Use this feature and get into some scenarios with your teammates!",
   },
   {
     id: "feature-3",
-    icon: send,
-    title: "Balance Transfer",
+    icon: pencil,
+    title: "Map Drawing",
     content:
-      "A balance transfer credit card can save you a lot of money in interest charges.",
+      "Have to discuss but due to language barrier or online environment unable to ? Use this feature and get into understanding with your team!",
   },
 ];
 
-export const feedback = [
+export const TestimonialsData = [
   {
-    id: "feedback-1",
-    content:
-      "Money is only a tool. It will take you wherever you wish, but it will not replace you as the driver.",
-    name: "Herman Jensen",
-    title: "Founder & Leader",
-    img: people01,
+    image: people01,
+    comment: "Sentence 1 that needs to be long long hehe",
+    name: "Pro Player 1 from Team XXX",
   },
   {
-    id: "feedback-2",
-    content:
-      "Money makes your life easier. If you're lucky to have it, you're lucky.",
-    name: "Steve Mark",
-    title: "Founder & Leader",
-    img: people02,
+    image: people02,
+    comment: "Sentence 2",
+    name: "Pro Player 2 from Team XXX",
   },
   {
-    id: "feedback-3",
-    content:
-      "It is usually people in the money business, finance, and international trade that are really rich.",
-    name: "Kenn Gallagher",
-    title: "Founder & Leader",
-    img: people03,
+    image: people03,
+    comment: "Sentence 3",
+    name: "Pro Player 3 from Team XXX",
+  },
+  {
+    image: people01,
+    comment: "Sentence 4 that needs to be long long long",
+    name: "Pro Player 4 from Team XXX",
+  },
+  {
+    image: people02,
+    comment: "Sentence 5",
+    name: "Pro Player 5 from Team XXX",
+  },
+  {
+    image: people03,
+    comment: "Sentence 6",
+    name: "Pro Player 6 from Team XXX",
   },
 ];
 
 export const stats = [
   {
     id: "stats-1",
-    title: "User Active",
-    value: "3800+",
+    title: "Create by gamer",
+    value: "✔",
   },
   {
     id: "stats-2",
-    title: "Trusted by Company",
-    value: "230+",
+    title: "Use by gamer",
+    value: "✔",
   },
   {
     id: "stats-3",
-    title: "Transaction",
-    value: "$230M+",
+    title: "Think for gamer",
+    value: "✔",
   },
 ];
 
 export const footerLinks = [
   {
-    title: "Useful Links",
-    links: [
-      {
-        name: "Content",
-        link: "https://www.hoobank.com/content/",
-      },
-      {
-        name: "How it Works",
-        link: "https://www.hoobank.com/documentation/",
-      },
-      {
-        name: "Create",
-        link: "https://www.facebook.com/kayzeepi/",
-      },
-      {
-        name: "Explore",
-        link: "https://www.hoobank.com/explore/",
-      },
-      {
-        name: "Terms & Services",
-        link: "https://www.hoobank.com/terms-and-services/",
-      },
-    ],
-  },
-  {
     title: "Community",
     links: [
       {
-        name: "Help Center",
-        link: "https://www.hoobank.com/help-center/",
+        name: "Be our partner",
+        link: "https://www.effeg.com/be-our-partner/",
       },
       {
-        name: "Partners",
-        link: "https://www.hoobank.com/partners/",
+        name: "Facebook",
+        link: "https://www.facebook.com/effeg.gg",
       },
       {
         name: "Suggestions",
-        link: "https://www.hoobank.com/suggestions/",
-      },
-      {
-        name: "Blog",
-        link: "https://www.hoobank.com/blog/",
+        link: "https://www.effeg.com/suggestions/",
       },
     ],
   },
   {
-    title: "Partner",
+    title: "Useful Links",
     links: [
       {
-        name: "Facebook",
-        link: "https://www.hoobank.com/our-partner/",
+        name: "EULA",
+        link: "https://www.effeg.com/EULA/",
+        route: ROUTE_EULA,
       },
       {
-        name: "Become a Partner",
-        link: "https://www.hoobank.com/become-a-partner/",
+        name: "Refund Policy",
+        link: "https://www.effeg.com/refundpolicy/",
+        route: ROUTE_REFUND_POLICY,
+      },
+      {
+        name: "Terms & Services",
+        link: "https://www.effeg.com/terms-and-services/",
+        route: ROUTE_TERMS_AND_SERVICE,
+      },
+    ],
+  },
+  {
+    title: "More Useful Links",
+    links: [
+      {
+        name: "Privacy",
+        link: "https://www.effeg.com/privacy/",
+        route: ROUTE_PRIVACY,
+      },
+      {
+        name: "Disclaimer",
+        link: "https://www.effeg.gg/disclaimer/",
+        route: ROUTE_DISCLAIMER,
       },
     ],
   },
 ];
 
 export const socialMedia = [
-  {
-    id: "social-media-1",
-    icon: instagram,
-    link: "https://www.instagram.com/",
-  },
+  // {
+  //   id: "social-media-1",
+  //   icon: instagram,
+  //   link: "https://www.instagram.com/",
+  // },
   {
     id: "social-media-2",
     icon: facebook,
-    link: "https://www.facebook.com/",
+    link: "https://www.facebook.com/effeg.gg",
   },
-  {
-    id: "social-media-3",
-    icon: twitter,
-    link: "https://www.twitter.com/",
-  },
-  {
-    id: "social-media-4",
-    icon: linkedin,
-    link: "https://www.linkedin.com/",
-  },
+  // {
+  //   id: "social-media-3",
+  //   icon: twitter,
+  //   link: "https://www.twitter.com/",
+  // },
 ];
 
 export const clients = [
   {
     id: "client-1",
-    logo: airbnb,
+    logo: client1,
   },
   {
     id: "client-2",
-    logo: binance,
+    logo: text,
   },
   {
     id: "client-3",
-    logo: coinbase,
+    logo: text,
   },
   {
     id: "client-4",
-    logo: dropbox,
+    logo: text,
   },
 ];

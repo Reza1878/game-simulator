@@ -6,22 +6,24 @@ import {
   ROUTE_ADMIN_DASHBOARD,
   ROUTE_ADS,
   ROUTE_BAN_AMOUNT_PAGE,
+  ROUTE_DISCLAIMER,
+  ROUTE_EULA,
   ROUTE_HEROES,
   ROUTE_HEROES_ROLE,
   ROUTE_ICONS,
   ROUTE_LOGOUT,
   ROUTE_MAP,
   ROUTE_PRICING_PAGE,
+  ROUTE_PRIVACY,
+  ROUTE_REFUND_POLICY,
+  ROUTE_SETTINGS,
   ROUTE_TEAM_PAGE,
+  ROUTE_TERMS_AND_SERVICE,
   ROUTE_USER,
   ROUTE_USER_TIER,
 } from "./config/routes";
 import { Home, Pricing } from "./pages";
 import {
-  AdsCreatePage,
-  AdsDetailPage,
-  AdsListPage,
-  AdsUpdatePage,
   BanAmountCreatePage,
   BanAmountListPage,
   BanAmountUpdatePage,
@@ -30,10 +32,6 @@ import {
   HeroesDetailPage,
   HeroesListPage,
   HeroesUpdatePage,
-  IconsCreatePage,
-  IconsDetailPage,
-  IconsListPage,
-  IconsUpdatePage,
   PricingCreatePage,
   PricingListPage,
   PricingUpdatePage,
@@ -44,23 +42,39 @@ import {
   UserTierCreatePage,
   UserTierListPage,
   UserTierUpdatePage,
+  IconsCreatePage,
+  IconsDetailPage,
+  IconsListPage,
+  IconsUpdatePage,
+  AdsCreatePage,
+  AdsDetailPage,
+  AdsListPage,
+  AdsUpdatePage,
+  SettingsItemPage,
+  SettingUpdatePage,
 } from "./pages/admin";
 import {
   HeroesRoleCreatePage,
   HeroesRoleListPage,
   HeroesRoleUpdatePage,
 } from "./pages/admin/heroes-role";
-import { MapDetailPage, MapUpdatePage } from "./pages/admin/map";
 import { ResetPassword } from "./pages/auth";
 import Logout from "./pages/auth/Logout";
-import { MapDrawing } from "./pages/map-drawing";
-import NotFound from "./pages/NotFound";
 import { CancelPayment, SuccessPayment } from "./pages/payment";
 import { Simulator, SimulatorPortal } from "./pages/simulator";
+import { MapDetailPage, MapUpdatePage } from "./pages/admin/map";
+import NotFound from "./pages/NotFound";
+import { MapDrawing } from "./pages/map-drawing";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Disclaimer from "./pages/Disclaimer";
+import Eula from "./pages/Eula";
+import TermsService from "./pages/TermsService";
+import RefundPolicy from "./pages/RefundPolicy";
 
 function ProtectedRoutes() {
   const role = useSelector((state) => state.user.role);
   const accessToken = useSelector((state) => state.auth.accessToken);
+
   if (role === "admin") {
     return (
       <AdminLayout>
@@ -137,6 +151,11 @@ function ProtectedRoutes() {
             path={`${ROUTE_ICONS}/:id/edit`}
             element={<IconsUpdatePage />}
           />
+          <Route path={ROUTE_SETTINGS} element={<SettingsItemPage />} />
+          <Route
+            path={`${ROUTE_SETTINGS}/edit`}
+            element={<SettingUpdatePage />}
+          />
           <Route path={ROUTE_LOGOUT} element={<Logout />} />
         </Routes>
       </AdminLayout>
@@ -157,6 +176,11 @@ function ProtectedRoutes() {
             <Route path="/map-drawing" element={<MapDrawing />} />
           </>
         )}
+        <Route path={ROUTE_PRIVACY} element={<PrivacyPolicy />} />
+        <Route path={ROUTE_DISCLAIMER} element={<Disclaimer />} />
+        <Route path={ROUTE_EULA} element={<Eula />} />
+        <Route path={ROUTE_TERMS_AND_SERVICE} element={<TermsService />} />
+        <Route path={ROUTE_REFUND_POLICY} element={<RefundPolicy />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </GuestLayout>

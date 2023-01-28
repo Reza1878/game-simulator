@@ -10,3 +10,10 @@ export const ROUTE_LOGOUT = "/logout";
 export const ROUTE_MAP = "/admin/maps";
 export const ROUTE_ADS = "/admin/ads";
 export const ROUTE_ICONS = "/admin/icons";
+export const ROUTE_SETTINGS = "/admin/settings";
+
+export const ROUTE_EULA = "/EULA";
+export const ROUTE_REFUND_POLICY = "/refund-policy";
+export const ROUTE_TERMS_AND_SERVICE = "/terms-and-services";
+export const ROUTE_PRIVACY = "/privacy";
+export const ROUTE_DISCLAIMER = "/disclaimer";

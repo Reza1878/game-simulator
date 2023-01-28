@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 
 function HeroesListPage() {
   const [selectedItem, setSelectedItem] = useState(null);
+  const [roles, setRoles] = useState([]);
   const [selectedRoles, setSelectedRoles] = useState(null);
   const [open, setOpen] = useState(false);
   const { showToast } = useToast();
@@ -92,7 +93,7 @@ function HeroesListPage() {
     return params;
   }, [selectedRoles]);
   return (
-    <BasePage title="Heroes List">
+    <BasePage title="Pricing List">
       <div className="flex justify-end mb-3">
         <Button onClick={() => navigate(`${ROUTE_HEROES}/create`)}>
           Create

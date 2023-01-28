@@ -8,6 +8,7 @@ import {
   ROUTE_LOGOUT,
   ROUTE_MAP,
   ROUTE_PRICING_PAGE,
+  ROUTE_SETTINGS,
   ROUTE_TEAM_PAGE,
   ROUTE_USER,
   ROUTE_USER_TIER,
@@ -20,12 +21,13 @@ import {
   Home,
   Layers,
   LogOut,
-  Map,
   PlayCircle,
   Settings,
   User,
   Users,
   XCircle,
+  Map,
+  Server,
 } from "react-feather";
 import { useSelector } from "react-redux";
 import { logo, mockAvatar } from "@/assets";
@@ -35,7 +37,6 @@ import { Text } from "../common";
 
 function AdminSidebar({ open = false }) {
   const user = useSelector((state) => state.user);
-
   const routes = useMemo(() => {
     return [
       {
@@ -78,6 +79,11 @@ function AdminSidebar({ open = false }) {
         href: ROUTE_ICONS,
       },
       {
+        title: "Settings",
+        icon: <Server className="icon" />,
+        href: ROUTE_SETTINGS,
+      },
+      {
         title: "Logout",
         icon: <LogOut className="icon" />,
         href: ROUTE_LOGOUT,
@@ -94,7 +100,7 @@ function AdminSidebar({ open = false }) {
     >
       <div className="flex justify-center items-center py-10 border-b border-b-gray-100">
         <div className="bg-primary p-2 rounded-md">
-          <img src={logo} className="w-[124px] h-[32px]" />
+          <img src={logo} className="w-[200px] h-[168px]" />
         </div>
       </div>
       <div className="flex pl-6 items-center py-6">
@@ -106,7 +112,7 @@ function AdminSidebar({ open = false }) {
         <Text className="font-medium ml-2">{user.name}</Text>
       </div>
 
-      <ul className="mb-4">
+      <ul>
         {routes.map((item, index) => (
           <li key={index} className="flex items-center relative">
             <NavItem

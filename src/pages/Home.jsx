@@ -1,13 +1,12 @@
 import {
-  Billing,
   Business,
-  CardDeal,
   Clients,
   CTA,
   Hero,
   Stats,
   Testimonials,
 } from "@/components";
+import ContactUsForm from "@/components/ContactUsForm";
 import styles from "@/style";
 import React from "react";
 
@@ -24,12 +23,10 @@ function Home() {
         <div className={`${styles.boxWidth}`}>
           <Stats />
           <Business />
-          <Billing />
-          <CardDeal />
-          <Testimonials />
-
+          {/* <Testimonials /> */}
           <Clients />
           <CTA />
+          <ContactUsForm />
         </div>
       </div>
     </>

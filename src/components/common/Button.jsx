@@ -17,6 +17,7 @@ function Button({
       primary: "bg-primary opacity-90 text-white hover:opacity-100",
       danger: "bg-red-500 text-white hover:bg-red-600",
       maroon: "bg-maroon opacity-90 text-white hover:opacity-100",
+      "blue-gradient": "bg-blue-gradient",
     },
     outlined: {
       primary:
@@ -53,7 +54,7 @@ Button.propTypes = {
   children: t.node,
   className: t.string,
   variant: t.oneOf(["filled", "outlined", "link"]).isRequired,
-  color: t.oneOf(["primary", "danger", "maroon"]).isRequired,
+  color: t.oneOf(["primary", "danger", "maroon", "blue-gradient"]).isRequired,
   type: t.string,
   onClick: t.func,
   isLoading: t.bool,
