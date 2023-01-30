@@ -56,7 +56,7 @@ function ContactUsForm() {
   return (
     <div>
       <Text bold variant="h1" className="mb-2 text-white">
-        Contact Us
+        Our Partner and Suggestions
       </Text>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl

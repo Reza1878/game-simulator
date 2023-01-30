@@ -10,9 +10,7 @@ import {
   people02,
   people03,
   facebook,
-  send,
   shield,
-  star,
   text,
   client1,
   sltool,
@@ -24,6 +22,11 @@ export const navLinks = [
     id: "home",
     title: "Home",
     href: "/",
+    links: [
+      { title: "Home", href: "/" },
+      { title: "Privacy", href: ROUTE_PRIVACY },
+      { title: "Suggestions", href: "/suggestions", protected: true },
+    ],
   },
   {
     id: "pricing",

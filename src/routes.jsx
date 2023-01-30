@@ -22,7 +22,7 @@ import {
   ROUTE_USER,
   ROUTE_USER_TIER,
 } from "./config/routes";
-import { Home, Pricing } from "./pages";
+import { Home, Pricing, Suggestions } from "./pages";
 import {
   BanAmountCreatePage,
   BanAmountListPage,
@@ -174,6 +174,7 @@ function ProtectedRoutes() {
         {accessToken && (
           <>
             <Route path="/map-drawing" element={<MapDrawing />} />
+            <Route path="/suggestions" element={<Suggestions />} />
           </>
         )}
         <Route path={ROUTE_PRIVACY} element={<PrivacyPolicy />} />

@@ -1,10 +1,11 @@
 import AuthModalContext from "@/context/AuthModalContext";
-import { useContext, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { close, logo, menu } from "../assets";
 import { navLinks } from "../constants";
 import AuthNavbarItem from "./AuthNavbarItem";
+import GuestNavItem from "./navigation/GuestNavItem";
 
 const Navbar = () => {
   const [active, setActive] = useState("Home");
@@ -42,7 +43,12 @@ const Navbar = () => {
   return (
     <nav className="w-full flex py-6 justify-between items-center navbar">
       <div className="flex">
-        <img src={logo} alt="effeg" className="w-[200px] h-[168px] mr-10" />
+        <img
+          src={logo}
+          alt="effeg"
+          className="w-[200px] h-[168px] mr-10 cursor-pointer"
+          onClick={() => navigate(`/`)}
+        />
         <button
           onClick={onSimulatorClick}
           className="text-dimWhite hover:text-white font-poppins font-normal text-[16px] hidden md:block mr-10"
@@ -65,17 +71,16 @@ const Navbar = () => {
 
       <ul className="list-none md:flex hidden justify-end items-center flex-1">
         {navLinks.map((nav, index) => (
-          <li
-            key={nav.id}
-            className={`font-poppins font-normal cursor-pointer text-[16px] ${
-              active === nav.title ? "text-white" : "text-dimWhite"
-            } ${index === navLinks.length - 1 ? "mr-0" : "mr-10"}`}
-            onClick={() => {
-              setActive(nav.title);
-            }}
-          >
-            <Link to={nav.href}>{nav.title}</Link>
-          </li>
+          <GuestNavItem
+            href={nav.href}
+            title={nav.title}
+            lastItem={index === navLinks.length - 1}
+            key={index}
+            links={nav.links}
+            setActive={setActive}
+            id={nav.id}
+            active={active}
+          />
         ))}
         <AuthNavbarItem />
       </ul>
@@ -95,21 +100,39 @@ const Navbar = () => {
         >
           <ul className="list-none flex justify-end items-start flex-1 flex-col">
             {navLinks.map((nav, index) => (
-              <li
-                key={nav.id}
-                className={`font-poppins font-medium cursor-pointer text-[16px] mb-4 ${
-                  active === nav.title ? "text-white" : "text-dimWhite"
-                }`}
-                onClick={() => setActive(nav.title)}
-              >
-                <Link to={nav.href}>{nav.title}</Link>
-              </li>
+              <Fragment key={nav.id}>
+                {(nav.links || []).length === 0 && (
+                  <li
+                    key={nav.id}
+                    className={`font-poppins font-medium cursor-pointer text-[16px] mb-4 relative ${
+                      active === nav.title ? "text-white" : "text-dimWhite"
+                    }`}
+                    onClick={() => setActive(nav.title)}
+                  >
+                    <Link to={nav.href}>{nav.title}</Link>
+                  </li>
+                )}
+                {(nav.links || []).length !== 0 && (
+                  <>
+                    {nav.links.map((link) => (
+                      <li
+                        key={link.href}
+                        className={`font-poppins font-medium cursor-pointer text-[16px] mb-4 relative ${
+                          active === nav.title ? "text-white" : "text-dimWhite"
+                        }`}
+                      >
+                        <Link to={link.href}>{link.title}</Link>
+                      </li>
+                    ))}
+                  </>
+                )}
+              </Fragment>
             ))}
             <li className="text-dimWhite hover:text-white font-poppins font-normal text-[16px] mb-4">
               <button onClick={onSimulatorClick}>Simulator</button>
             </li>
-            <li className="text-dimWhite hover:text-white font-poppins font-normal text-[16px] mb-4">
-              <button onClick={onMapDrawingClick}>Map Drawing</button>
+            <li className="text-dimWhite hover:text-white font-poppins font-normal text-[16px] mb-4 cursor-pointer">
+              <p onClick={onMapDrawingClick}>Map Drawing</p>
             </li>
             <li className="text-dimWhite hover:text-white font-poppins font-normal text-[16px] mb-4">
               <button onClick={onToolPageClick}>Tool Page</button>

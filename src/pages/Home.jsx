@@ -1,12 +1,4 @@
-import {
-  Business,
-  Clients,
-  CTA,
-  Hero,
-  Stats,
-  Testimonials,
-} from "@/components";
-import ContactUsForm from "@/components/ContactUsForm";
+import { Business, Clients, CTA, Hero, Stats } from "@/components";
 import styles from "@/style";
 import React from "react";
 
@@ -26,7 +18,6 @@ function Home() {
           {/* <Testimonials /> */}
           <Clients />
           <CTA />
-          <ContactUsForm />
         </div>
       </div>
     </>

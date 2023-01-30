@@ -1,3 +1,4 @@
 import Home from "./Home";
 import Pricing from "./Pricing";
-export { Home, Pricing };
+import Suggestions from "./Suggestions";
+export { Home, Pricing, Suggestions };
