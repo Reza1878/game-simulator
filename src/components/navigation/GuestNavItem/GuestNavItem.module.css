@@ -1,0 +1,7 @@
+.nav-item > .sidebar {
+  display: none;
+}
+
+.nav-item:hover > .sidebar {
+  display: flex;
+}

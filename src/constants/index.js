@@ -25,6 +25,14 @@ export const navLinks = [
     links: [
       { title: "Home", href: "/" },
       { title: "Privacy", href: ROUTE_PRIVACY },
+      { title: "Disclaimer", href: ROUTE_DISCLAIMER },
+      { title: "EULA", href: ROUTE_EULA },
+      { title: "Refund Policy", href: ROUTE_REFUND_POLICY },
+      { title: "Terms & Service", href: ROUTE_TERMS_AND_SERVICE },
+      {
+        title: "Facebook",
+        outerLink: "https://www.facebook.com/effeg.gg",
+      },
       { title: "Suggestions", href: "/suggestions", protected: true },
     ],
   },

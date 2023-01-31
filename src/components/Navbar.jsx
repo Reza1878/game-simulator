@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { close, logo, menu } from "../assets";
 import { navLinks } from "../constants";
 import AuthNavbarItem from "./AuthNavbarItem";
-import GuestNavItem from "./navigation/GuestNavItem";
+import GuestNavItem from "./navigation/GuestNavItem/GuestNavItem";
 
 const Navbar = () => {
   const [active, setActive] = useState("Home");
