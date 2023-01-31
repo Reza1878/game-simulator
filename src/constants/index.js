@@ -32,6 +32,7 @@ export const navLinks = [
       {
         title: "Facebook",
         outerLink: "https://www.facebook.com/effeg.gg",
+        href: "FB",
       },
       { title: "Suggestions", href: "/suggestions", protected: true },
     ],
