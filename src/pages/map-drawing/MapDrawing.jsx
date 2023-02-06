@@ -22,13 +22,18 @@ function MapDrawing() {
   const canvasContainerRef = useRef(null);
 
   const showedAds = useMemo(() => {
-    if (!ads.length) return null;
+    if (!(ads || []).length) return null;
 
     return ads[Math.floor(Math.random() * ads.length)];
   }, [ads]);
 
   const wrappedFetchIcons = useWrap(
     () => IconsService.gets(),
+    () => []
+  );
+
+  const wrappedFetchAds = useWrap(
+    () => AdService.gets(),
     () => []
   );
 
@@ -80,7 +85,7 @@ function MapDrawing() {
     })();
 
     (async () => {
-      const response = await AdService.gets();
+      const response = await wrappedFetchAds();
       if (!active) return;
       setAds(response.data);
     })();
@@ -301,7 +306,7 @@ function MapDrawing() {
       </div>
       <div className="flex flex-col gap-4">
         <div className="grid grid-cols-8">
-          {icons.map((icon) => (
+          {(icons || []).map((icon) => (
             <img
               key={icon.id}
               className="md:w-10 md:h-10 w-5 h-5 cursor-pointer"

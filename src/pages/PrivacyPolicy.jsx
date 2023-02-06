@@ -116,11 +116,11 @@ function PrivacyPolicy() {
           <p>
             <strong>Website</strong> refers to Effeg, accessible from{" "}
             <a
-              href="www.Effeg.com"
+              href="www.Effeg.gg"
               rel="external nofollow noopener"
               target="_blank"
             >
-              www.Effeg.com
+              www.Effeg.gg
             </a>
           </p>
         </li>
@@ -516,7 +516,7 @@ function PrivacyPolicy() {
         If you have any questions about this Privacy Policy, You can contact us:
       </p>
       <ul>
-        <li>By email: support@Effeg.com</li>
+        <li>By email: effeg28@gmail.com </li>
       </ul>
     </div>
   );

@@ -61,11 +61,11 @@ function RefundPolicy() {
           <p>
             <strong>Website</strong> refers to Effeg, accessible from{" "}
             <a
-              href="https://www.Effeg.com"
+              href="https://www.Effeg.gg"
               rel="external nofollow noopener"
               target="_blank"
             >
-              https://www.Effeg.com
+              https://www.Effeg.gg
             </a>
           </p>
         </li>
@@ -93,7 +93,7 @@ function RefundPolicy() {
         decision by:
       </p>
       <ul>
-        <li>By email: support@Effeg.com</li>
+        <li>By email: effeg28@gmail.com </li>
       </ul>
       <p>
         We will reimburse You no later than 14 days from the day on which We
@@ -144,7 +144,7 @@ function RefundPolicy() {
         You are responsible for the cost and risk of returning the Goods to Us.
         You should send the Goods at the following address:
       </p>
-      <p>You can email us at support@Effeg.com</p>
+      <p>You can email us at effeg28@gmail.com </p>
       <p>
         We cannot be held responsible for Goods damaged or lost in return
         shipment. Therefore, We recommend an insured and trackable mail service.
@@ -169,7 +169,7 @@ function RefundPolicy() {
         contact us:
       </p>
       <ul>
-        <li>By email: support@Effeg.com</li>
+        <li>By email: effeg28@gmail.com </li>
       </ul>
     </div>
   );

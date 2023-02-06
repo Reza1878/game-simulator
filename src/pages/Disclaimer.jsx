@@ -164,7 +164,7 @@ function Disclaimer() {
         If you have any questions about this Disclaimer, You can contact Us:
       </p>
       <ul>
-        <li>By email: support@Effeg.com</li>
+        <li>By email: effeg28@gmail.com</li>
       </ul>
     </div>
   );

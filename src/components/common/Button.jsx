@@ -10,6 +10,7 @@ function Button({
   type,
   onClick,
   isLoading,
+  disabled = false,
   ...otherProps
 }) {
   const variantClassName = {
@@ -36,7 +37,7 @@ function Button({
       type={type}
       className={clsx(
         "block py-2 px-6 transition-all rounded-md font-medium",
-        isLoading
+        isLoading || disabled
           ? "bg-gray-400 pointer-events-none text-white opacity-70"
           : variantClassName[variant][color] ??
               variantClassName["filled"]["primary"],
@@ -58,6 +59,7 @@ Button.propTypes = {
   type: t.string,
   onClick: t.func,
   isLoading: t.bool,
+  disabled: t.bool,
 };
 
 Button.defaultProps = {

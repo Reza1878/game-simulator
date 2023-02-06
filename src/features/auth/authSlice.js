@@ -4,6 +4,7 @@ export const authSlice = createSlice({
   name: "auth",
   initialState: {
     accessToken: localStorage.getItem("accessToken") ?? "",
+    refreshToken: localStorage.getItem("refreshToken") ?? "",
     showUnauthorizedModal: false,
   },
   reducers: {
@@ -14,9 +15,14 @@ export const authSlice = createSlice({
     setShowUnauthorizedModal: (state, action) => {
       state.showUnauthorizedModal = action.payload;
     },
+    setRefreshToken: (state, action) => {
+      state.refreshToken = action.payload;
+      localStorage.setItem("refreshToken", action.payload);
+    },
   },
 });
 
-export const { setAccessToken, setShowUnauthorizedModal } = authSlice.actions;
+export const { setAccessToken, setShowUnauthorizedModal, setRefreshToken } =
+  authSlice.actions;
 
 export default authSlice.reducer;

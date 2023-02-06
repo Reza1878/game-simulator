@@ -7,7 +7,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import AuthService from "@/service/auth-service";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/features/user/userSlice";
-import { setAccessToken } from "@/features/auth/authSlice";
+import { setAccessToken, setRefreshToken } from "@/features/auth/authSlice";
 import useToast from "@/hooks/useToast";
 import AuthModalContext from "@/context/AuthModalContext";
 import { useNavigate } from "react-router-dom";
@@ -57,6 +57,7 @@ function LoginForm() {
       const { data } = response;
       dispatch(setUser(data));
       dispatch(setAccessToken(data.token));
+      dispatch(setRefreshToken(data.refresh_token));
       setLoading(false);
       setShowAuthModal(false);
       showToast("Authentication success");

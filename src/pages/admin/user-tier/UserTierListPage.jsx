@@ -22,6 +22,11 @@ function UserTierListPage() {
       cell: (info) => info.getValue(),
       header: () => <span>Name</span>,
     }),
+    columnHelper.accessor("max_session", {
+      cell: (info) => info.getValue(),
+      header: () => <span>Max Session</span>,
+      enableColumnFilter: false,
+    }),
     columnHelper.display({
       id: "action",
       cell: (props) => {

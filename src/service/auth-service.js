@@ -1,3 +1,4 @@
+import { sendAndHandleInvalidRequest } from "@/utils/api";
 import axios from "axios";
 
 export default class AuthService {
@@ -31,5 +32,21 @@ export default class AuthService {
   static async resetPassword(payload) {
     const response = await axios.post("/api/auth/reset-password", payload);
     return response.data;
+  }
+
+  static async refreshToken() {
+    const refreshToken = localStorage.getItem("refreshToken");
+    const response = await axios.post("/api/auth/refresh-token", {
+      refresh_token: refreshToken,
+    });
+    return response.data;
+  }
+
+  static async logout() {
+    const refreshToken = localStorage.getItem("refreshToken");
+
+    return sendAndHandleInvalidRequest("/api/auth/logout", "post", {
+      refresh_token: refreshToken,
+    });
   }
 }

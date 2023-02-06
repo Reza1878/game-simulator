@@ -8,6 +8,10 @@ import { FormControl } from "../form";
 
 const schema = yup.object({
   name: yup.string().required("This field is required"),
+  max_session: yup
+    .number()
+    .typeError("Mus be a number")
+    .required("This field is required"),
 });
 
 function UserTierForm({
@@ -16,7 +20,7 @@ function UserTierForm({
   defaultValue = {},
 }) {
   const [initialFormData] = useState(() =>
-    purgeInitialFormData(defaultValue, { name: "" })
+    purgeInitialFormData(defaultValue, { name: "", max_session: 0 })
   );
   const {
     register,
@@ -41,6 +45,10 @@ function UserTierForm({
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <FormControl {...getFormAttr("Name", "name", "name")} />
+      <FormControl
+        {...getFormAttr("Max Session", "max_session", "max_session")}
+        type="number"
+      />
 
       <Button isLoading={isSubmitting} type="submit">
         Submit

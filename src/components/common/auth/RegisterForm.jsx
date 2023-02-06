@@ -10,7 +10,8 @@ import { Text, Button } from "@/components/common";
 import AuthModalContext from "@/context/AuthModalContext";
 import AuthService from "@/service/auth-service";
 import { setUser } from "@/features/user/userSlice";
-import { setAccessToken } from "@/features/auth/authSlice";
+import { setAccessToken, setRefreshToken } from "@/features/auth/authSlice";
+import { ROUTE_EULA } from "@/config/routes";
 
 const schema = yup.object({
   email: yup
@@ -38,6 +39,7 @@ function RegisterForm() {
   const dispatch = useDispatch();
   const { showToast } = useToast("dark");
   const { setShowAuthModal, setAuthForm } = useContext(AuthModalContext);
+  const [isAgree, setIsAgree] = useState(false);
   const navigate = useNavigate();
 
   const [error, setError] = useState("");
@@ -55,22 +57,23 @@ function RegisterForm() {
 
   const onSubmit = async (val) => {
     try {
-    setError("");
-    setLoading(true);
-    const response = await AuthService.register(val);
-    const { data } = response;
-    dispatch(setUser(data));
-    dispatch(setAccessToken(data.token));
-    setLoading(false);
-    setShowAuthModal(false);
-    showToast("Register success");
+      setError("");
+      setLoading(true);
+      const response = await AuthService.register(val);
+      const { data } = response;
+      dispatch(setUser(data));
+      dispatch(setAccessToken(data.token));
+      dispatch(setRefreshToken(data.refreshToken));
+      setLoading(false);
+      setShowAuthModal(false);
+      showToast("Register success");
     } catch (error) {
-    console.log(error);
-    setError(error?.response?.data?.message || "Something went wrong");
-    setLoading(false);
+      console.log(error);
+      setError(error?.response?.data?.message || "Something went wrong");
+      setLoading(false);
     }
-    };
-    
+  };
+
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -94,7 +97,36 @@ function RegisterForm() {
           )}
           type="password"
         />
-        <Button isLoading={loading} type="submit" className="w-full">
+        <div className="flex items-center mb-3">
+          <input
+            type="checkbox"
+            id="is-agree"
+            className="w-4 h-4"
+            checked={isAgree}
+            onChange={(e) => setIsAgree(e.target.checked)}
+          />
+          <label
+            htmlFor="is-agree"
+            className="ml-2 text-sm font-medium select-none"
+          >
+            By register you accept to our{" "}
+            <span
+              className="text-blue-500 cursor-pointer underline"
+              onClick={() => {
+                navigate(ROUTE_EULA);
+                setShowAuthModal(false);
+              }}
+            >
+              Terms and Service
+            </span>
+          </label>
+        </div>
+        <Button
+          disabled={!isAgree}
+          isLoading={loading}
+          type="submit"
+          className="w-full"
+        >
           Register
         </Button>
       </form>

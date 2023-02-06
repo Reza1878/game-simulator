@@ -3,6 +3,7 @@ import {
   setShowUnauthorizedModal,
 } from "@/features/auth/authSlice";
 import { setUser } from "@/features/user/userSlice";
+import AuthService from "@/service/auth-service";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +15,8 @@ function UnauthorizedModal({ open }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleClick = () => {
+  const handleClick = async () => {
+    await AuthService.logout();
     dispatch(setShowUnauthorizedModal(false));
     dispatch(setAccessToken(""));
     dispatch(setUser(null));

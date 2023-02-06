@@ -42,7 +42,7 @@ function SimulatorPortal() {
     const fetchData = async () => {
       const response = await wrappedFetchBanAmount();
       if (!active) return;
-      setBanOptions(response.data);
+      setBanOptions(response?.data || []);
     };
 
     fetchData();
@@ -84,7 +84,7 @@ function SimulatorPortal() {
             First Pick
           </p>
           <div>
-            {teams.map((team) => (
+            {(teams || []).map((team) => (
               <React.Fragment key={team.id}>
                 <div className="flex gap-2 items-center mb-3">
                   <input
@@ -112,7 +112,7 @@ function SimulatorPortal() {
             Team Name
           </p>
           <div className="flex flex-col">
-            {teams.map((team) => (
+            {(teams || []).map((team) => (
               <React.Fragment key={team.id}>
                 <div className="mb-3 flex flex-col">
                   <label htmlFor={`team-${team.id}`} className="text-white">
