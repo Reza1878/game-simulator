@@ -11,6 +11,7 @@ const schema = yup.object().shape({
     .string()
     .email("Must be a valid email")
     .required("This field is required"),
+  donation_link: yup.string().required("This field is required"),
 });
 
 function SettingsForm({
@@ -19,7 +20,7 @@ function SettingsForm({
   isSubmitting = false,
 }) {
   const [initValue] = useState(() =>
-    purgeInitialFormData(defaultValue, { email: "" })
+    purgeInitialFormData(defaultValue, { email: "", donation_link: "" })
   );
   const {
     register,
@@ -38,6 +39,13 @@ function SettingsForm({
         type="email"
         helperText={errors?.email?.message}
         error={!!errors?.email}
+      />
+      <FormControl
+        register={register}
+        name="donation_link"
+        label="Donation Link"
+        helperText={errors?.donation_link?.message}
+        error={!!errors?.donation_link}
       />
       <Button isLoading={isSubmitting} type="submit">
         Submit

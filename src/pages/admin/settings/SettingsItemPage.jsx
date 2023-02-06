@@ -10,7 +10,10 @@ function SettingsItemPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const attrAndLabel = [{ label: "Email", key: "email" }];
+  const attrAndLabel = [
+    { label: "Email", key: "email" },
+    { label: "Donation Link", key: "donation_link" },
+  ];
 
   const wrappedFetchItem = useWrap(SettingService.gets);
 
