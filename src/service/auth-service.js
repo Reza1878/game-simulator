@@ -3,43 +3,44 @@ import axios from "axios";
 
 export default class AuthService {
   static async login({ email, password }) {
-    const response = await axios.post("/api/auth/login", { email, password });
-    return response.data;
+    return sendAndHandleInvalidRequest("/api/auth/login", "post", {
+      email,
+      password,
+    });
   }
 
   static async register({ email, name, password }) {
-    const response = await axios.post("/api/auth/register", {
+    return sendAndHandleInvalidRequest("/api/auth/register", "post", {
       email,
       name,
       password,
     });
-    return response.data;
   }
 
   static async forgotPassword({ email }) {
-    const response = await axios.post("/api/auth/forgot-password", { email });
-    return response.data;
+    return sendAndHandleInvalidRequest("/api/auth/forgot-password", { email });
   }
 
   static async verifyForgotPasswordToken(token) {
-    const response = await axios.post(
+    return sendAndHandleInvalidRequest(
       "/api/auth/validate-forgot-password-token",
       { token }
     );
-    return response.data;
   }
 
   static async resetPassword(payload) {
-    const response = await axios.post("/api/auth/reset-password", payload);
-    return response.data;
+    return sendAndHandleInvalidRequest(
+      "/api/auth/reset-password",
+      "post",
+      payload
+    );
   }
 
   static async refreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
-    const response = await axios.post("/api/auth/refresh-token", {
+    return sendAndHandleInvalidRequest("/api/auth/refres-token", {
       refresh_token: refreshToken,
     });
-    return response.data;
   }
 
   static async logout() {
