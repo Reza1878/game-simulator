@@ -37,6 +37,8 @@ const Hero = () => {
           alt="billing"
           className="w-[100%] h-[100%] relative z-[5] ms-auto"
           loading="lazy"
+          width={530}
+          height={534}
         />
 
         {/* gradient start */}
