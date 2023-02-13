@@ -14,6 +14,8 @@ const Clients = () => (
             src={client.logo}
             alt="client_logo"
             className="sm:w-[192px] w-[100px] object-contain"
+            width={192}
+            height={108}
           />
         </div>
       ))}
