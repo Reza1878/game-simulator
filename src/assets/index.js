@@ -23,7 +23,7 @@ import people02 from "./people02.png";
 import people03 from "./people03.png";
 import mockAvatar from "./mock-avatar.png";
 import client1 from "./client1.webp";
-import text from "./text.png";
+import text from "./text.webp";
 import sltool from "./sltool.svg";
 import pencil from "./pencil.svg";
 
