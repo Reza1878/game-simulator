@@ -1,10 +1,10 @@
 import styles from "../style";
 import { discount, robot } from "../assets";
 import GetStarted from "./GetStarted";
-import { motion } from "framer-motion";
+// import { motion } from "framer-motion";
 
 const Hero = () => {
-  const transition = { duration: 2, type: "spring" };
+  // const transition = { duration: 2, type: "spring" };
   return (
     <section
       id="home"
@@ -40,7 +40,7 @@ const Hero = () => {
         />
 
         {/* gradient start */}
-        <motion.div
+        {/* <motion.div
           initial={{ bottom: "40rem" }}
           whileInView={{ bottom: "0rem" }}
           className="absolute z-[0] w-[40%] h-[30%] top-0 pink__gradient"
@@ -57,7 +57,7 @@ const Hero = () => {
           whileInView={{ left: "0rem" }}
           className="absolute z-[0] w-[50%] h-[50%] blue__gradient"
           transition={transition}
-        />
+        /> */}
         {/* gradient end */}
       </div>
 
