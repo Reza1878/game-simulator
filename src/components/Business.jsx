@@ -46,7 +46,7 @@ const Business = () => {
           You play the game, <br className="sm:block hidden" /> You learn the
           game
           <p className="font-poppins font-medium text-[64px] ml-10">
-            <span className="text-gradient">with effeg !</span>
+            <span className="text-gradient">with effeg</span>
           </p>
         </h2>
         <p className={`${styles.paragraph} max-w-[470px] mt-5`}>
