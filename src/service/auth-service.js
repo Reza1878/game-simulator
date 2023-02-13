@@ -38,7 +38,7 @@ export default class AuthService {
 
   static async refreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
-    return sendAndHandleInvalidRequest("/api/auth/refres-token", {
+    return sendAndHandleInvalidRequest("/api/auth/refresh-token", "post", {
       refresh_token: refreshToken,
     });
   }
