@@ -37,11 +37,11 @@ export const navLinks = [
       { title: "Suggestions", href: "/suggestions", protected: true },
     ],
   },
-  {
-    id: "pricing",
-    title: "Pricings",
-    href: "/pricing",
-  },
+  // {
+  //   id: "pricing",
+  //   title: "Pricings",
+  //   href: "/pricing",
+  // },
 ];
 
 export const features = [
