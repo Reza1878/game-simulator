@@ -1,10 +1,8 @@
 import styles from "../style";
-import { discount, robot } from "../assets";
+import { robot } from "../assets";
 import GetStarted from "./GetStarted";
-// import { motion } from "framer-motion";
 
 const Hero = () => {
-  // const transition = { duration: 2, type: "spring" };
   return (
     <section
       id="home"
@@ -40,27 +38,6 @@ const Hero = () => {
           width={530}
           height={534}
         />
-
-        {/* gradient start */}
-        {/* <motion.div
-          initial={{ bottom: "40rem" }}
-          whileInView={{ bottom: "0rem" }}
-          className="absolute z-[0] w-[40%] h-[30%] top-0 pink__gradient"
-          transition={transition}
-        />
-        <motion.div
-          initial={{ top: "30rem" }}
-          whileInView={{ top: "0rem" }}
-          className="absolute z-[1] w-[80%] h-[80%] rounded-full white__gradient"
-          transition={transition}
-        />
-        <motion.div
-          initial={{ right: "40rem" }}
-          whileInView={{ left: "0rem" }}
-          className="absolute z-[0] w-[50%] h-[50%] blue__gradient"
-          transition={transition}
-        /> */}
-        {/* gradient end */}
       </div>
 
       <div className={`ss:hidden ${styles.flexCenter}`}>

@@ -15,7 +15,6 @@ function Home() {
         <div className={`${styles.boxWidth}`}>
           <Stats />
           <Business />
-          {/* <Testimonials /> */}
           <Clients />
           <CTA />
         </div>
