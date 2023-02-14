@@ -20,8 +20,8 @@ function IconsCreatePage() {
       setIsSubmitting(true);
       const response = await wrappedCreateItem(val);
       showToast(response?.message);
-      navigate(ROUTE_ICONS);
       setIsSubmitting(false);
+      navigate(ROUTE_ICONS);
     } catch (error) {
       setIsSubmitting(false);
       showInvalidRequestToast(error);
