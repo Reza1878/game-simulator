@@ -135,7 +135,7 @@ function Simulator() {
 
   const banHeroes = (hero) => {
     const arr = [...heroesBanList];
-    arr.push({ ...hero, order: currentBanOrder });
+    arr.push({ ...hero, order: banSequences[currentBanOrder] });
     setHeroesBanList(arr);
     setCurrentBanOrder(currentBanOrder + 1);
     setCurrentHeroes(null);
