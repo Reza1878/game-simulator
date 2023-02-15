@@ -38,9 +38,9 @@ const Hero = () => {
           width={530}
           height={534}
         />
-        <div className="absolute z-[0] w-[40%] h-[30%] top-0 pink__gradient bottom-0" />
+        {/* <div className="absolute z-[0] w-[40%] h-[30%] top-0 pink__gradient bottom-0" />
         <div className="absolute z-[1] w-[80%] h-[80%] rounded-full white__gradient" />
-        <div className="absolute z-[0] w-[50%] h-[50%] blue__gradient" />
+        <div className="absolute z-[0] w-[50%] h-[50%] blue__gradient" /> */}
       </div>
 
       <div className={`ss:hidden ${styles.flexCenter}`}>
