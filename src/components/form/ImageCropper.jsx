@@ -10,7 +10,7 @@ import Cropper from "react-easy-crop";
 import { FormControl, Label } from ".";
 
 const ImageCropper = forwardRef(
-  ({ label = "", aspect, ...otherProps }, ref) => {
+  ({ label = "", aspect, mimetype, ...otherProps }, ref) => {
     const [image, setImage] = useState(null);
     const [imageUrl, setImageUrl] = useState(null);
     const [zoom, setZoom] = useState(1);
@@ -36,7 +36,13 @@ const ImageCropper = forwardRef(
       getCroppedImage: async () => {
         try {
           if (!imageUrl) return null;
-          const croppedImage = await getCroppedImg(imageUrl, croppedAreaPixels);
+          const croppedImage = await getCroppedImg(
+            imageUrl,
+            croppedAreaPixels,
+            0,
+            { horizontal: false, vertical: false },
+            mimetype
+          );
           return croppedImage;
         } catch (e) {
           console.error(e);
