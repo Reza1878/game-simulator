@@ -39,7 +39,7 @@ function Simulator() {
   const [currentHeroes, setCurrentHeroes] = useState(null);
   const [heroesPickList, setHeroesPickList] = useState([]);
   const pickSequences = useMemo(() => [0, 1, 3, 2, 4, 5, 7, 6, 8, 9], []);
-  const banSequences = useMemo(() => [0, 1, 2, 3, 5, 4, 7, 6, 9, 8], []);
+  const banSequences = useMemo(() => [0, 1, 2, 3, 4, 5, 7, 6, 9, 8], []);
   const withTimer = useMemo(
     () => Boolean(+searchParams.get("timer") || 0),
     [searchParams]
