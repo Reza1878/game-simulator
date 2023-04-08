@@ -16,10 +16,12 @@ function MapDrawing() {
   const [isDrawing, setIsDrawing] = useState(false);
   const [icons, setIcons] = useState([]);
   const [usedIcons, setUsedIcons] = useState([]);
+  const [tempUsedIcons, setTempUsedIcons] = useState([]);
   const [imgSrc, setImgSrc] = useState(null);
-  const [resetFlag, setResetFlag] = useState(false);
   const [ads, setAds] = useState([]);
   const canvasContainerRef = useRef(null);
+  const [points, setPoints] = useState([]);
+  const [activities, setActivities] = useState([]);
 
   const showedAds = useMemo(() => {
     if (!(ads || []).length) return null;
@@ -48,24 +50,50 @@ function MapDrawing() {
   }, [brushColor]);
 
   const resetCanvas = () => {
-    setResetFlag(!resetFlag);
+    const ctx = canvasRef.current?.getContext("2d");
+    ctx.clearRect(
+      0,
+      0,
+      canvasContainerRef.current.clientWidth,
+      canvasContainerRef.current.clientHeight
+    );
   };
 
   const startDrawing = (e) => {
     ctxRef.current.beginPath();
     ctxRef.current.moveTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+    const pointsCopy = [...points];
+    pointsCopy.push({
+      x: e.nativeEvent.offsetX,
+      y: e.nativeEvent.offsetY,
+    });
+    setPoints(pointsCopy);
     setIsDrawing(true);
   };
 
   const endDrawing = () => {
     ctxRef.current.closePath();
-    // ctxRef.current.getContext("2d").save();
+    const activitiesCopy = [...activities];
+    activitiesCopy.push({
+      points,
+      mode: "draw",
+      brushColor,
+      activity: "drawing",
+    });
+    setActivities(activitiesCopy);
+    setPoints([]);
     setIsDrawing(false);
   };
 
   const draw = (e) => {
     if (!isDrawing) return;
     ctxRef.current.lineTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+    const pointsCopy = [...points];
+    pointsCopy.push({
+      x: e.nativeEvent.offsetX,
+      y: e.nativeEvent.offsetY,
+    });
+    setPoints(pointsCopy);
     ctxRef.current.stroke();
   };
 
@@ -101,32 +129,15 @@ function MapDrawing() {
 
   useEffect(() => {
     if (!imgSrc) return;
-    const image = new Image();
-    image.crossOrigin = "anonymous";
-    const context = canvasRef.current?.getContext("2d");
-    image.src = imgSrc;
-    image.onload = function () {
-      canvasRef.current.width = canvasContainerRef.current.clientWidth;
-      canvasRef.current.height = canvasContainerRef.current.clientHeight;
-      context.drawImage(
-        image,
-        0,
-        0,
-        image.width,
-        image.height,
-        0,
-        0,
-        canvasRef.current.width,
-        canvasRef.current.height
-      );
-      const ctx = canvasRef.current?.getContext("2d");
-      ctx.lineCap = "round";
-      ctx.lineJoin = "round";
-      ctx.strokeStyle = brushColor;
-      ctx.lineWidth = 5;
-      ctxRef.current = ctx;
-    };
-  }, [imgSrc, resetFlag]);
+    canvasRef.current.width = canvasContainerRef.current.clientWidth;
+    canvasRef.current.height = canvasContainerRef.current.clientHeight;
+    const ctx = canvasRef.current?.getContext("2d");
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = brushColor;
+    ctx.lineWidth = 5;
+    ctxRef.current = ctx;
+  }, [imgSrc]);
 
   const addIconToMap = (icon) => {
     const randomX =
@@ -136,14 +147,21 @@ function MapDrawing() {
       Math.floor(Math.random() * canvasContainerRef.current.clientWidth) -
       Math.floor(Math.random() * 300);
     const iconCpy = [...usedIcons];
+    const x = Math.abs(randomX);
+    const y = Math.abs(randomY);
     const id = new Date().getTime();
-    iconCpy.push({
-      ...icon,
-      coordX: Math.abs(randomX),
-      coordY: Math.abs(randomY),
-      id,
-    });
+    const addedIcon = { ...icon, coordX: x, coordY: y, id };
+    iconCpy.push(addedIcon);
     setUsedIcons(iconCpy);
+
+    const activitiesCopy = [...activities];
+    activitiesCopy.push({
+      points: [{ x, y }],
+      mode: "drag",
+      activity: "addIcon",
+      icon: addedIcon,
+    });
+    setActivities(activitiesCopy);
   };
 
   const onStopDragIcon = (e, id) => {
@@ -156,7 +174,19 @@ function MapDrawing() {
       coordX: x,
       coordY: y,
     };
+    const pointsCopy = [...points];
+    pointsCopy.push({ x, y });
+
+    const activitiesCopy = [...activities];
+    activitiesCopy.push({
+      points: pointsCopy,
+      mode: "drag",
+      activity: "dragIcon",
+      icon: iconCpy[index],
+    });
     setUsedIcons(iconCpy);
+    setActivities(activitiesCopy);
+    setPoints([]);
   };
 
   const onDragIcon = (e, id) => {
@@ -170,47 +200,78 @@ function MapDrawing() {
     ) {
       const iconCopy = [...usedIcons];
       const index = iconCopy.findIndex((item) => item.id === id);
+      const icon = iconCopy[index];
+
+      const activitiesCopy = [...activities];
+      activitiesCopy.push({
+        points: [{ x, y }],
+        mode: "drag",
+        activity: "removeIcon",
+        icon,
+      });
 
       iconCopy.splice(index, 1);
       setUsedIcons(iconCopy);
+      setActivities(activitiesCopy);
     }
+    const pointsCopy = [...points];
+    pointsCopy.push({ x, y });
+    setPoints(pointsCopy);
   };
 
   const handleDownloadImage = async () => {
+    if (!imgSrc) return;
     const newCanvas = document.createElement("canvas");
     const ctx = newCanvas.getContext("2d");
+    const image = new Image();
+    image.crossOrigin = "anonymous";
 
-    newCanvas.width = canvasRef.current.width;
-    newCanvas.height = canvasRef.current.height;
+    image.src = imgSrc;
+    image.onload = async function () {
+      newCanvas.width = canvasContainerRef.current.clientWidth;
+      newCanvas.height = canvasContainerRef.current.clientHeight;
 
-    ctx.drawImage(canvasRef.current, 0, 0);
+      ctx.drawImage(
+        image,
+        0,
+        0,
+        image.width,
+        image.height,
+        0,
+        0,
+        canvasContainerRef.current.clientWidth,
+        canvasContainerRef.current.clientHeight
+      );
 
-    await Promise.all(
-      usedIcons.map((icon) => {
-        return new Promise((resolve) => {
-          const image = new Image();
-          image.crossOrigin = "anonymous";
-          image.src = `${import.meta.env.VITE_BASE_URL}/${icon.image_url}`;
-          image.onload = function () {
-            ctx.drawImage(image, icon.coordX, icon.coordY, 24, 24);
-            resolve(true);
-          };
-        });
-      })
-    );
-    const link = document.createElement("a");
-    link.download = "map.png";
-    link.href = newCanvas.toDataURL();
-    document.body.appendChild(link);
+      ctx.drawImage(canvasRef.current, 0, 0);
 
-    link.dispatchEvent(
-      new MouseEvent("click", {
-        bubbles: true,
-        cancelable: true,
-        view: window,
-      })
-    );
-    document.body.removeChild(link);
+      await Promise.all(
+        usedIcons.map((icon) => {
+          return new Promise((resolve) => {
+            const image = new Image();
+            image.crossOrigin = "anonymous";
+            image.src = `${import.meta.env.VITE_BASE_URL}/${icon.image_url}`;
+            image.onload = function () {
+              ctx.drawImage(image, icon.coordX, icon.coordY, 24, 24);
+              resolve(true);
+            };
+          });
+        })
+      );
+      const link = document.createElement("a");
+      link.download = "map.png";
+      link.href = newCanvas.toDataURL();
+      document.body.appendChild(link);
+
+      link.dispatchEvent(
+        new MouseEvent("click", {
+          bubbles: true,
+          cancelable: true,
+          view: window,
+        })
+      );
+      document.body.removeChild(link);
+    };
   };
 
   const handleTouchStart = (e) => {
@@ -250,19 +311,106 @@ function MapDrawing() {
     };
   }, []);
 
+  const handleUndo = () => {
+    resetCanvas();
+    const activitiesCopy = [...activities];
+    const latestAct = activitiesCopy.pop();
+    const drawingActivities = activitiesCopy.filter(
+      (act) => act.mode === "draw"
+    );
+    drawingActivities.forEach((act) => {
+      const ctx = canvasRef.current?.getContext("2d");
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.strokeStyle = act.brushColor;
+      ctx.lineWidth = 5;
+      ctxRef.current = ctx;
+
+      ctxRef.current.beginPath();
+      const firstPoint = act.points[0];
+      ctxRef.current.moveTo(firstPoint.x, firstPoint.y);
+      act.points
+        .filter((p, i) => i > 0)
+        .forEach((point) => {
+          ctxRef.current.lineTo(point.x, point.y);
+          ctxRef.current.stroke();
+        });
+    });
+    if (!latestAct) return;
+    if (latestAct.mode === "drag") {
+      let iconCopy = [...usedIcons];
+      const { activity, icon = {}, points: latestActPoints = [] } = latestAct;
+      switch (activity) {
+        case "addIcon": {
+          const index = iconCopy.findIndex((cpy) => cpy.id === icon.id);
+          if (index !== -1) iconCopy.splice(index, 1);
+          break;
+        }
+        case "removeIcon": {
+          iconCopy.push({ ...icon });
+          break;
+        }
+        case "dragIcon": {
+          if (!latestActPoints.length) return;
+          const index = iconCopy.findIndex((cpy) => cpy.id === icon.id);
+          const currIcon = iconCopy[index];
+          iconCopy[index] = {
+            ...currIcon,
+            coordX: latestActPoints[0].x,
+            coordY: latestActPoints[0].y,
+          };
+          break;
+        }
+        case "resetIcon": {
+          iconCopy = tempUsedIcons;
+          setTempUsedIcons([]);
+          break;
+        }
+        default:
+          break;
+      }
+      setUsedIcons(iconCopy);
+    }
+
+    setActivities(activitiesCopy);
+  };
+
+  const handleRemoveIcon = () => {
+    const copy = [...usedIcons];
+    setTempUsedIcons(copy);
+    setUsedIcons([]);
+    const activitiesCopy = [...activities];
+    activitiesCopy.push({
+      points: [],
+      mode: "drag",
+      activity: "resetIcon",
+    });
+    setActivities(activitiesCopy);
+  };
+
+  const handleResetMap = () => {
+    const activitiesCopy = [...activities];
+    activitiesCopy.push({
+      points: [],
+      mode: "draw",
+      activity: "resetMap",
+    });
+    resetCanvas();
+  };
+
   return (
     <div className="min-h-[50vh] flex flex-row gap-4 p-6">
       <div
         ref={canvasContainerRef}
         className="relative md:w-[600px] md:h-[600px] w-[300px] h-[300px]"
       >
+        {imgSrc ? <img className="absolute z-0" src={imgSrc} /> : null}
         {usedIcons.map((icon) => (
           <Draggable
-            defaultPosition={{
+            position={{
               x: icon.coordX,
               y: icon.coordY,
             }}
-            // offsetParent={canvasRef}
             bounds="parent"
             onStop={(e, data) => {
               onStopDragIcon({ x: data.x, y: Math.abs(data.y) }, icon.id);
@@ -273,7 +421,7 @@ function MapDrawing() {
             key={icon.id}
           >
             <img
-              className="md:w-6 md:h-6 w-5 h-5 absolute"
+              className="md:w-6 md:h-6 w-5 h-5 absolute z-20"
               src={`${import.meta.env.VITE_BASE_URL}/${icon.image_url}`}
             />
           </Draggable>
@@ -301,6 +449,7 @@ function MapDrawing() {
           onTouchEnd={(e) => {
             endDrawing();
           }}
+          className="absolute z-10"
           ref={canvasRef}
         />
       </div>
@@ -328,11 +477,14 @@ function MapDrawing() {
           <Button onClick={handleDownloadImage} variant="outlined">
             Download Image
           </Button>
-          <Button variant="outlined" onClick={() => setUsedIcons([])}>
+          <Button variant="outlined" onClick={handleRemoveIcon}>
             Remove Icon
           </Button>
-          <Button variant="outlined" onClick={resetCanvas}>
+          <Button variant="outlined" onClick={handleResetMap}>
             Reset Map
+          </Button>
+          <Button variant="outlined" onClick={handleUndo}>
+            Undo
           </Button>
         </div>
         {showedAds && (
