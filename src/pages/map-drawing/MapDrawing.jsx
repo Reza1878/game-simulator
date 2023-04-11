@@ -72,10 +72,12 @@ function MapDrawing() {
   };
 
   const endDrawing = () => {
+    if (!isDrawing) return;
     ctxRef.current.closePath();
     const activitiesCopy = [...activities];
+    const pointsCopy = [...points];
     activitiesCopy.push({
-      points,
+      points: pointsCopy,
       mode: "draw",
       brushColor,
       activity: "drawing",
@@ -163,6 +165,10 @@ function MapDrawing() {
     });
     setActivities(activitiesCopy);
   };
+
+  const isMobile = useMemo(() => {
+    return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  }, []);
 
   const onStopDragIcon = (e, id) => {
     const iconCpy = [...usedIcons];
@@ -427,9 +433,18 @@ function MapDrawing() {
           </Draggable>
         ))}
         <canvas
-          onMouseDown={startDrawing}
-          onMouseUp={endDrawing}
-          onMouseMove={draw}
+          onMouseDown={(e) => {
+            if (isMobile) return;
+            startDrawing(e);
+          }}
+          onMouseUp={(e) => {
+            if (isMobile) return;
+            endDrawing();
+          }}
+          onMouseMove={(e) => {
+            if (isMobile) return;
+            draw(e);
+          }}
           onTouchStart={(e) => {
             startDrawing({
               nativeEvent: {
