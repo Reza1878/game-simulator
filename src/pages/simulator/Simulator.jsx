@@ -15,6 +15,7 @@ function Simulator() {
     { id: 1, name: "Blue Team", side: "LEFT" },
     { id: 2, name: "Read Team", side: "RIGHT" },
   ]);
+  const [activities, setActivities] = useState([]);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [roles, setRoles] = useState([]);
@@ -136,6 +137,15 @@ function Simulator() {
   const banHeroes = (hero) => {
     const arr = [...heroesBanList];
     arr.push({ ...hero, order: banSequences[currentBanOrder] });
+    const activitisCopy = [...activities];
+    activitisCopy.push({
+      activity: "ban",
+      hero,
+      sequence: banSequences[currentBanOrder],
+      order: currentBanOrder,
+    });
+
+    setActivities(activitisCopy);
     setHeroesBanList(arr);
     setCurrentBanOrder(currentBanOrder + 1);
     setCurrentHeroes(null);
@@ -146,6 +156,15 @@ function Simulator() {
   const pickHeroes = (hero) => {
     const arr = [...heroesPickList];
     arr.push({ ...hero, order: pickSequences[currentOrder] });
+    const activitisCopy = [...activities];
+    activitisCopy.push({
+      activity: "pick",
+      hero,
+      sequence: pickSequences[currentOrder],
+      order: currentOrder,
+    });
+
+    setActivities(activitisCopy);
     setHeroesPickList(arr);
     setCurrentOrder(currentOrder + 1);
     setCurrentHeroes(null);
@@ -196,6 +215,42 @@ function Simulator() {
     setTimer(+searchParams.get("timer") || 0);
     clearInterval();
     setTimerInterval();
+  };
+
+  const handleUndoClick = () => {
+    const activitiesCopy = [...activities];
+    const lastAct = activitiesCopy.pop();
+    if (!lastAct) return;
+
+    const { sequence, order } = lastAct;
+
+    switch (lastAct.activity) {
+      case "ban": {
+        const banListCopy = [...heroesBanList];
+        const index = banListCopy.findIndex((val) => val.order === sequence);
+        if (index === -1) return;
+        banListCopy.splice(index, 1);
+        setCurrentBanOrder(order);
+        setHeroesBanList(banListCopy);
+        break;
+      }
+
+      case "pick": {
+        const pickListCopy = [...heroesPickList];
+        const index = pickListCopy.findIndex((val) => val.order === sequence);
+        if (index === -1) return;
+        pickListCopy.splice(index, 1);
+        setCurrentOrder(order);
+        setHeroesPickList(pickListCopy);
+        break;
+      }
+    }
+    setActivities(activitiesCopy);
+    if (withTimer) {
+      setTimer(+searchParams.get("timer"));
+      clearInterval();
+      setTimerInterval();
+    }
   };
 
   const heroesList = useMemo(() => {
@@ -261,12 +316,20 @@ function Simulator() {
           <p className="text-white font-bold text-opacity-70">|</p>
           <p className="text-white font-bold">Simulator</p>
         </div>
-        <button
-          onClick={handleResetClick}
-          className="bg-gray-500 text-white py-2 rounded-md w-24"
-        >
-          Reset
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={handleResetClick}
+            className="bg-gray-500 text-white py-2 rounded-md w-24"
+          >
+            Reset
+          </button>
+          <button
+            onClick={handleUndoClick}
+            className="bg-gray-500 text-white py-2 rounded-md w-24"
+          >
+            Undo
+          </button>
+        </div>
       </div>
       <div className="flex w-full gap-4 flex-wrap">
         <div className="w-full md:w-96 sm:w-64 xs:landscape:w-44">
