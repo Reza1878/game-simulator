@@ -28,6 +28,7 @@ function SimulatorPickSlot({
   return (
     <div className="relative z-0">
       <HeroesBanner
+        key={heroes.banner_url}
         url={heroes.banner_url}
         className="md:h-28 landscape:xs:h-12"
       />

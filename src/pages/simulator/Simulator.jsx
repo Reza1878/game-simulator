@@ -9,6 +9,7 @@ import { Loader } from "@/components/common";
 import BanAmountService from "@/service/ban-amount-service";
 import { useWrap } from "@/hooks/useWrap";
 import HeroesButton from "@/components/simulator/HeroesButton";
+import { exportAsImage } from "@/utils/canvas";
 
 function Simulator() {
   const [teams, setTeams] = useState([
@@ -35,6 +36,8 @@ function Simulator() {
   const [search, setSearch] = useState("");
   const [selectedBanCount, setSelectedBanCount] = useState(null);
   const wrappedFetchBanCount = useWrap((id) => BanAmountService.get(id));
+  const wrappedFetchHeroes = useWrap(() => HeroService.gets());
+  const wrappedFetchHeroRoles = useWrap(() => HeroesRoleService.gets());
   const [heroesBanList, setHeroesBanList] = useState([]);
   const [currentBanOrder, setCurrentBanOrder] = useState(0);
   const [currentHeroes, setCurrentHeroes] = useState(null);
@@ -45,6 +48,8 @@ function Simulator() {
     () => Boolean(+searchParams.get("timer") || 0),
     [searchParams]
   );
+  const containerRef = useRef();
+  const [isDownloadImage, setIsDownloadImage] = useState(false);
 
   const banPhase = useMemo(() => {
     if (!selectedBanCount) return false;
@@ -80,43 +85,20 @@ function Simulator() {
     let active = true;
 
     const fetchData = async () => {
-      const response = await HeroService.gets();
+      setLoading(true);
+      const response = await Promise.all([
+        wrappedFetchHeroes(),
+        wrappedFetchHeroRoles(),
+        await wrappedFetchBanCount(banCount),
+      ]);
       if (!active) return;
-      setHeroes(response.data);
-    };
-
-    fetchData();
-
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    let active = true;
-
-    const fetchData = async () => {
-      const response = await HeroesRoleService.gets();
-      if (!active) return;
-      setRoles(response.data);
-    };
-
-    fetchData();
-
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    let active = true;
-
-    (async () => {
-      const response = await wrappedFetchBanCount(banCount);
-      if (!active) return;
-      setSelectedBanCount(response.data);
+      setHeroes(response[0].data);
+      setRoles(response[1].data);
+      setSelectedBanCount(response[2].data);
       setLoading(false);
-    })();
+    };
+
+    fetchData();
 
     return () => {
       active = false;
@@ -253,6 +235,17 @@ function Simulator() {
     }
   };
 
+  const handleCaptureClick = async () => {
+    setIsDownloadImage(true);
+    setTimeout(async () => {
+      await exportAsImage(containerRef.current, "test");
+
+      setTimeout(() => {
+        setIsDownloadImage(false);
+      }, 1000);
+    }, 250);
+  };
+
   const heroesList = useMemo(() => {
     if (!roleFilter && !search) return heroes;
 
@@ -329,166 +322,188 @@ function Simulator() {
           >
             Undo
           </button>
+          <button
+            onClick={handleCaptureClick}
+            className="bg-gray-500 text-white py-2 rounded-md w-24"
+          >
+            Capture
+          </button>
         </div>
       </div>
-      <div className="flex w-full gap-4 flex-wrap">
-        <div className="w-full md:w-96 sm:w-64 xs:landscape:w-44">
-          <div className="flex justify-between px-4 items-center mb-3">
-            <p className="font-bold text-white">{leftTeam}</p>
-            <span className="block w-10 h-6 bg-blue-500" />
-          </div>
-          <div className="flex flex-col gap-1">
-            {[...Array(5 * 2).keys()]
-              .filter((item) => arrangeBanAndPickOrder("LEFT", item))
-              .map((slot) => (
-                <SimulatorPickSlot
-                  key={slot}
-                  slot={slot}
-                  active={
-                    banPhase
-                      ? +slot === banSequences[currentBanOrder]
-                      : +slot === pickSequences[currentOrder]
-                  }
-                  heroes={
-                    pickSequences[currentOrder] == slot && pickPhase
-                      ? currentHeroes
-                      : heroesPickList.filter(
-                          (hero) => hero.order == slot
-                        )[0] || null
-                  }
-                  timer={timer}
-                />
-              ))}
-          </div>
-        </div>
-        <div className="flex-1 border p-4 overflow-x-scroll no-scrollbar sm:max-h-[615px] landscape:xs:max-h-[290px]">
-          <div className="flex gap-2 justify-between items-center flex-wrap">
-            <p className="text-white font-bold w-full md:w-auto">
-              Select Champion
-            </p>
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => setRoleFilter(0)}
-                className={clsx("text-white px-2 py-1 rounded-md w-auto", {
-                  "bg-gray-400": roleFilter === 0,
-                })}
-              >
-                All
-              </button>
-              {roles.map((item, index) => (
-                <button
-                  className={clsx("text-white px-2 py-1 rounded-md w-auto", {
-                    "bg-gray-400": roleFilter === item.id,
-                  })}
-                  key={index}
-                  onClick={() => setRoleFilter(item.id)}
-                >
-                  {item.name}
-                </button>
-              ))}
+      <div className="w-full bg-primary py-4" ref={containerRef}>
+        <div className="flex w-full gap-4 flex-wrap">
+          <div className="w-full md:w-96 sm:w-64 xs:landscape:w-44">
+            <div className="flex justify-between px-4 items-center mb-3">
+              <p className="font-bold text-white">{leftTeam}</p>
+              <span className="block w-10 h-6 bg-blue-500" />
             </div>
-            <input
-              type="text"
-              className="border lg:w-36 rounded-full py-1 px-2 outline-none bg-primary text-white w-full"
-              placeholder="Search"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+            <div className="flex flex-col gap-1">
+              {[...Array(5 * 2).keys()]
+                .filter((item) => arrangeBanAndPickOrder("LEFT", item))
+                .map((slot) => (
+                  <SimulatorPickSlot
+                    key={slot}
+                    slot={slot}
+                    active={
+                      banPhase
+                        ? +slot === banSequences[currentBanOrder]
+                        : +slot === pickSequences[currentOrder]
+                    }
+                    heroes={
+                      pickSequences[currentOrder] == slot && pickPhase
+                        ? currentHeroes
+                        : heroesPickList.filter(
+                            (hero) => hero.order == slot
+                          )[0] || null
+                    }
+                    timer={timer}
+                  />
+                ))}
+            </div>
           </div>
-          <div className="grid grid-cols-2 xs:grid-cols-4 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2 mt-3">
-            {heroesList.map((hero) => (
-              <HeroesButton
-                key={hero.id}
-                hero={hero}
-                disabled={
-                  heroesBanList.filter((item) => item.id === hero.id)[0] ||
-                  heroesPickList.filter((item) => item.id === hero.id)[0]
-                }
-                onClick={() => setCurrentHeroes(hero)}
-              />
-            ))}
+
+          {isDownloadImage ? (
+            <div className="flex-1" />
+          ) : (
+            <div className="flex-1 border p-4 overflow-x-scroll no-scrollbar sm:max-h-[615px] landscape:xs:max-h-[290px]">
+              <div className="flex gap-2 justify-between items-center flex-wrap">
+                <p className="text-white font-bold w-full md:w-auto">
+                  Select Champion
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={() => setRoleFilter(0)}
+                    className={clsx("text-white px-2 py-1 rounded-md w-auto", {
+                      "bg-gray-400": roleFilter === 0,
+                    })}
+                  >
+                    All
+                  </button>
+                  {roles.map((item, index) => (
+                    <button
+                      className={clsx(
+                        "text-white px-2 py-1 rounded-md w-auto",
+                        {
+                          "bg-gray-400": roleFilter === item.id,
+                        }
+                      )}
+                      key={index}
+                      onClick={() => setRoleFilter(item.id)}
+                    >
+                      {item.name}
+                    </button>
+                  ))}
+                </div>
+                <input
+                  type="text"
+                  className="border lg:w-36 rounded-full py-1 px-2 outline-none bg-primary text-white w-full"
+                  placeholder="Search"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+              <div className="grid grid-cols-2 xs:grid-cols-4 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2 mt-3">
+                {heroesList.map((hero) => (
+                  <HeroesButton
+                    key={hero.id}
+                    hero={hero}
+                    disabled={
+                      heroesBanList.filter((item) => item.id === hero.id)[0] ||
+                      heroesPickList.filter((item) => item.id === hero.id)[0]
+                    }
+                    onClick={() => setCurrentHeroes(hero)}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+          <div className="w-full md:w-96 sm:w-64 xs:landscape:w-44">
+            <div className="flex justify-between px-4 items-center mb-3">
+              <span className="block w-10 h-6 bg-red-500" />
+              <p className="font-bold text-white">{rightTeam}</p>
+            </div>
+            <div className="flex flex-col gap-1">
+              {[...Array(5 * 2).keys()]
+                .filter((item) => arrangeBanAndPickOrder("RIGHT", item))
+                .map((slot) => (
+                  <SimulatorPickSlot
+                    slot={slot}
+                    key={slot}
+                    active={
+                      banPhase
+                        ? +slot === banSequences[currentBanOrder]
+                        : +slot === pickSequences[currentOrder]
+                    }
+                    heroes={
+                      pickSequences[currentOrder] == slot && pickPhase
+                        ? currentHeroes
+                        : heroesPickList.filter(
+                            (hero) => hero.order == slot
+                          )[0] || null
+                    }
+                    timer={timer}
+                  />
+                ))}
+            </div>
           </div>
         </div>
-        <div className="w-full md:w-96 sm:w-64 xs:landscape:w-44">
-          <div className="flex justify-between px-4 items-center mb-3">
-            <span className="block w-10 h-6 bg-red-500" />
-            <p className="font-bold text-white">{rightTeam}</p>
-          </div>
-          <div className="flex flex-col gap-1">
-            {[...Array(5 * 2).keys()]
-              .filter((item) => arrangeBanAndPickOrder("RIGHT", item))
-              .map((slot) => (
-                <SimulatorPickSlot
-                  slot={slot}
-                  key={slot}
-                  active={
-                    banPhase
-                      ? +slot === banSequences[currentBanOrder]
-                      : +slot === pickSequences[currentOrder]
-                  }
+
+        <div className="flex w-full px-4 justify-between mt-3 flex-wrap gap-4">
+          <div className="flex gap-2 mt-3 px-4">
+            {[...Array(selectedBanCount.ban_count * 2).keys()]
+              .filter((item) => arrangeBanAndPickOrder("LEFT", item))
+              .map((item) => (
+                <SimulatorBanSlot
+                  key={item}
+                  slot={item}
                   heroes={
-                    pickSequences[currentOrder] == slot && pickPhase
+                    banSequences[currentBanOrder] == item && banPhase
                       ? currentHeroes
-                      : heroesPickList.filter(
-                          (hero) => hero.order == slot
-                        )[0] || null
+                      : heroesBanList.filter((hero) => hero.order == item)[0] ||
+                        null
                   }
-                  timer={timer}
                 />
               ))}
           </div>
-        </div>
-      </div>
-
-      <div className="flex w-full px-4 justify-between mt-3 flex-wrap gap-4">
-        <div className="flex gap-2 mt-3 px-4">
-          {[...Array(selectedBanCount.ban_count * 2).keys()]
-            .filter((item) => arrangeBanAndPickOrder("LEFT", item))
-            .map((item) => (
-              <SimulatorBanSlot
-                key={item}
-                slot={item}
-                heroes={
-                  banSequences[currentBanOrder] == item && banPhase
-                    ? currentHeroes
-                    : heroesBanList.filter((hero) => hero.order == item)[0] ||
-                      null
-                }
-              />
-            ))}
-        </div>
-        {banPhase && (
-          <button
-            onClick={handleBanClick}
-            className="bg-red-500 text-white py-2 px-6 rounded-md w-full xs:w-48"
-          >
-            Ban
-          </button>
-        )}
-        {pickPhase && (
-          <button
-            onClick={handlePickClick}
-            className="bg-blue-500 text-white py-2 px-6 rounded-md w-full xs:w-48"
-          >
-            Pick
-          </button>
-        )}
-        <div className="flex gap-2 mt-3 px-4">
-          {[...Array(selectedBanCount.ban_count * 2).keys()]
-            .filter((item) => arrangeBanAndPickOrder("RIGHT", item))
-            .reverse()
-            .map((item) => (
-              <SimulatorBanSlot
-                key={item}
-                slot={item}
-                heroes={
-                  banSequences[currentBanOrder] == item && banPhase
-                    ? currentHeroes
-                    : heroesBanList.filter((hero) => hero.order == item)[0] ||
-                      null
-                }
-              />
-            ))}
+          {banPhase && (
+            <button
+              onClick={handleBanClick}
+              className={clsx(
+                "bg-red-500 text-white py-2 px-6 rounded-md w-full xs:w-48 transition-opacity duration-100",
+                [isDownloadImage && "opacity-0"]
+              )}
+            >
+              Ban
+            </button>
+          )}
+          {pickPhase && (
+            <button
+              onClick={handlePickClick}
+              className={clsx(
+                "bg-blue-500 text-white py-2 px-6 rounded-md w-full xs:w-48 transition-opacity duration-100",
+                [isDownloadImage && "opacity-0"]
+              )}
+            >
+              Pick
+            </button>
+          )}
+          <div className="flex gap-2 mt-3 px-4">
+            {[...Array(selectedBanCount.ban_count * 2).keys()]
+              .filter((item) => arrangeBanAndPickOrder("RIGHT", item))
+              .reverse()
+              .map((item) => (
+                <SimulatorBanSlot
+                  key={item}
+                  slot={item}
+                  heroes={
+                    banSequences[currentBanOrder] == item && banPhase
+                      ? currentHeroes
+                      : heroesBanList.filter((hero) => hero.order == item)[0] ||
+                        null
+                  }
+                />
+              ))}
+          </div>
         </div>
       </div>
     </div>
