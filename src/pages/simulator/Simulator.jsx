@@ -238,7 +238,10 @@ function Simulator() {
   const handleCaptureClick = async () => {
     setIsDownloadImage(true);
     setTimeout(async () => {
-      await exportAsImage(containerRef.current, "test");
+      await exportAsImage(
+        containerRef.current,
+        `Simulator - ${new Date().toLocaleString()}`
+      );
 
       setTimeout(() => {
         setIsDownloadImage(false);
