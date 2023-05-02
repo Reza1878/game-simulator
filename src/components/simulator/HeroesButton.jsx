@@ -1,8 +1,36 @@
 import React from "react";
 import { Slash } from "react-feather";
 import HeroesIcon from "../heroes/HeroesIcon";
+import { useDrag } from "react-dnd";
+import clsx from "clsx";
 
-function HeroesButton({ onClick = () => {}, hero = null, disabled = false }) {
+function HeroesButton({
+  onClick = () => {},
+  hero = null,
+  disabled = false,
+  isDragAndDrop = false,
+}) {
+  const [{ opacity, isDragging }, dragRef] = useDrag(
+    {
+      type: "hero",
+      item: hero,
+      collect: (monitor) => ({
+        opacity: monitor.isDragging() ? 0.4 : 1,
+        isDragging: monitor.isDragging(),
+      }),
+    },
+    [hero]
+  );
+  if (isDragAndDrop && !disabled) {
+    return (
+      <div className={clsx("flex flex-col items-center relative")}>
+        <div ref={dragRef} style={{ opacity }}>
+          <HeroesIcon url={hero.icon_url} className="border mb-1 w-14 h-14" />
+        </div>
+        <p className="text-white font-bold text-xs">{hero.name}</p>
+      </div>
+    );
+  }
   return (
     <button
       disabled={disabled}

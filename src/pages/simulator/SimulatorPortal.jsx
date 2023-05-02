@@ -18,6 +18,7 @@ function SimulatorPortal() {
   const accessToken = useSelector((state) => state.auth.accessToken);
   const navigate = useNavigate();
   const wrappedFetchBanAmount = useWrap(BanAmountService.gets);
+  const [method, setMethod] = useState("sequential");
 
   const handleTeamNameChange = (event, side) => {
     const teamsCopy = [...teams];
@@ -56,7 +57,7 @@ function SimulatorPortal() {
     const leftName = teams.filter((team) => team.side === "LEFT")[0].name;
     const rightName = teams.filter((team) => team.side === "RIGHT")[0].name;
     navigate(
-      `/simulator/start?ban_count=${banCount}&first_pick=${firstPick}&left_name=${leftName}&right_name=${rightName}&timer=${timer}`
+      `/simulator/start?ban_count=${banCount}&first_pick=${firstPick}&left_name=${leftName}&right_name=${rightName}&timer=${timer}&method=${method}`
     );
   };
 
@@ -140,7 +141,7 @@ function SimulatorPortal() {
             onChange={(e) => setTimer(e.target.value)}
           />
         </div>
-        <div className="flex items-start md:gap-4 gap-2 md:flex-row flex-col">
+        <div className="flex items-start md:gap-4 gap-2 md:flex-row flex-col mb-3">
           <p className="text-lg font-medium text-white min-w-[128px]">
             Ban Amount
           </p>
@@ -151,6 +152,24 @@ function SimulatorPortal() {
             {banOptions.map((item) => (
               <option key={item.id} value={item.id}>
                 {item.ban_count} Bans
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="flex items-start md:gap-4 gap-2 md:flex-row flex-col">
+          <p className="text-lg font-medium text-white min-w-[128px]">
+            Ban Amount
+          </p>
+          <select
+            className="py-1 px-2 outline-none md:w-auto w-full"
+            onChange={(e) => setMethod(e.target.value)}
+          >
+            {[
+              { label: "Sequential", value: "sequential" },
+              { label: "Drag and Drop", value: "dnd" },
+            ].map((item) => (
+              <option key={item.value} value={item.value}>
+                {item.label}
               </option>
             ))}
           </select>

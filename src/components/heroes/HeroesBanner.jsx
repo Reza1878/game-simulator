@@ -35,7 +35,7 @@ function HeroesBanner({ url, className = "" }) {
     };
   }, [url]);
   return (
-    <div className={clsx("w-96 h-20", className)} ref={canvasContainerRef}>
+    <div className={clsx("sm:w-96 h-20", className)} ref={canvasContainerRef}>
       <canvas ref={canvasRef} className="w-full h-full" />
     </div>
   );
