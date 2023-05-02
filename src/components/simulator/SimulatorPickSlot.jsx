@@ -9,6 +9,7 @@ function SimulatorPickSlot({
   active = false,
   timer = 0,
   onDropHero = (hero) => {},
+  fullWidth = false,
 }) {
   const [{ isOver, canDrop }, dropRef] = useDrop({
     accept: "hero",
@@ -23,9 +24,11 @@ function SimulatorPickSlot({
       {!heroes ? (
         <div
           className={clsx(
-            "w-full md:h-28 xs:landscape:h-12 bg-gray-300 relative z-0",
+            "w-full bg-gray-300 relative z-0",
             { "opacity-70": !active },
-            { "opacity-50": active }
+            { "opacity-50": active },
+            { "md:h-28 xs:landscape:h-12": !fullWidth },
+            { "md:h-36 xs:landscape:h-28": fullWidth }
           )}
         >
           {active && timer > 0 && (
@@ -37,9 +40,12 @@ function SimulatorPickSlot({
       ) : (
         <div className="relative z-0" ref={dropRef}>
           <HeroesBanner
-            key={heroes.banner_url}
             url={heroes.banner_url}
-            className="md:h-28 landscape:xs:h-12"
+            className={clsx(
+              { "md:h-28 landscape:xs:h-12": !fullWidth },
+              { "md:h-36 xs:landscape:h-28 w-full": fullWidth }
+            )}
+            fullWidth={fullWidth}
           />
           <div className="absolute right-4 md:bottom-8 landscape:xs:bottom-4">
             <p className="font-bold text-white mb-0 font-poppins">

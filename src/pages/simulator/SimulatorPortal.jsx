@@ -1,5 +1,4 @@
 import { Button } from "@/components/common";
-import { SwitchToggle } from "@/components/form";
 import { useWrap } from "@/hooks/useWrap";
 import BanAmountService from "@/service/ban-amount-service";
 import React, { useEffect, useState } from "react";
@@ -156,9 +155,9 @@ function SimulatorPortal() {
             ))}
           </select>
         </div>
-        <div className="flex items-start md:gap-4 gap-2 md:flex-row flex-col">
+        {/* <div className="flex items-start md:gap-4 gap-2 md:flex-row flex-col">
           <p className="text-lg font-medium text-white min-w-[128px]">
-            Ban Amount
+            Pick Method
           </p>
           <select
             className="py-1 px-2 outline-none md:w-auto w-full"
@@ -173,7 +172,7 @@ function SimulatorPortal() {
               </option>
             ))}
           </select>
-        </div>
+        </div> */}
         <Button
           onClick={onClick}
           color="maroon"

@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import React, { useEffect, useRef } from "react";
 
-function HeroesBanner({ url, className = "" }) {
+function HeroesBanner({ url, className = "", fullWidth }) {
   const canvasRef = useRef();
   const canvasContainerRef = useRef();
 
@@ -33,9 +33,17 @@ function HeroesBanner({ url, className = "" }) {
         canvasRef.current.height
       );
     };
-  }, [url]);
+  }, [url, fullWidth]);
   return (
-    <div className={clsx("sm:w-96 h-20", className)} ref={canvasContainerRef}>
+    <div
+      className={clsx(
+        "h-20",
+        { "md:w-96": !fullWidth },
+        { "w-full": fullWidth },
+        className
+      )}
+      ref={canvasContainerRef}
+    >
       <canvas ref={canvasRef} className="w-full h-full" />
     </div>
   );

@@ -343,7 +343,7 @@ function Simulator() {
   return (
     <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
       <div className="min-h-[50vh]">
-        <div className="flex justify-between items-center p-4">
+        <div className="flex justify-between items-center p-4 flex-wrap">
           <div className="flex gap-2">
             <p className="text-white text-opacity-70 font-bold">Game Mode</p>
             <p className="text-white font-bold text-opacity-70">|</p>
@@ -371,8 +371,19 @@ function Simulator() {
           </div>
         </div>
         <div className="w-full bg-primary py-4" ref={containerRef}>
-          <div className="flex w-full gap-4 flex-wrap">
-            <div className="w-full md:w-96 sm:w-64 xs:landscape:w-44">
+          <div
+            className={clsx("flex w-full gap-4 justify-between", {
+              "flex-wrap": !isDownloadImage,
+            })}
+          >
+            <div
+              className={clsx(
+                {
+                  "w-full md:w-96 sm:w-64 xs:landscape:w-44": !isDownloadImage,
+                },
+                { "w-1/2": isDownloadImage }
+              )}
+            >
               <div className="flex justify-between px-4 items-center mb-3">
                 <p className="font-bold text-white">{leftTeam}</p>
                 <span className="block w-10 h-6 bg-blue-500" />
@@ -382,6 +393,7 @@ function Simulator() {
                   .filter((item) => arrangeBanAndPickOrder("LEFT", item))
                   .map((slot) => (
                     <SimulatorPickSlot
+                      fullWidth={isDownloadImage}
                       key={slot}
                       slot={slot}
                       active={
@@ -406,9 +418,7 @@ function Simulator() {
               </div>
             </div>
 
-            {isDownloadImage ? (
-              <div className="flex-1" />
-            ) : (
+            {!isDownloadImage ? (
               <div className="flex-1 border p-4 overflow-x-scroll no-scrollbar sm:max-h-[615px] landscape:xs:max-h-[290px]">
                 <div className="flex gap-2 justify-between items-center flex-wrap">
                   <p className="text-white font-bold w-full md:w-auto">
@@ -466,8 +476,15 @@ function Simulator() {
                   ))}
                 </div>
               </div>
-            )}
-            <div className="w-full md:w-96 sm:w-64 xs:landscape:w-44">
+            ) : null}
+            <div
+              className={clsx(
+                {
+                  "w-full md:w-96 sm:w-64 xs:landscape:w-44": !isDownloadImage,
+                },
+                { "w-1/2": isDownloadImage }
+              )}
+            >
               <div className="flex justify-between px-4 items-center mb-3">
                 <span className="block w-10 h-6 bg-red-500" />
                 <p className="font-bold text-white">{rightTeam}</p>
@@ -479,6 +496,7 @@ function Simulator() {
                     <SimulatorPickSlot
                       slot={slot}
                       key={slot}
+                      fullWidth={isDownloadImage}
                       active={
                         (banPhase
                           ? +slot === banSequences[currentBanOrder]
