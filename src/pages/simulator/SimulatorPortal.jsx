@@ -155,7 +155,7 @@ function SimulatorPortal() {
             ))}
           </select>
         </div>
-        {/* <div className="flex items-start md:gap-4 gap-2 md:flex-row flex-col">
+        <div className="flex items-start md:gap-4 gap-2 md:flex-row flex-col">
           <p className="text-lg font-medium text-white min-w-[128px]">
             Pick Method
           </p>
@@ -172,7 +172,7 @@ function SimulatorPortal() {
               </option>
             ))}
           </select>
-        </div> */}
+        </div>
         <Button
           onClick={onClick}
           color="maroon"
