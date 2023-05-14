@@ -1,5 +1,4 @@
 import SimulatorBanSlot from "@/components/simulator/SimulatorBanSlot";
-import SimulatorPickSlot from "@/components/simulator/SimulatorPickSlot";
 import HeroesRoleService from "@/service/heroes-roles-service";
 import HeroService from "@/service/heroes-service";
 import React, {
@@ -14,11 +13,12 @@ import clsx from "clsx";
 import { Loader } from "@/components/common";
 import BanAmountService from "@/service/ban-amount-service";
 import { useWrap } from "@/hooks/useWrap";
-import HeroesButton from "@/components/simulator/HeroesButton";
 import { exportAsImage } from "@/utils/canvas";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
+import SimulatorPickSlotDND from "@/components/simulator/SimulatorPickSlotDND";
+import HeroesPanel from "@/components/simulator/HeroesPanel";
 
 function Simulator() {
   const [teams, setTeams] = useState([
@@ -41,8 +41,6 @@ function Simulator() {
   const leftTeamFromQuery = searchParams.get("left_name");
   const rightTeamFromQuery = searchParams.get("right_name");
   const [currentOrder, setCurrentOrder] = useState(0);
-  const [roleFilter, setRoleFilter] = useState(0);
-  const [search, setSearch] = useState("");
   const [selectedBanCount, setSelectedBanCount] = useState(null);
   const wrappedFetchBanCount = useWrap((id) => BanAmountService.get(id));
   const wrappedFetchHeroes = useWrap(() => HeroService.gets());
@@ -132,12 +130,12 @@ function Simulator() {
 
   const banHeroes = (hero, order = null) => {
     const arr = [...heroesBanList];
-    arr.push({ ...hero, order: banSequences[order || currentBanOrder] });
+    arr.push({ ...hero, order: order || banSequences[currentBanOrder] });
     const activitisCopy = [...activities];
     activitisCopy.push({
       activity: "ban",
       hero,
-      sequence: banSequences[order || currentBanOrder],
+      sequence: order || banSequences[currentBanOrder],
       order: currentBanOrder,
     });
 
@@ -272,20 +270,6 @@ function Simulator() {
     }, 250);
   };
 
-  const heroesList = useMemo(() => {
-    if (!roleFilter && !search) return heroes;
-
-    return heroes
-      .filter((hero) =>
-        roleFilter
-          ? !!hero.heroes_roles.filter((role) => role.id === roleFilter)[0]
-          : true
-      )
-      .filter((hero) =>
-        search ? hero.name.toLowerCase().includes(search.toLowerCase()) : true
-      );
-  }, [roleFilter, heroes, search]);
-
   const leftTeam = useMemo(() => {
     if (leftTeamFromQuery) return leftTeamFromQuery;
     const curr = teams.filter((item) => item.side === "LEFT")[0];
@@ -314,8 +298,136 @@ function Simulator() {
         return currentHeroes;
       return heroesBanList.filter((hero) => hero.order === order)[0] || null;
     },
-    [isDragAndDrop, banSequences, currentBanOrder, banPhase]
+    [
+      isDragAndDrop,
+      banSequences,
+      currentBanOrder,
+      banPhase,
+      heroesBanList,
+      currentHeroes,
+    ]
   );
+
+  const getBanSlotActive = useCallback(
+    (pos) => {
+      if (pickPhase) return false;
+      const pickedOrder = heroesBanList.map((hero) => hero.order);
+      if (!heroesBanList.length) return pos === firstPick;
+
+      const notPickedOrder = banSequences.filter(
+        (p) => !pickedOrder.includes(p)
+      );
+      const current = notPickedOrder[0];
+      if (pos == "LEFT") return current % 2 === 0;
+      return current % 2 !== 0;
+    },
+    [banSequences, heroesBanList, currentBanOrder, pickPhase, firstPick]
+  );
+
+  const getPickSlotActive = useCallback(
+    (order) => {
+      if (isDragAndDrop) {
+        if (banPhase) {
+          return false;
+        }
+
+        const pickedOrder = heroesPickList.map((hero) => hero.order);
+        if (!pickedOrder.length) return order === 0;
+
+        const notPickedOrder = pickSequences.filter(
+          (p) => !pickedOrder.includes(p)
+        );
+        const current = notPickedOrder[0];
+        return current === order;
+      }
+      if (banPhase) {
+        return order === pickSequences[currentBanOrder];
+      }
+      return order === pickSequences[currentOrder];
+    },
+    [
+      banPhase,
+      isDragAndDrop,
+      heroesPickList,
+      pickSequences,
+      currentOrder,
+      banSequences,
+      currentBanOrder,
+    ]
+  );
+
+  const getHeroPick = useCallback(
+    (order) => {
+      if (pickSequences[currentOrder] === order && pickPhase && !isDragAndDrop)
+        return currentHeroes;
+      return heroesPickList.filter((hero) => hero.order === order)[0] || null;
+    },
+    [
+      isDragAndDrop,
+      pickSequences,
+      currentOrder,
+      pickPhase,
+      currentHeroes,
+      pickPhase,
+      heroesPickList,
+    ]
+  );
+
+  const dropBannedHero = (hero) => {
+    const heroesBanListCopy = [...heroesBanList];
+    const index = heroesBanListCopy.findIndex(
+      (item) => item.order === hero.order
+    );
+    const activitisCopy = [...activities];
+    const order = banSequences.findIndex((p) => p === hero.order);
+    activitisCopy.push({
+      activity: "dropBannedHero",
+      hero,
+      sequence: hero.order,
+      order,
+    });
+
+    setActivities(activitisCopy);
+
+    heroesBanListCopy.splice(index, 1);
+    setHeroesBanList(heroesBanListCopy);
+    clearInterval();
+    setTimerInterval();
+  };
+
+  const onDropPickedHero = (hero) => {
+    if (hero.type === "ban") {
+      dropBannedHero(hero);
+      return;
+    }
+    const heroesPickListCopy = [...heroesPickList];
+    const index = heroesPickListCopy.findIndex(
+      (item) => item.order === hero.order
+    );
+    const activitisCopy = [...activities];
+    const order = pickSequences.findIndex((p) => p === hero.order);
+    activitisCopy.push({
+      activity: "dropPickedHero",
+      hero,
+      sequence: hero.order,
+      order,
+    });
+
+    setActivities(activitisCopy);
+
+    heroesPickListCopy.splice(index, 1);
+    setHeroesPickList(heroesPickListCopy);
+    clearInterval();
+    setTimerInterval();
+  };
+
+  const getNotBannedOrder = () => {
+    const pickedOrder = heroesBanList.map((hero) => hero.order);
+    if (!heroesBanList.length) return banSequences[0];
+    const notPickedOrder = banSequences.filter((p) => !pickedOrder.includes(p));
+
+    return notPickedOrder[0];
+  };
 
   if (loading) {
     return (
@@ -392,90 +504,32 @@ function Simulator() {
                 {[...Array(5 * 2).keys()]
                   .filter((item) => arrangeBanAndPickOrder("LEFT", item))
                   .map((slot) => (
-                    <SimulatorPickSlot
+                    <SimulatorPickSlotDND
                       fullWidth={isDownloadImage}
                       key={slot}
                       slot={slot}
-                      active={
-                        (banPhase
-                          ? +slot === banSequences[currentBanOrder]
-                          : +slot === pickSequences[currentOrder]) &&
-                        !isDragAndDrop
-                      }
-                      heroes={
-                        pickSequences[currentOrder] == slot && pickPhase
-                          ? currentHeroes
-                          : heroesPickList.filter(
-                              (hero) => hero.order == slot
-                            )[0] || null
-                      }
+                      active={getPickSlotActive(+slot)}
+                      heroes={getHeroPick(+slot)}
                       timer={timer}
                       onDropHero={(hero) =>
                         handleDropHeroes(hero, slot, "pick")
                       }
+                      droppable={getPickSlotActive(+slot)}
                     />
                   ))}
               </div>
             </div>
 
             {!isDownloadImage ? (
-              <div className="flex-1 border p-4 overflow-x-scroll no-scrollbar sm:max-h-[615px] landscape:xs:max-h-[290px]">
-                <div className="flex gap-2 justify-between items-center flex-wrap">
-                  <p className="text-white font-bold w-full md:w-auto">
-                    Select Champion
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    <button
-                      onClick={() => setRoleFilter(0)}
-                      className={clsx(
-                        "text-white px-2 py-1 rounded-md w-auto",
-                        {
-                          "bg-gray-400": roleFilter === 0,
-                        }
-                      )}
-                    >
-                      All
-                    </button>
-                    {roles.map((item, index) => (
-                      <button
-                        className={clsx(
-                          "text-white px-2 py-1 rounded-md w-auto",
-                          {
-                            "bg-gray-400": roleFilter === item.id,
-                          }
-                        )}
-                        key={index}
-                        onClick={() => setRoleFilter(item.id)}
-                      >
-                        {item.name}
-                      </button>
-                    ))}
-                  </div>
-                  <input
-                    type="text"
-                    className="border lg:w-36 rounded-full py-1 px-2 outline-none bg-primary text-white w-full"
-                    placeholder="Search"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                  />
-                </div>
-                <div className="grid grid-cols-2 xs:grid-cols-4 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2 mt-3">
-                  {heroesList.map((hero) => (
-                    <HeroesButton
-                      key={hero.id}
-                      hero={hero}
-                      disabled={
-                        heroesBanList.filter(
-                          (item) => item.id === hero.id
-                        )[0] ||
-                        heroesPickList.filter((item) => item.id === hero.id)[0]
-                      }
-                      onClick={() => setCurrentHeroes(hero)}
-                      isDragAndDrop={isDragAndDrop}
-                    />
-                  ))}
-                </div>
-              </div>
+              <HeroesPanel
+                heroes={heroes}
+                roles={roles}
+                heroesBanList={heroesBanList}
+                heroesPickList={heroesPickList}
+                isDragAndDrop={isDragAndDrop}
+                onHeroesButtonClick={(hero) => setCurrentHeroes(hero)}
+                onDropHero={(hero) => onDropPickedHero(hero)}
+              />
             ) : null}
             <div
               className={clsx(
@@ -493,27 +547,17 @@ function Simulator() {
                 {[...Array(5 * 2).keys()]
                   .filter((item) => arrangeBanAndPickOrder("RIGHT", item))
                   .map((slot) => (
-                    <SimulatorPickSlot
-                      slot={slot}
-                      key={slot}
+                    <SimulatorPickSlotDND
                       fullWidth={isDownloadImage}
-                      active={
-                        (banPhase
-                          ? +slot === banSequences[currentBanOrder]
-                          : +slot === pickSequences[currentOrder]) &&
-                        !isDragAndDrop
-                      }
-                      heroes={
-                        pickSequences[currentOrder] == slot && pickPhase
-                          ? currentHeroes
-                          : heroesPickList.filter(
-                              (hero) => hero.order == slot
-                            )[0] || null
-                      }
+                      key={slot}
+                      slot={slot}
+                      active={getPickSlotActive(+slot)}
+                      heroes={getHeroPick(+slot)}
                       timer={timer}
                       onDropHero={(hero) =>
                         handleDropHeroes(hero, slot, "pick")
                       }
+                      droppable={getPickSlotActive(+slot)}
                     />
                   ))}
               </div>
@@ -534,28 +578,62 @@ function Simulator() {
                   />
                 ))}
             </div>
-            {banPhase && !isDragAndDrop && (
-              <button
-                onClick={handleBanClick}
-                className={clsx(
-                  "bg-red-500 text-white py-2 px-6 rounded-md w-full xs:w-48 transition-opacity duration-100",
-                  [isDownloadImage && "opacity-0"]
+            {!isDragAndDrop ? (
+              <>
+                {banPhase && (
+                  <button
+                    onClick={handleBanClick}
+                    className={clsx(
+                      "bg-red-500 text-white py-2 px-6 rounded-md w-full xs:w-48 transition-opacity duration-100",
+                      [isDownloadImage && "opacity-0"]
+                    )}
+                  >
+                    Ban
+                  </button>
                 )}
-              >
-                Ban
-              </button>
-            )}
-            {pickPhase && !isDragAndDrop && (
-              <button
-                onClick={handlePickClick}
-                className={clsx(
-                  "bg-blue-500 text-white py-2 px-6 rounded-md w-full xs:w-48 transition-opacity duration-100",
-                  [isDownloadImage && "opacity-0"]
+                {pickPhase && (
+                  <button
+                    onClick={handlePickClick}
+                    className={clsx(
+                      "bg-blue-500 text-white py-2 px-6 rounded-md w-full xs:w-48 transition-opacity duration-100",
+                      [isDownloadImage && "opacity-0"]
+                    )}
+                  >
+                    Pick
+                  </button>
                 )}
-              >
-                Pick
-              </button>
+              </>
+            ) : (
+              <>
+                <div className="flex gap-2 w-1/2">
+                  <div className="w-1/2">
+                    <SimulatorPickSlotDND
+                      fullWidth={isDownloadImage}
+                      // active={getPickSlotActive(+slot)}
+                      // heroes={getHeroPick(+slot)}
+                      timer={timer}
+                      onDropHero={(hero) =>
+                        handleDropHeroes(hero, getNotBannedOrder(), "ban")
+                      }
+                      active={getBanSlotActive("LEFT")}
+                      droppable={getBanSlotActive("LEFT")}
+                    />
+                  </div>
+                  <div className="w-1/2">
+                    <SimulatorPickSlotDND
+                      fullWidth={isDownloadImage}
+                      onDropHero={(hero) =>
+                        handleDropHeroes(hero, getNotBannedOrder(), "ban")
+                      }
+                      timer={timer}
+                      active={getBanSlotActive("RIGHT")}
+                      droppable={getBanSlotActive("RIGHT")}
+                    />
+                  </div>
+                </div>
+              </>
             )}
+
             <div className="flex gap-2 mt-3 px-4">
               {[...Array(selectedBanCount.ban_count * 2).keys()]
                 .filter((item) => arrangeBanAndPickOrder("RIGHT", item))

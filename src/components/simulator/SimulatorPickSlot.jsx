@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import React from "react";
-import { useDrop } from "react-dnd";
 import HeroesBanner from "../heroes/HeroesBanner";
 
 function SimulatorPickSlot({
@@ -11,16 +10,8 @@ function SimulatorPickSlot({
   onDropHero = (hero) => {},
   fullWidth = false,
 }) {
-  const [{ isOver, canDrop }, dropRef] = useDrop({
-    accept: "hero",
-    drop: (item) => onDropHero(item),
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
-    }),
-  });
   return (
-    <div ref={dropRef}>
+    <div>
       {!heroes ? (
         <div
           className={clsx(
@@ -38,7 +29,7 @@ function SimulatorPickSlot({
           )}
         </div>
       ) : (
-        <div className="relative z-0" ref={dropRef}>
+        <div className="relative z-0 bg-gray-300">
           <HeroesBanner
             url={heroes.banner_url}
             className={clsx(
@@ -51,7 +42,6 @@ function SimulatorPickSlot({
             <p className="font-bold text-white mb-0 font-poppins">
               {heroes.name}
             </p>
-            {/* <p className="font-bold text-white">{heroes.heroes_role.name}</p> */}
           </div>
           {active && timer > 0 && (
             <div className="absolute right-0 bottom-0 bg-white w-12 p-1 bg-opacity-60 rounded-md">
