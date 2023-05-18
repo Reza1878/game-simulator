@@ -515,6 +515,8 @@ function Simulator() {
                         handleDropHeroes(hero, slot, "pick")
                       }
                       droppable={getPickSlotActive(+slot)}
+                      isDragAndDrop={isDragAndDrop}
+                      helperText="Pick"
                     />
                   ))}
               </div>
@@ -558,6 +560,8 @@ function Simulator() {
                         handleDropHeroes(hero, slot, "pick")
                       }
                       droppable={getPickSlotActive(+slot)}
+                      isDragAndDrop={isDragAndDrop}
+                      helperText="Pick"
                     />
                   ))}
               </div>
@@ -609,14 +613,14 @@ function Simulator() {
                   <div className="w-1/2">
                     <SimulatorPickSlotDND
                       fullWidth={isDownloadImage}
-                      // active={getPickSlotActive(+slot)}
-                      // heroes={getHeroPick(+slot)}
                       timer={timer}
                       onDropHero={(hero) =>
                         handleDropHeroes(hero, getNotBannedOrder(), "ban")
                       }
                       active={getBanSlotActive("LEFT")}
                       droppable={getBanSlotActive("LEFT")}
+                      isDragAndDrop={isDragAndDrop}
+                      helperText="Ban"
                     />
                   </div>
                   <div className="w-1/2">
@@ -628,6 +632,8 @@ function Simulator() {
                       timer={timer}
                       active={getBanSlotActive("RIGHT")}
                       droppable={getBanSlotActive("RIGHT")}
+                      isDragAndDrop={isDragAndDrop}
+                      helperText="Ban"
                     />
                   </div>
                 </div>

@@ -9,6 +9,8 @@ function SimulatorPickSlotDND({
   onDropHero = (hero) => {},
   fullWidth = false,
   droppable = false,
+  isDragAndDrop = false,
+  helperText = "",
 }) {
   const [{ isOver, canDrop }, dropRef] = useDrop({
     accept: "hero",
@@ -37,8 +39,10 @@ function SimulatorPickSlotDND({
       timer,
       active,
       heroes,
+      isDragAndDrop,
+      helperText,
     };
-  }, [fullWidth, timer, active, heroes]);
+  }, [fullWidth, timer, active, heroes, isDragAndDrop, helperText]);
 
   if (droppable) {
     return (

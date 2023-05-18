@@ -9,6 +9,8 @@ function SimulatorPickSlot({
   timer = 0,
   onDropHero = (hero) => {},
   fullWidth = false,
+  isDragAndDrop = false,
+  helperText = "",
 }) {
   return (
     <div>
@@ -22,6 +24,13 @@ function SimulatorPickSlot({
             { "md:h-36 xs:landscape:h-28": fullWidth }
           )}
         >
+          {isDragAndDrop && active && helperText ? (
+            <div className="absolute top-1/2 -translate-y-1/2 text-center w-full">
+              <p className="text-primary font-bold uppercase blink text-2xl">
+                {helperText}
+              </p>
+            </div>
+          ) : null}
           {active && timer > 0 && (
             <div className="absolute right-0 bottom-0 bg-white w-12 p-1 bg-opacity-60 rounded-md">
               <p className="font-bold text-center text-red-500">{timer}</p>
