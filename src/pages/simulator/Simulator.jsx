@@ -130,12 +130,14 @@ function Simulator() {
 
   const banHeroes = (hero, order = null) => {
     const arr = [...heroesBanList];
-    arr.push({ ...hero, order: order || banSequences[currentBanOrder] });
+    const seq = order !== null ? order : banSequences[currentBanOrder];
+
+    arr.push({ ...hero, order: seq });
     const activitisCopy = [...activities];
     activitisCopy.push({
       activity: "ban",
       hero,
-      sequence: order || banSequences[currentBanOrder],
+      sequence: seq,
       order: currentBanOrder,
     });
 
@@ -149,12 +151,13 @@ function Simulator() {
 
   const pickHeroes = (hero, order = null) => {
     const arr = [...heroesPickList];
-    arr.push({ ...hero, order: order || pickSequences[currentOrder] });
+    const seq = order !== null ? order : pickSequences[currentOrder];
+    arr.push({ ...hero, order: seq });
     const activitisCopy = [...activities];
     activitisCopy.push({
       activity: "pick",
       hero,
-      sequence: order || pickSequences[currentOrder],
+      sequence: seq,
       order: currentOrder,
     });
 
@@ -310,7 +313,11 @@ function Simulator() {
 
   const getBanSlotActive = useCallback(
     (pos) => {
-      if (pickPhase) return false;
+      if (
+        pickPhase ||
+        heroesBanList.length === (selectedBanCount?.ban_count || 0) * 2
+      )
+        return false;
       const pickedOrder = heroesBanList.map((hero) => hero.order);
       if (!heroesBanList.length) return pos === firstPick;
 
@@ -321,7 +328,14 @@ function Simulator() {
       if (pos == "LEFT") return current % 2 === 0;
       return current % 2 !== 0;
     },
-    [banSequences, heroesBanList, currentBanOrder, pickPhase, firstPick]
+    [
+      banSequences,
+      heroesBanList,
+      currentBanOrder,
+      pickPhase,
+      firstPick,
+      selectedBanCount,
+    ]
   );
 
   const getPickSlotActive = useCallback(
