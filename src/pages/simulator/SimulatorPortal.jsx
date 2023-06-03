@@ -1,7 +1,7 @@
 import { Button } from "@/components/common";
 import { useWrap } from "@/hooks/useWrap";
 import BanAmountService from "@/service/ban-amount-service";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -15,9 +15,18 @@ function SimulatorPortal() {
   const [banCount, setBanCount] = useState(null);
   const [timer, setTimer] = useState(0);
   const accessToken = useSelector((state) => state.auth.accessToken);
+  const userTier = useSelector((state) => state.user.user_tier);
   const navigate = useNavigate();
   const wrappedFetchBanAmount = useWrap(BanAmountService.gets);
   const [method, setMethod] = useState("sequential");
+
+  const pickMethodOptions = useMemo(() => {
+    const arr = [{ label: "Sequential", value: "sequential" }];
+    if (userTier?.name === "Premium")
+      arr.push({ label: "Drag and Drop", value: "dnd" });
+
+    return arr;
+  }, [userTier]);
 
   const handleTeamNameChange = (event, side) => {
     const teamsCopy = [...teams];
@@ -163,10 +172,7 @@ function SimulatorPortal() {
             className="py-1 px-2 outline-none md:w-auto w-full"
             onChange={(e) => setMethod(e.target.value)}
           >
-            {[
-              { label: "Sequential", value: "sequential" },
-              { label: "Drag and Drop", value: "dnd" },
-            ].map((item) => (
+            {pickMethodOptions.map((item) => (
               <option key={item.value} value={item.value}>
                 {item.label}
               </option>

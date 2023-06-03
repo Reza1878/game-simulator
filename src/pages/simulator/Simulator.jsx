@@ -19,8 +19,10 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
 import SimulatorPickSlotDND from "@/components/simulator/SimulatorPickSlotDND";
 import HeroesPanel from "@/components/simulator/HeroesPanel";
+import { useSelector } from "react-redux";
 
 function Simulator() {
+  const userTier = useSelector((state) => state.user.user_tier);
   const [teams, setTeams] = useState([
     { id: 1, name: "Blue Team", side: "LEFT" },
     { id: 2, name: "Read Team", side: "RIGHT" },
@@ -33,6 +35,13 @@ function Simulator() {
   const [searchParams] = useSearchParams();
   const [timer, setTimer] = useState(+searchParams.get("timer") || 0);
   const timerRef = useRef(null);
+
+  const isPaidUser = useMemo(() => {
+    return userTier && userTier.name !== "User";
+  }, [userTier]);
+  const isPremiumUser = useMemo(() => {
+    return userTier && userTier.name === "Premium";
+  }, [userTier]);
 
   const banCount = +searchParams.get("ban_count") || 0;
   const firstPick = !["LEFT", "RIGHT"].includes(searchParams.get("first_pick"))
@@ -52,8 +61,8 @@ function Simulator() {
   const pickSequences = useMemo(() => [0, 1, 3, 2, 4, 5, 7, 6, 8, 9], []);
   const banSequences = useMemo(() => [0, 1, 2, 3, 4, 5, 7, 6, 9, 8], []);
   const isDragAndDrop = useMemo(
-    () => searchParams.get("method") === "dnd",
-    [searchParams]
+    () => searchParams.get("method") === "dnd" && isPremiumUser,
+    [searchParams, isPremiumUser]
   );
   const withTimer = useMemo(
     () => Boolean(+searchParams.get("timer") || 0) && !isDragAndDrop,
@@ -482,18 +491,22 @@ function Simulator() {
             >
               Reset
             </button>
-            <button
-              onClick={handleUndoClick}
-              className="bg-gray-500 text-white py-2 rounded-md w-24"
-            >
-              Undo
-            </button>
-            <button
-              onClick={handleCaptureClick}
-              className="bg-gray-500 text-white py-2 rounded-md w-24"
-            >
-              Capture
-            </button>
+            {isPaidUser ? (
+              <>
+                <button
+                  onClick={handleUndoClick}
+                  className="bg-gray-500 text-white py-2 rounded-md w-24"
+                >
+                  Undo
+                </button>
+                <button
+                  onClick={handleCaptureClick}
+                  className="bg-gray-500 text-white py-2 rounded-md w-24"
+                >
+                  Capture
+                </button>
+              </>
+            ) : null}
           </div>
         </div>
         <div className="w-full bg-primary py-4" ref={containerRef}>

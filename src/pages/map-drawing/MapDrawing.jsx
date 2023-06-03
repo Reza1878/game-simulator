@@ -7,9 +7,11 @@ import IconsService from "@/service/icons-service";
 import MapService from "@/service/map-service";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Draggable from "react-draggable";
+import { useSelector } from "react-redux";
 
 function MapDrawing() {
   const [mapImage, setMapImage] = useState(null);
+  const userTier = useSelector((state) => state.user.user_tier);
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
   const [brushColor, setBrushColor] = useState("#FF0000");
@@ -22,6 +24,10 @@ function MapDrawing() {
   const canvasContainerRef = useRef(null);
   const [points, setPoints] = useState([]);
   const [activities, setActivities] = useState([]);
+
+  const isPaidUser = useMemo(() => {
+    return userTier.name !== "User";
+  }, [userTier]);
 
   const showedAds = useMemo(() => {
     if (!(ads || []).length) return null;
@@ -498,9 +504,11 @@ function MapDrawing() {
           <Button variant="outlined" onClick={handleResetMap}>
             Reset Map
           </Button>
-          <Button variant="outlined" onClick={handleUndo}>
-            Undo
-          </Button>
+          {isPaidUser ? (
+            <Button variant="outlined" onClick={handleUndo}>
+              Undo
+            </Button>
+          ) : null}
         </div>
         {showedAds && (
           <AdsImage ratio={showedAds.ratio} url={showedAds.image_url} />

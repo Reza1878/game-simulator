@@ -9,6 +9,10 @@ export default class AuthService {
     });
   }
 
+  static async fetchMe() {
+    return sendAndHandleInvalidRequest("/api/auth/fetch-me", "get");
+  }
+
   static async register({ email, name, password }) {
     return sendAndHandleInvalidRequest("/api/auth/register", "post", {
       email,

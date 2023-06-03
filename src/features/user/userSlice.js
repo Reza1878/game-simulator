@@ -7,6 +7,7 @@ export const userSlice = createSlice({
     id: 0,
     name: "",
     role: "",
+    user_tier: null,
   },
   reducers: {
     setUser: (state, action) => {
@@ -14,6 +15,7 @@ export const userSlice = createSlice({
       state.name = action.payload?.name ?? "";
       state.email = action.payload?.email ?? "";
       state.role = action.payload?.role ?? "";
+      state.user_tier = action.payload?.user_tier ?? null;
       localStorage.setItem("user", JSON.stringify(action.payload));
     },
   },
