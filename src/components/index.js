@@ -9,6 +9,7 @@ import Hero from "./Hero";
 import Pricings from "./Pricings";
 import { Modal } from "./common";
 import { GuestLayout } from "./layout";
+import AdsComponent from "./AdsComponent";
 
 export {
   Navbar,
@@ -22,4 +23,5 @@ export {
   Modal,
   GuestLayout,
   Pricings,
+  AdsComponent,
 };

@@ -1,3 +1,4 @@
+import { AdsComponent } from "@/components";
 import AdsImage from "@/components/ads/AdsImage";
 import { Button } from "@/components/common";
 import { FormControl } from "@/components/form";
@@ -30,10 +31,8 @@ function MapDrawing() {
   }, [userTier]);
 
   const showedAds = useMemo(() => {
-    if (!(ads || []).length) return null;
-
-    return ads[Math.floor(Math.random() * ads.length)];
-  }, [ads]);
+    return !isPaidUser;
+  }, [isPaidUser]);
 
   const wrappedFetchIcons = useWrap(
     () => IconsService.gets(),
@@ -411,110 +410,110 @@ function MapDrawing() {
   };
 
   return (
-    <div className="min-h-[50vh] flex flex-row gap-4 p-6">
-      <div
-        ref={canvasContainerRef}
-        className="relative md:w-[600px] md:h-[600px] w-[300px] h-[300px]"
-      >
-        {imgSrc ? <img className="absolute z-0" src={imgSrc} /> : null}
-        {usedIcons.map((icon) => (
-          <Draggable
-            position={{
-              x: icon.coordX,
-              y: icon.coordY,
-            }}
-            bounds="parent"
-            onStop={(e, data) => {
-              onStopDragIcon({ x: data.x, y: Math.abs(data.y) }, icon.id);
-            }}
-            onDrag={(e, data) => {
-              onDragIcon({ x: data.x, y: Math.abs(data.y) }, icon.id);
-            }}
-            key={icon.id}
-          >
-            <img
-              className="md:w-6 md:h-6 w-5 h-5 absolute z-20"
-              src={`${import.meta.env.VITE_BASE_URL}/${icon.image_url}`}
-            />
-          </Draggable>
-        ))}
-        <canvas
-          onMouseDown={(e) => {
-            if (isMobile) return;
-            startDrawing(e);
-          }}
-          onMouseUp={(e) => {
-            if (isMobile) return;
-            endDrawing();
-          }}
-          onMouseMove={(e) => {
-            if (isMobile) return;
-            draw(e);
-          }}
-          onTouchStart={(e) => {
-            startDrawing({
-              nativeEvent: {
-                offsetX: e.changedTouches[0].clientX,
-                offsetY: e.changedTouches[0].clientY,
-              },
-            });
-          }}
-          onTouchMove={(e) => {
-            draw({
-              nativeEvent: {
-                offsetX: e.changedTouches[0].clientX,
-                offsetY: e.changedTouches[0].clientY,
-              },
-            });
-          }}
-          onTouchEnd={(e) => {
-            endDrawing();
-          }}
-          className="absolute z-10"
-          ref={canvasRef}
-        />
-      </div>
-      <div className="flex flex-col gap-4">
-        <div className="grid grid-cols-8">
-          {(icons || []).map((icon) => (
-            <img
+    <>
+      {showedAds && <AdsComponent dataAdSlot={9212602771} />}
+      <div className="min-h-[50vh] flex flex-row gap-4 p-6">
+        <div
+          ref={canvasContainerRef}
+          className="relative md:w-[600px] md:h-[600px] w-[300px] h-[300px]"
+        >
+          {imgSrc ? <img className="absolute z-0" src={imgSrc} /> : null}
+          {usedIcons.map((icon) => (
+            <Draggable
+              position={{
+                x: icon.coordX,
+                y: icon.coordY,
+              }}
+              bounds="parent"
+              onStop={(e, data) => {
+                onStopDragIcon({ x: data.x, y: Math.abs(data.y) }, icon.id);
+              }}
+              onDrag={(e, data) => {
+                onDragIcon({ x: data.x, y: Math.abs(data.y) }, icon.id);
+              }}
               key={icon.id}
-              className="md:w-10 md:h-10 w-5 h-5 cursor-pointer"
-              src={`${import.meta.env.VITE_BASE_URL}/${icon.image_url}`}
-              onClick={() => addIconToMap(icon)}
-            />
+            >
+              <img
+                className="md:w-6 md:h-6 w-5 h-5 absolute z-20"
+                src={`${import.meta.env.VITE_BASE_URL}/${icon.image_url}`}
+              />
+            </Draggable>
           ))}
+          <canvas
+            onMouseDown={(e) => {
+              if (isMobile) return;
+              startDrawing(e);
+            }}
+            onMouseUp={(e) => {
+              if (isMobile) return;
+              endDrawing();
+            }}
+            onMouseMove={(e) => {
+              if (isMobile) return;
+              draw(e);
+            }}
+            onTouchStart={(e) => {
+              startDrawing({
+                nativeEvent: {
+                  offsetX: e.changedTouches[0].clientX,
+                  offsetY: e.changedTouches[0].clientY,
+                },
+              });
+            }}
+            onTouchMove={(e) => {
+              draw({
+                nativeEvent: {
+                  offsetX: e.changedTouches[0].clientX,
+                  offsetY: e.changedTouches[0].clientY,
+                },
+              });
+            }}
+            onTouchEnd={(e) => {
+              endDrawing();
+            }}
+            className="absolute z-10"
+            ref={canvasRef}
+          />
         </div>
-        <FormControl
-          LabelProps={{ className: "text-white" }}
-          label="Brush Color"
-          type="color"
-          InputProps={{
-            value: brushColor,
-            onChange: (e) => setBrushColor(e.target.value),
-          }}
-        />
-        <div className="flex sm:flex-row flex-col gap-2">
-          <Button onClick={handleDownloadImage} variant="outlined">
-            Download Image
-          </Button>
-          <Button variant="outlined" onClick={handleRemoveIcon}>
-            Remove Icon
-          </Button>
-          <Button variant="outlined" onClick={handleResetMap}>
-            Reset Map
-          </Button>
-          {isPaidUser ? (
-            <Button variant="outlined" onClick={handleUndo}>
-              Undo
+        <div className="flex flex-col gap-4">
+          <div className="grid grid-cols-8">
+            {(icons || []).map((icon) => (
+              <img
+                key={icon.id}
+                className="md:w-10 md:h-10 w-5 h-5 cursor-pointer"
+                src={`${import.meta.env.VITE_BASE_URL}/${icon.image_url}`}
+                onClick={() => addIconToMap(icon)}
+              />
+            ))}
+          </div>
+          <FormControl
+            LabelProps={{ className: "text-white" }}
+            label="Brush Color"
+            type="color"
+            InputProps={{
+              value: brushColor,
+              onChange: (e) => setBrushColor(e.target.value),
+            }}
+          />
+          <div className="flex sm:flex-row flex-col gap-2">
+            <Button onClick={handleDownloadImage} variant="outlined">
+              Download Image
             </Button>
-          ) : null}
+            <Button variant="outlined" onClick={handleRemoveIcon}>
+              Remove Icon
+            </Button>
+            <Button variant="outlined" onClick={handleResetMap}>
+              Reset Map
+            </Button>
+            {isPaidUser ? (
+              <Button variant="outlined" onClick={handleUndo}>
+                Undo
+              </Button>
+            ) : null}
+          </div>
         </div>
-        {showedAds && (
-          <AdsImage ratio={showedAds.ratio} url={showedAds.image_url} />
-        )}
       </div>
-    </div>
+    </>
   );
 }
 
