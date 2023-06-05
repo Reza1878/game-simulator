@@ -636,7 +636,11 @@ function Simulator() {
               </>
             ) : (
               <>
-                <div className="flex gap-2 w-1/2">
+                <div
+                  className={clsx("flex gap-2 w-1/2", {
+                    "opacity-0": isDownloadImage,
+                  })}
+                >
                   <div className="w-1/2">
                     <SimulatorPickSlotDND
                       fullWidth={isDownloadImage}
